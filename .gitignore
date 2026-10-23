@@ -3,3 +3,5 @@ dev/.pgdata/
 .vercel/
 .env
 .env.*
+design/video/.hyperframes/
+design/video/renders/

@@ -143,3 +143,10 @@ One entry per real decision or problem. Newest at the bottom.
 - Who: Siddh (picked Ledger, asked for a video), Claude (build)
 - Evidence: Browser tests passed: table quick-checks, expand, decline with reason, refer, and live counts. Every demo scene shows for about 5 seconds and loops. No sideways scrolling at 375px, and 11 of 11 database tests pass.
 - Result: The demo is HTML, not an MP4, so it's crisp and light on phones. An MP4 version via HyperFrames is pending Siddh's OK to install FFmpeg.
+
+## 2026-10-24 · "How it works" video rendered with HyperFrames
+- Decision: Installed FFmpeg (winget) and used HeyGen's open-source HyperFrames to render a 29-second square MP4 (1080×1080, 30fps, 1.1 MB) in the Ledger look. It runs hook → logo → share → ask → inbox → answer → end card. It's silent, because LinkedIn autoplays muted.
+- Why: Siddh wanted a video for the launch. Square fills the most space in the LinkedIn phone feed. The website keeps the lighter HTML demo.
+- Who: Siddh (asked, approved the install), Claude (script, build, render)
+- Evidence: `hyperframes check` passed with 0 errors and all text meeting the contrast standard. Frames were checked from both the preview and the final MP4. A DM line that could read as mocking candidates was replaced.
+- Result: `design/referlink-how-it-works.mp4`. The end card has no URL yet. Add the domain after deploy and re-render with `cd design/video && npm run render` (about a minute).

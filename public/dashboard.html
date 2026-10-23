@@ -3,7 +3,7 @@
 <head>
   <meta charset="utf-8">
   <script>try{document.documentElement.dataset.theme=localStorage.getItem('rl-theme')||'light'}catch(e){document.documentElement.dataset.theme='light'}</script>
-  <meta name="theme-color" content="#faf8f4">
+  <meta name="theme-color" content="#ffffff">
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <meta name="referrer" content="no-referrer">
   <meta name="robots" content="noindex, nofollow">
@@ -11,7 +11,7 @@
   <link rel="icon" href="/favicon.svg" type="image/svg+xml">
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=Newsreader:opsz,wght@6..72,400;6..72,500&display=swap">
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@500;600&display=swap">
   <link rel="stylesheet" href="/css/style.css">
   <script src="/js/config.js" defer></script>
   <script src="/js/app.js" defer></script>
@@ -21,12 +21,13 @@
   <header class="site-header">
     <div class="container wide nav">
       <a class="logo" href="/" aria-label="ReferLink home"><span class="logo-mark"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M20 6 9 17l-5-5"/></svg></span>ReferLink</a>
+      <span class="nav-spacer"></span>
       <button id="refresh" class="btn btn-secondary btn-sm hidden" type="button"><svg class="icon"><use href="#i-refresh"/></svg>Refresh</button>
       <button class="btn btn-ghost btn-icon theme-toggle" type="button" data-theme-toggle aria-label="Switch to dark mode"><svg class="icon icon-moon"><use href="#i-moon"/></svg><svg class="icon icon-sun"><use href="#i-sun"/></svg></button>
     </div>
   </header>
 
-  <main style="padding-top:36px">
+  <main>
     <div class="container wide">
       <div id="loading" class="loading"><div class="spinner"></div>Loading your requests…</div>
 
@@ -52,24 +53,27 @@
             <span class="small muted" style="white-space:nowrap">Your link</span>
             <div class="copy-field">
               <input id="public-link" type="text" readonly aria-label="Your public link">
-              <button id="copy-public" class="btn btn-secondary btn-sm" type="button">Copy</button>
+              <button id="copy-public" class="btn btn-secondary btn-sm" type="button"><svg class="icon"><use href="#i-copy"/></svg>Copy</button>
             </div>
           </div>
         </div>
 
-        <div class="tabs" role="tablist" aria-label="Filter requests">
-          <button class="tab" role="tab" data-filter="pending" aria-selected="true">Inbox<span class="count"></span></button>
-          <button class="tab" role="tab" data-filter="referred" aria-selected="false">Referred<span class="count"></span></button>
-          <button class="tab" role="tab" data-filter="declined" aria-selected="false">Declined<span class="count"></span></button>
-          <button class="tab" role="tab" data-filter="all" aria-selected="false">All<span class="count"></span></button>
+        <div class="toolbar">
+          <div class="seg" role="tablist" aria-label="Filter requests">
+            <button role="tab" data-filter="pending" aria-selected="true">Pending<span class="count"></span></button>
+            <button role="tab" data-filter="referred" aria-selected="false">Referred<span class="count"></span></button>
+            <button role="tab" data-filter="declined" aria-selected="false">Declined<span class="count"></span></button>
+            <button role="tab" data-filter="all" aria-selected="false">All<span class="count"></span></button>
+          </div>
+          <span class="xs muted">Click a row to read the full request.</span>
         </div>
 
-        <div class="inbox" id="inbox">
-          <div class="list" id="list" role="list"></div>
-          <div class="detail" id="detail" aria-live="polite"></div>
+        <div class="table" role="table" aria-label="Referral requests">
+          <div class="thead" role="row"><span role="columnheader">Candidate</span><span role="columnheader">Job</span><span role="columnheader">Checks</span><span role="columnheader">Why they fit</span><span role="columnheader">Sent</span><span role="columnheader" style="text-align:right">Decision</span></div>
+          <div id="rows"></div>
         </div>
 
-        <p class="dash-note"><svg class="icon"><use href="#i-lock"/></svg> Bookmark this page. This private link is your only way back in. Tap <strong>Refer</strong> after you've submitted the referral in your company's tool.</p>
+        <p class="dash-note"><svg class="icon"><use href="#i-lock"/></svg> Bookmark this page. This private link is your only way back in. Click <strong>Refer</strong> after you've submitted the referral in your company's tool.</p>
       </section>
     </div>
   </main>

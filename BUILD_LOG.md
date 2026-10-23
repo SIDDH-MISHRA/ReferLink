@@ -136,3 +136,10 @@ One entry per real decision or problem. Newest at the bottom.
 - Who: Siddh (picked Paper), Claude (build)
 - Evidence: Browser tests passed for the step flow (blocks bad input, Back works, sends at the end) and the phone dashboard (tap to open, decline with reason, stays open). No page scrolls sideways at 375px, and the 11 database tests still pass. Two bugs were found and fixed: stretched avatars, and a stray "null" on the dashboard.
 - Result: Added `request_form_step_viewed`, so Step 8 can show exactly which question candidates drop off at.
+
+## 2026-10-24 · Switched to the "Ledger" design, added an animated demo
+- Decision: Restyled the site in the Ledger direction: white, slate text, one indigo accent, Inter, and a near-black logo mark. The landing page puts the headline beside an example inbox. The dashboard is now a table where you refer or decline from the row and click a row to expand the full request. The candidate form keeps one question per screen. The landing page gets a 20-second "how it works" demo built from HTML.
+- Why: Siddh preferred Ledger. Claude kept the step-by-step form because its per-question drop-off data matters for Step 8 more than matching the mock exactly.
+- Who: Siddh (picked Ledger, asked for a video), Claude (build)
+- Evidence: Browser tests passed: table quick-checks, expand, decline with reason, refer, and live counts. Every demo scene shows for about 5 seconds and loops. No sideways scrolling at 375px, and 11 of 11 database tests pass.
+- Result: The demo is HTML, not an MP4, so it's crisp and light on phones. An MP4 version via HyperFrames is pending Siddh's OK to install FFmpeg.

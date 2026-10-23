@@ -319,7 +319,7 @@
     document.documentElement.dataset.theme = theme;
     try { localStorage.setItem('rl-theme', theme); } catch (e) { /* storage blocked: still works for this page */ }
     const meta = document.querySelector('meta[name="theme-color"]');
-    if (meta) meta.content = theme === 'dark' ? '#161412' : '#faf8f4';
+    if (meta) meta.content = theme === 'dark' ? '#0b0f17' : '#ffffff';
   }
   function initThemeToggle() {
     document.querySelectorAll('[data-theme-toggle]').forEach((btn) => {

@@ -3,23 +3,24 @@
 <head>
   <meta charset="utf-8">
   <script>try{document.documentElement.dataset.theme=localStorage.getItem('rl-theme')||'light'}catch(e){document.documentElement.dataset.theme='light'}</script>
-  <meta name="theme-color" content="#faf8f4">
+  <meta name="theme-color" content="#ffffff">
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <meta name="referrer" content="no-referrer">
-  <title>ReferLink: a kinder way to handle referral requests</title>
-  <meta name="description" content="One link for referral requests. Candidates ask properly, you answer every one of them.">
-  <meta property="og:title" content="ReferLink: a kinder way to handle referral requests">
-  <meta property="og:description" content="One link for referral requests. Candidates ask properly, you answer every one of them.">
+  <title>ReferLink: every referral request in one inbox</title>
+  <meta name="description" content="Share one link. Candidates send the job ID, resume and a short pitch. You answer in one click, and they always hear back.">
+  <meta property="og:title" content="ReferLink: every referral request in one inbox">
+  <meta property="og:description" content="Share one link. Candidates send the job ID, resume and a short pitch. You answer in one click, and they always hear back.">
   <meta property="og:image" content="/og.png">
   <meta property="og:type" content="website">
   <meta name="twitter:card" content="summary_large_image">
   <link rel="icon" href="/favicon.svg" type="image/svg+xml">
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=Newsreader:opsz,wght@6..72,400;6..72,500&display=swap">
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@500;600&display=swap">
   <link rel="stylesheet" href="/css/style.css">
   <script src="/js/config.js" defer></script>
   <script src="/js/app.js" defer></script>
+  <script src="/js/demo.js" defer></script>
 </head>
 <body>
   <header class="site-header">
@@ -27,79 +28,132 @@
       <a class="logo" href="/" aria-label="ReferLink home"><span class="logo-mark"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M20 6 9 17l-5-5"/></svg></span>ReferLink</a>
       <a class="nav-link" href="#how">How it works</a>
       <a class="nav-link" href="/privacy">Privacy</a>
-      <a class="btn btn-primary btn-sm" href="/create">Create your link</a>
+      <span class="nav-spacer"></span>
+      <a class="btn btn-ink btn-sm" href="/create">Create your link</a>
       <button class="btn btn-ghost btn-icon theme-toggle" type="button" data-theme-toggle aria-label="Switch to dark mode"><svg class="icon icon-moon"><use href="#i-moon"/></svg><svg class="icon icon-sun"><use href="#i-sun"/></svg></button>
     </div>
   </header>
 
   <main>
-    <div class="container">
+    <div class="container wide">
       <section class="hero">
-        <h1>A kinder way to handle referral requests.</h1>
-        <p class="lead">You get dozens of "can you refer me?" messages. ReferLink gives you one link where candidates ask properly, and one place where you answer every one of them.</p>
-        <div class="hero-cta">
-          <a class="btn btn-primary btn-lg" href="/create">Create your link <svg class="icon"><use href="#i-arrow"/></svg></a>
-          <span class="small muted">Free, no sign-up, about a minute.</span>
+        <div>
+          <span class="eyebrow">For employees who get referral DMs</span>
+          <h1>Every referral request in one inbox.</h1>
+          <p class="lead">Share one link. Candidates send the job ID, resume and a short pitch. You answer in one click, and they always hear back.</p>
+          <div class="hero-cta">
+            <a class="btn btn-primary btn-lg" href="/create">Create your link <svg class="icon"><use href="#i-arrow"/></svg></a>
+            <a class="btn btn-secondary btn-lg" href="#how">See how it works</a>
+          </div>
+          <p class="fine">Free · No sign-up · Takes a minute</p>
         </div>
 
-        <!-- A static example of a request, styled like a letter -->
-        <figure class="letter" aria-label="Example of a referral request" style="margin-left:0;margin-right:0;margin-bottom:0">
-          <div class="letter-head">
-            <div class="avatar avatar-sm" aria-hidden="true">AI</div>
-            <div>
-              <div><strong>Ananya Iyer</strong> <span class="small muted">· Data Analyst II · <span class="mono">JR-104523</span></span></div>
-              <div class="xs muted">2 hours ago</div>
-            </div>
-            <span class="badge badge-pending">Waiting for you</span>
-          </div>
-          <blockquote class="quote">"Two years as a data analyst, SQL and Python daily. The role asks for exactly this."</blockquote>
-          <div class="hero-cta" style="gap:8px">
-            <span class="btn btn-primary btn-sm" aria-hidden="true">Refer</span>
-            <span class="btn btn-secondary btn-sm" aria-hidden="true">Not this time</span>
-          </div>
-        </figure>
-        <p class="example-note">Example request. The name is made up.</p>
+        <!-- Static example of the inbox -->
+        <div class="product" role="img" aria-label="Example of the ReferLink inbox with three requests">
+          <div class="product-head"><strong class="small">Requests</strong><span class="badge badge-pending">2 pending</span><span class="grow"></span><span class="xs muted">Newest first</span></div>
+          <div class="prow"><span class="who"><span class="avatar avatar-sm">AI</span><span class="ellip"><b>Ananya Iyer</b><span class="muted">Data Analyst II</span></span></span><span class="muted ellip"><span class="mono">JR-104523</span> · Resume ✓</span><span class="btn btn-primary btn-sm" aria-hidden="true">Refer</span></div>
+          <div class="prow"><span class="who"><span class="avatar avatar-sm">RV</span><span class="ellip"><b>Rahul Verma</b><span class="muted">Backend Engineer</span></span></span><span class="muted ellip">Job ✓ · Resume ✓</span><span class="btn btn-primary btn-sm" aria-hidden="true">Refer</span></div>
+          <div class="prow"><span class="who"><span class="avatar avatar-sm">MN</span><span class="ellip"><b>Meera Nair</b><span class="muted">Payments SRE</span></span></span><span class="muted ellip">Job ✓ · Resume ✓</span><span class="badge badge-ok">Referred</span></div>
+        </div>
       </section>
 
+      <div class="steps-grid">
+        <div><span class="step-num">01</span><h3>Share one link</h3><p>Put it on your LinkedIn profile, or reply to referral DMs with it.</p></div>
+        <div><span class="step-num">02</span><h3>Get complete requests</h3><p>Job ID, resume and pitch are required. No more vague DMs.</p></div>
+        <div><span class="step-num">03</span><h3>Answer in one click</h3><p>Refer or decline. The candidate sees it on their own status page.</p></div>
+      </div>
+
+      <!-- How it works: an animated replay of the real flow, built from HTML (no video file) -->
       <section class="section" id="how">
-        <h2 class="section-title">How it works</h2>
-        <ol class="steps">
-          <li><span class="step-n">1</span><div><h3>Share your link</h3><p>Add it to your LinkedIn profile, or reply to referral DMs with it.</p></div></li>
-          <li><span class="step-n">2</span><div><h3>Candidates ask properly</h3><p>Job ID, resume and a short pitch, one question at a time. Nothing goes missing.</p></div></li>
-          <li><span class="step-n">3</span><div><h3>Everyone hears back</h3><p>One tap from you. A clear answer on their own status page.</p></div></li>
-        </ol>
+        <div class="section-head">
+          <h2>See it in 20 seconds</h2>
+          <p>From a LinkedIn DM to a clear answer, without a single back-and-forth.</p>
+        </div>
+        <div class="demo" id="demo">
+          <div class="demo-bar">
+            <div class="demo-steps" role="tablist" aria-label="Demo steps">
+              <button type="button" role="tab" data-go="0"><span><i></i></span>1 · Share</button>
+              <button type="button" role="tab" data-go="1"><span><i></i></span>2 · Ask</button>
+              <button type="button" role="tab" data-go="2"><span><i></i></span>3 · Inbox</button>
+              <button type="button" role="tab" data-go="3"><span><i></i></span>4 · Answer</button>
+            </div>
+            <button class="btn btn-ghost btn-sm demo-replay" type="button" id="demo-toggle">Pause</button>
+          </div>
+          <div class="demo-stage">
+            <!-- Scene 1: share the link -->
+            <div class="scene" data-scene="0">
+              <div class="mock">
+                <div style="display:flex;gap:10px;align-items:center;margin-bottom:12px"><span class="avatar">PS</span><div><strong class="small">Priya Sharma</strong><div class="xs muted">Software Engineer at Google</div></div></div>
+                <p class="small" style="margin:0 0 10px">Want a referral from me? Request it here:</p>
+                <div class="copy-field"><span class="mono xs" style="flex:1;color:var(--accent)" data-type="referlink.app/r/priya-google"></span><span class="btn btn-ink btn-sm" data-flash>Copy</span></div>
+              </div>
+              <p class="scene-caption">Add your link to LinkedIn, or reply to DMs with it.</p>
+            </div>
+            <!-- Scene 2: candidate answers one question at a time -->
+            <div class="scene" data-scene="1">
+              <div class="mock">
+                <div class="xs muted" style="display:flex;justify-content:space-between"><span>Asking Priya Sharma · Google</span><span>Step 3 of 5</span></div>
+                <div class="mock-progress"><i data-grow="60%"></i></div>
+                <h3 style="font-size:1.125rem;letter-spacing:-0.02em;margin-bottom:12px">Which job are you applying for?</h3>
+                <div class="mock-input focus"><span class="mono" data-type="JR-104523"></span><span class="caret"></span></div>
+                <div class="hint">Requests without a job ID usually get ignored.</div>
+                <span class="btn btn-primary btn-block" style="margin-top:14px">Continue</span>
+              </div>
+              <p class="scene-caption">Candidates must include the job, resume and pitch.</p>
+            </div>
+            <!-- Scene 3: it lands in the inbox -->
+            <div class="scene" data-scene="2">
+              <div class="mock" style="padding:6px 16px">
+                <div class="mock-li" data-arrive><span class="avatar avatar-sm">AI</span><span style="flex:1"><strong>Ananya Iyer</strong><span class="muted"> · <span class="mono">JR-104523</span></span></span><span class="badge badge-pending">New</span></div>
+                <div class="mock-li"><span class="avatar avatar-sm">RV</span><span style="flex:1"><strong>Rahul Verma</strong><span class="muted"> · Backend</span></span><span class="badge badge-plain">2h</span></div>
+                <div class="mock-li"><span class="avatar avatar-sm">KM</span><span style="flex:1"><strong>Karan Malhotra</strong><span class="muted"> · Data</span></span><span class="badge badge-plain">1d</span></div>
+              </div>
+              <p class="scene-caption">Every request lands complete, newest first.</p>
+            </div>
+            <!-- Scene 4: one click, the candidate hears back -->
+            <div class="scene" data-scene="3">
+              <div style="display:grid;gap:14px;width:100%;max-width:420px">
+                <div class="mock" style="display:flex;align-items:center;gap:10px;padding:14px 16px"><span class="avatar avatar-sm">AI</span><strong class="small" style="flex:1">Ananya Iyer</strong><span class="btn btn-primary btn-sm" data-pulse>Refer</span></div>
+                <div class="mock" data-reveal style="text-align:center">
+                  <span class="badge badge-ok" style="margin-bottom:8px">Referred</span>
+                  <div style="font-weight:650;letter-spacing:-0.02em">You were referred</div>
+                  <div class="xs muted">Priya referred you at Google</div>
+                </div>
+              </div>
+              <p class="scene-caption">One click. The candidate sees the answer on their status page.</p>
+            </div>
+          </div>
+        </div>
+        <p class="xs muted" style="margin-top:10px">Example names. This is an animation of the real screens, not a video.</p>
       </section>
 
       <section class="section">
-        <h2 class="section-title">Good for both sides</h2>
+        <div class="section-head"><h2>Built for both sides</h2></div>
         <div class="two-col">
-          <div>
-            <h3>If you're the employee</h3>
+          <div class="card">
+            <h3>For employees</h3>
             <ul>
-              <li>A private inbox for requests. No account.</li>
-              <li>Every request has the job, resume and pitch.</li>
-              <li>Decline kindly in one tap. We word it gently.</li>
+              <li><svg class="icon"><use href="#i-check"/></svg>A private inbox for referral requests. No account.</li>
+              <li><svg class="icon"><use href="#i-check"/></svg>Quick checks on every request: job link, resume, LinkedIn.</li>
+              <li><svg class="icon"><use href="#i-check"/></svg>Decline politely in one click. We send the kind wording.</li>
             </ul>
           </div>
-          <div>
-            <h3>If you're asking</h3>
+          <div class="card">
+            <h3>For candidates</h3>
             <ul>
-              <li>A short form that gets your request read.</li>
-              <li>Your own page with the answer. No more guessing.</li>
-              <li>Delete your details any time.</li>
+              <li><svg class="icon"><use href="#i-check"/></svg>A short form, one question at a time.</li>
+              <li><svg class="icon"><use href="#i-check"/></svg>Your own status page with the answer.</li>
+              <li><svg class="icon"><use href="#i-check"/></svg>Delete your details any time.</li>
             </ul>
           </div>
         </div>
-      </section>
-
-      <section class="section">
-        <h2 class="section-title">Your data, handled with care</h2>
-        <p class="muted" style="margin:0">No passwords. You get private links that can't be guessed. A candidate's details are shown only to the person they asked. <a href="/privacy">Read how we handle data</a>.</p>
       </section>
 
       <section class="closing">
-        <h2 class="section-title">Ready when your next DM arrives.</h2>
-        <p class="muted">Create your link in about a minute. It's free.</p>
+        <div>
+          <h2>Ready when your next DM arrives.</h2>
+          <p>Create your link in about a minute. <a href="/privacy">How we handle data</a></p>
+        </div>
         <a class="btn btn-primary btn-lg" href="/create">Create your link <svg class="icon"><use href="#i-arrow"/></svg></a>
       </section>
     </div>

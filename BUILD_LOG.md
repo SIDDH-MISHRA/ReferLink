@@ -1,0 +1,96 @@
+# ReferLink Build Log
+
+One entry per real decision or problem. Newest at the bottom.
+
+---
+
+## 2026-10-24 · Build without asking employees first
+- Decision: Build ReferLink as a side project. Don't check with employees before building.
+- Why: Siddh chose to build first and test demand at launch.
+- Who: Siddh (Claude flagged the risk)
+- Evidence: None yet. No employee has agreed to use it.
+- Result: "Employees may not adopt it" is the #1 risk in the PRD. The launch plan has to cover it.
+
+## 2026-10-24 · No AI on day 1
+- Decision: Don't add AI summaries, ratings or rankings to the MVP. Move them to the top of the Later list.
+- Why: The AI could only read 300 characters, since resumes are Drive links and LinkedIn can't be scraped. Ranking people's careers with AI is a fairness risk. It would also need a server, a paid API and 2–3 more hours.
+- Who: Together (Siddh proposed AI, Claude argued against it, Siddh agreed)
+- Evidence: None yet. Revisit in Step 8 if the data shows employees struggling with large queues.
+- Result: Pending
+
+## 2026-10-24 · Strict form instead of "Need more info"
+- Decision: Drop the "Need more info" status. Check required fields on the form before submitting. Show a rule-based quality line on each request. Add "Resume link didn't open" as a decline reason.
+- Why: Siddh's insight was that busy employees won't chase candidates for missing details, so gaps should be fixed by the candidate before submitting.
+- Who: Together (Siddh found the problem, Claude proposed the fix)
+- Evidence: None yet
+- Result: Two outcomes only: Referred ✓ or Not this time.
+
+## 2026-10-24 · No email in the MVP
+- Decision: No email service. A "Save your link" screen shows copy and "Email this link to myself" buttons. The email button opens the user's own mail app.
+- Why: It keeps the build to one day with one less tool. The tradeoff is that employees get no alert for new requests and can't recover a lost dashboard link.
+- Who: Siddh (picked option a)
+- Evidence: None yet. Watch how quickly requests get a decision.
+- Result: Pending
+
+## 2026-10-24 · Candidates see the decline reason
+- Decision: Show the decline reason on the status page in soft wording.
+- Why: It closes the loop and teaches candidates to send better requests.
+- Who: Together
+- Evidence: None yet
+- Result: Pending
+
+## 2026-10-24 · Setup defaults
+- Decision: Private GitHub repo, hosted on Vercel's free subdomain. Readable public link (`/r/name-company-x7k2`). Long random tokens for the dashboard and status links. Limit of 20 requests per board per hour.
+- Why: The public link only lets people submit a request, so a readable link is safe. Private links must be impossible to guess.
+- Who: Claude proposed, Siddh accepted
+- Evidence: None yet
+- Result: Pending
+
+## 2026-10-24 · PRD approved; overnight build delegated
+- Decision: Siddh approved the PRD and asked Claude to write the plan and build locally overnight, making the build decisions on Siddh's behalf.
+- Why: Saves a day. Siddh reviews everything in the morning before anything goes live.
+- Who: Siddh
+- Evidence: None
+- Result: The plan approval checkpoint was skipped. The entries below marked "Claude (overnight)" need Siddh's review.
+
+## 2026-10-24 · Test locally with a real Postgres, no accounts
+- Decision: Run Postgres inside Node (PGlite) for local testing, loading the same `schema.sql` that goes live.
+- Why: We could build and test everything before any accounts existed, with no Docker.
+- Who: Claude (overnight)
+- Evidence: 11 of 11 automated database tests pass (`cd dev && npm test`).
+- Result: Every security rule is checked by a test, e.g. that the browser key can't read the tables directly and that one board's secret can't touch another board.
+
+## 2026-10-24 · Store fingerprints, not tokens
+- Decision: The database stores a SHA-256 fingerprint of each secret link, never the link itself.
+- Why: If the database ever leaked, the stored values couldn't be turned back into working links. This is the same idea as password hashing.
+- Who: Claude (overnight)
+- Evidence: Tested. The stored value never equals the token.
+- Result: Done
+
+## 2026-10-24 · "Delete my request" wipes personal data, keeps an anonymous row
+- Decision: Deleting clears the name, email, links and message, but keeps the board, status and dates.
+- Why: The candidate's data is gone, but deleted requests don't silently vanish from the North Star. The PRD has been updated to match.
+- Who: Claude (overnight)
+- Evidence: Tested. After a delete, all personal fields are empty and the status link stops working.
+- Result: Done
+
+## 2026-10-24 · Extra form rules
+- Decision: "Why you fit" must be 20–300 characters. A job ID must contain at least one number. The site allows at most 50 new boards an hour.
+- Why: This blocks "pls refer" requests and junk job IDs like "SDE", and stops someone flooding the site with boards.
+- Who: Claude (overnight)
+- Evidence: None yet. Watch `request_form_blocked` to see if these rules block real candidates.
+- Result: Pending
+
+## 2026-10-24 · Analytics carries no personal data
+- Decision: PostHog gets only the events we name. There's no autocapture, no session recording and no names or emails, and secret tokens are scrubbed from URLs.
+- Why: It handles career data, so trust matters more than extra analytics.
+- Who: Claude (overnight)
+- Evidence: Browser test. The dashboard event logged its URL as `/d/[token]`.
+- Result: Done
+
+## 2026-10-24 · Local end-to-end test
+- Decision: Tested every flow in the browser at desktop and phone width (375px): create board → submit request → dashboard decisions → status page → delete.
+- Why: To catch problems before deploying.
+- Who: Claude (overnight)
+- Evidence: All flows worked. A `<img onerror>` injection test in "Why you fit" showed as plain text. No page scrolled sideways on a phone.
+- Result: Fixed 3 small issues: filter tabs touching the card above, unclear wording ("their recruiting team" → "Google's recruiting team"), and a confusing message when copying fails.

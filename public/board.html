@@ -1,0 +1,141 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="referrer" content="no-referrer">
+  <meta name="robots" content="noindex">
+  <title>Request a referral · ReferLink</title>
+  <meta name="description" content="Send a complete referral request and see the answer on your own status page.">
+  <meta property="og:title" content="Request a referral from me">
+  <meta property="og:description" content="Send your job link, resume and why you fit. You'll see my answer on your own status page.">
+  <meta property="og:image" content="/og.png">
+  <meta property="og:type" content="website">
+  <meta name="twitter:card" content="summary_large_image">
+  <link rel="icon" href="/favicon.svg" type="image/svg+xml">
+  <link rel="stylesheet" href="/css/style.css">
+  <script src="/js/config.js" defer></script>
+  <script src="/js/app.js" defer></script>
+  <script src="/js/board.js" defer></script>
+</head>
+<body>
+  <header class="site-header">
+    <div class="wrap">
+      <a class="logo" href="/"><svg class="logo-mark" viewBox="0 0 32 32" aria-hidden="true"><rect width="32" height="32" rx="8" fill="#1d4ed8"/><path d="M9.5 16.5l4.5 4.5 8.5-10" fill="none" stroke="#fff" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/></svg>ReferLink</a>
+    </div>
+  </header>
+
+  <main>
+    <div class="wrap">
+      <div id="loading" class="loading"><div class="spinner"></div>Loading…</div>
+
+      <section id="not-found" class="card center hidden">
+        <h1>This link doesn't work</h1>
+        <p class="muted">Check the link with the person who shared it. It may have a typo.</p>
+        <a href="/">Go to ReferLink</a>
+      </section>
+
+      <section id="load-error" class="card center hidden">
+        <h1>Couldn't load this page</h1>
+        <p class="muted" id="load-error-text"></p>
+        <button class="btn btn-secondary" type="button" onclick="location.reload()">Try again</button>
+      </section>
+
+      <!-- The request form -->
+      <section id="form-view" class="hidden stack">
+        <div class="card">
+          <div class="person">
+            <div class="avatar" id="avatar" aria-hidden="true"></div>
+            <div>
+              <h1 id="employee-name"></h1>
+              <div class="muted" id="employee-company"></div>
+            </div>
+          </div>
+          <p class="small" id="refers-for" style="margin:14px 0 0"></p>
+          <p class="note hidden" id="employee-note"></p>
+          <p class="small" style="margin:12px 0 0"><span id="employee-linkedin"></span></p>
+        </div>
+
+        <form id="request-form" class="card" novalidate>
+          <h2>Request a referral</h2>
+          <p class="muted small">Complete requests get answers. Every field is needed.</p>
+          <div id="form-error" class="form-error hidden" role="alert"></div>
+
+          <div class="field">
+            <label for="name">Your full name</label>
+            <input id="name" type="text" autocomplete="name" maxlength="80" required>
+          </div>
+
+          <div class="field">
+            <label for="email">Your email</label>
+            <input id="email" type="email" inputmode="email" autocomplete="email" maxlength="254" required>
+            <div class="hint">Employees need it to fill the referral form.</div>
+          </div>
+
+          <div class="field">
+            <label for="linkedin">Your LinkedIn profile URL</label>
+            <input id="linkedin" type="url" inputmode="url" placeholder="linkedin.com/in/your-name" required>
+          </div>
+
+          <div class="field">
+            <label for="job_ref">Job link or job ID</label>
+            <input id="job_ref" type="text" placeholder="Paste the job link, or an ID like JR-104523" maxlength="500" required>
+            <div class="hint">No job ID? Find it on the job posting. Requests without one usually get ignored.</div>
+          </div>
+
+          <div class="field">
+            <label for="resume">Resume link</label>
+            <input id="resume" type="url" inputmode="url" placeholder="Google Drive, Dropbox or similar" required>
+            <div class="hint">Set sharing to "Anyone with the link", or it won't open.</div>
+          </div>
+
+          <div class="field">
+            <label for="why">Why you fit</label>
+            <textarea id="why" maxlength="300" placeholder="e.g. 3 years building payment APIs in Java. This role needs the same stack." required></textarea>
+            <div class="counter" id="why-counter">0 / 300</div>
+          </div>
+
+          <div class="field">
+            <label class="check">
+              <input id="consent" type="checkbox" required>
+              <span>I agree to share these details with <strong class="employee-first"></strong> only. <a href="/privacy" target="_blank" rel="noopener">How we handle data</a></span>
+            </label>
+          </div>
+
+          <div class="honeypot" aria-hidden="true">
+            <label for="website">Website</label>
+            <input id="website" type="text" tabindex="-1" autocomplete="off">
+          </div>
+
+          <button class="btn btn-primary btn-block" type="submit">Send request</button>
+        </form>
+      </section>
+
+      <!-- After sending -->
+      <section id="done-view" class="hidden stack">
+        <div class="card">
+          <div class="status-big status-referred">
+            <div class="status-icon" aria-hidden="true">✓</div>
+            <h1>Request sent</h1>
+            <p class="muted"><span class="employee-first"></span> will see it in their referral inbox.</p>
+          </div>
+        </div>
+
+        <div class="card">
+          <h2>Save your status link</h2>
+          <p class="muted">It's the only way to see the answer. We don't send emails.</p>
+          <div class="linkbox">
+            <input id="status-link" type="text" readonly aria-label="Your status link">
+            <button id="copy-status" class="btn btn-secondary btn-sm" type="button">Copy</button>
+          </div>
+          <a id="email-status" class="btn btn-secondary btn-block" style="margin-top:10px" href="#">Email this link to myself</a>
+        </div>
+
+        <a id="open-status" class="btn btn-primary btn-block" href="#">Open my status page</a>
+      </section>
+    </div>
+  </main>
+
+  <footer class="site-footer"><a href="/privacy">Privacy</a> · <a href="/">Get your own ReferLink</a></footer>
+</body>
+</html>

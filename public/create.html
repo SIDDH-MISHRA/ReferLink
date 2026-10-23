@@ -1,0 +1,108 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="referrer" content="no-referrer">
+  <title>Create your referral link · ReferLink</title>
+  <meta name="description" content="Create your personal referral inbox in under a minute.">
+  <link rel="icon" href="/favicon.svg" type="image/svg+xml">
+  <link rel="stylesheet" href="/css/style.css">
+  <script src="/js/config.js" defer></script>
+  <script src="/js/app.js" defer></script>
+  <script src="/js/create.js" defer></script>
+</head>
+<body>
+  <header class="site-header">
+    <div class="wrap">
+      <a class="logo" href="/"><svg class="logo-mark" viewBox="0 0 32 32" aria-hidden="true"><rect width="32" height="32" rx="8" fill="#1d4ed8"/><path d="M9.5 16.5l4.5 4.5 8.5-10" fill="none" stroke="#fff" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/></svg>ReferLink</a>
+    </div>
+  </header>
+
+  <main>
+    <div class="wrap">
+      <!-- Step 1: the form -->
+      <section id="form-view">
+        <h1>Create your referral link</h1>
+        <p class="muted">Candidates will see your name, company and note.</p>
+
+        <form id="create-form" class="card" novalidate>
+          <div id="form-error" class="form-error hidden" role="alert"></div>
+
+          <div class="field">
+            <label for="name">Your full name</label>
+            <input id="name" name="name" type="text" autocomplete="name" maxlength="80" required>
+          </div>
+
+          <div class="field">
+            <label for="company">Company you work at</label>
+            <input id="company" name="company" type="text" autocomplete="organization" maxlength="80" required>
+          </div>
+
+          <div class="field">
+            <label for="linkedin">Your LinkedIn profile URL</label>
+            <input id="linkedin" name="linkedin" type="url" inputmode="url" autocomplete="url" placeholder="linkedin.com/in/your-name" required>
+            <div class="hint">Shown to candidates so they know the link is really yours.</div>
+          </div>
+
+          <div class="field">
+            <label for="refers_for">Teams or roles you refer for <span class="optional">(optional)</span></label>
+            <input id="refers_for" name="refers_for" type="text" maxlength="200" placeholder="e.g. Backend, Data, Product">
+          </div>
+
+          <div class="field">
+            <label for="note">A short note for candidates <span class="optional">(optional)</span></label>
+            <textarea id="note" name="note" maxlength="200" placeholder="e.g. I only refer for engineering roles in Bengaluru."></textarea>
+            <div class="counter" id="note-counter">0 / 200</div>
+          </div>
+
+          <div class="honeypot" aria-hidden="true">
+            <label for="website">Website</label>
+            <input id="website" name="website" type="text" tabindex="-1" autocomplete="off">
+          </div>
+
+          <button class="btn btn-primary btn-block" type="submit">Create my link</button>
+          <p class="small muted center" style="margin:12px 0 0">No sign-up. You'll get a private link to manage requests.</p>
+        </form>
+      </section>
+
+      <!-- Step 2: save your links -->
+      <section id="done-view" class="hidden stack">
+        <div>
+          <h1>Your links are ready</h1>
+          <p class="muted" style="margin:0">Two links: one to share, one to keep private.</p>
+        </div>
+
+        <div class="card">
+          <h2>1. Share your public link</h2>
+          <p class="muted">Put it on your LinkedIn profile (About or Featured), or reply to referral DMs with it.</p>
+          <div class="linkbox">
+            <input id="public-link" type="text" readonly aria-label="Your public link">
+            <button id="copy-public" class="btn btn-secondary btn-sm" type="button">Copy</button>
+          </div>
+          <p class="small muted" style="margin:16px 0 6px">Ready-made line for LinkedIn:</p>
+          <div id="linkedin-line" class="why"></div>
+          <button id="copy-line" class="btn btn-secondary btn-sm" type="button">Copy LinkedIn text</button>
+        </div>
+
+        <div class="card">
+          <h2>2. Save your private dashboard link</h2>
+          <div class="alert alert-warn" style="margin-bottom:12px">
+            <strong>Anyone with this link can manage your requests. Keep it private.</strong>
+            There's no password, so we can't recover it if you lose it.
+          </div>
+          <div class="linkbox">
+            <input id="dashboard-link" type="text" readonly aria-label="Your private dashboard link">
+            <button id="copy-dashboard" class="btn btn-secondary btn-sm" type="button">Copy</button>
+          </div>
+          <a id="email-dashboard" class="btn btn-secondary btn-block" style="margin-top:10px" href="#">Email this link to myself</a>
+        </div>
+
+        <a id="open-dashboard" class="btn btn-primary btn-block" href="#">Open my dashboard</a>
+      </section>
+    </div>
+  </main>
+
+  <footer class="site-footer"><a href="/privacy">Privacy</a> · Made by Siddh Mishra</footer>
+</body>
+</html>

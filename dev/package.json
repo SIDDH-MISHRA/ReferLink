@@ -1,0 +1,13 @@
+{
+  "name": "referlink-dev",
+  "private": true,
+  "description": "Local test server for ReferLink. Not deployed.",
+  "type": "module",
+  "scripts": {
+    "start": "node server.js",
+    "test": "node --test test.js"
+  },
+  "devDependencies": {
+    "@electric-sql/pglite": "^0.5.11"
+  }
+}

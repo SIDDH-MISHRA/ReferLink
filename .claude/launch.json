@@ -1,0 +1,11 @@
+{
+  "version": "0.0.1",
+  "configurations": [
+    {
+      "name": "referlink-dev",
+      "runtimeExecutable": "node",
+      "runtimeArgs": ["C:/Users/Siddh/Documents/ReferLink/dev/server.js"],
+      "port": 3000
+    }
+  ]
+}

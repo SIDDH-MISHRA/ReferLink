@@ -1,0 +1,83 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="referrer" content="no-referrer">
+  <meta name="robots" content="noindex, nofollow">
+  <title>Your referral request · ReferLink</title>
+  <link rel="icon" href="/favicon.svg" type="image/svg+xml">
+  <link rel="stylesheet" href="/css/style.css">
+  <script src="/js/config.js" defer></script>
+  <script src="/js/app.js" defer></script>
+  <script src="/js/status.js" defer></script>
+</head>
+<body>
+  <header class="site-header">
+    <div class="wrap">
+      <a class="logo" href="/"><svg class="logo-mark" viewBox="0 0 32 32" aria-hidden="true"><rect width="32" height="32" rx="8" fill="#1d4ed8"/><path d="M9.5 16.5l4.5 4.5 8.5-10" fill="none" stroke="#fff" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/></svg>ReferLink</a>
+    </div>
+  </header>
+
+  <main>
+    <div class="wrap">
+      <div id="loading" class="loading"><div class="spinner"></div>Checking your request…</div>
+
+      <section id="not-found" class="card center hidden">
+        <h1>This status link doesn't work</h1>
+        <p class="muted">Check that you copied the whole link. If you deleted this request, it's gone for good.</p>
+      </section>
+
+      <section id="load-error" class="card center hidden">
+        <h1>Couldn't load your status</h1>
+        <p class="muted" id="load-error-text"></p>
+        <button class="btn btn-secondary" type="button" onclick="location.reload()">Try again</button>
+      </section>
+
+      <section id="deleted" class="card center hidden">
+        <h1>Request deleted</h1>
+        <p class="muted">Your name, email, links and message have been removed.</p>
+        <a href="/">Go to ReferLink</a>
+      </section>
+
+      <section id="app" class="hidden stack">
+        <div class="card">
+          <div id="status-box" class="status-big">
+            <div class="status-icon" id="status-icon" aria-hidden="true"></div>
+            <h1 id="status-title"></h1>
+            <p class="muted" id="status-text" style="margin:0"></p>
+            <a id="retry" class="btn btn-primary hidden" style="margin-top:16px" href="#">Fix my link and request again</a>
+          </div>
+        </div>
+
+        <div class="card">
+          <h2>Your request</h2>
+          <dl class="facts" style="margin:0">
+            <dt>To</dt><dd id="to"></dd>
+            <dt>Job</dt><dd id="job"></dd>
+            <dt>Sent</dt><dd id="sent"></dd>
+            <dt class="decided-row hidden">Answered</dt><dd class="decided-row hidden" id="answered"></dd>
+          </dl>
+        </div>
+
+        <div class="card">
+          <h2>Keep this link</h2>
+          <p class="muted small">This page is the only place to see the answer. We don't send emails.</p>
+          <div class="linkbox">
+            <input id="status-link" type="text" readonly aria-label="Your status link">
+            <button id="copy-status" class="btn btn-secondary btn-sm" type="button">Copy</button>
+          </div>
+          <a id="email-status" class="btn btn-secondary btn-block" style="margin-top:10px" href="#">Email this link to myself</a>
+        </div>
+
+        <div class="center">
+          <button id="delete" class="btn-danger-link" type="button">Delete my request</button>
+          <p class="small muted" style="margin:0">Removes your name, email, links and message for good.</p>
+        </div>
+      </section>
+    </div>
+  </main>
+
+  <footer class="site-footer"><a href="/privacy">Privacy</a> · <a href="/">ReferLink</a></footer>
+</body>
+</html>

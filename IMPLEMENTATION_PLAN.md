@@ -102,6 +102,7 @@ Anti-spam checks inside the functions:
 | `request_submitted` | Request saved | `board_id`, `job_ref_type` (link / id) |
 | `dashboard_viewed` | Dashboard opens | `board_id`, `pending_count`, `total_count` |
 | `decision_made` | Referred or Declined | `board_id`, `type`, `reason`, `hours_to_decision`, `is_first_decision` |
+| `home_inbox_opened` | A remembered employee clicks their live inbox on the homepage | `board_id`, `pending_count` |
 | `status_page_viewed` | Status page opens | `status` |
 
 `board_id` is a random ID, not a name. It lets us group events by board without identifying anyone.

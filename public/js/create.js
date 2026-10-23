@@ -1,6 +1,6 @@
 // /create: the employee creates a board, then saves their two links.
 (function () {
-  const { rpc, track, check, withHttps, setFieldError, bindCopy, mailtoHref, errorText } = window.RL;
+  const { rpc, track, check, withHttps, setFieldError, bindCopy, mailtoHref, errorText, savedDashboard } = window.RL;
   const $ = (id) => document.getElementById(id);
 
   const form = $('create-form');
@@ -109,6 +109,15 @@
       '\n\nMy public link to share:\n' + publicLink
     );
     email.addEventListener('click', markSaved);
+
+    // Remember this dashboard in this browser (default on), so the homepage shows it.
+    const remember = $('remember');
+    const saveChoice = () => {
+      if (remember.checked) savedDashboard.set({ token: res.dashboard_token, slug: res.slug });
+      else savedDashboard.clear();
+    };
+    remember.addEventListener('change', saveChoice);
+    saveChoice();
 
     const open = $('open-dashboard');
     open.href = dashboardLink;

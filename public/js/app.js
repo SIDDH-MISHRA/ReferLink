@@ -333,13 +333,122 @@
     });
   }
 
+  // ---------------------------------------------------------------------------
+  // Remembered dashboard: if the employee ticks "Remember on this device", their
+  // private dashboard link is kept in this browser so the homepage can show their
+  // inbox. Nothing leaves the browser; "Forget this device" removes it.
+  // ---------------------------------------------------------------------------
+  const KEY = 'rl-dashboard';
+  const savedDashboard = {
+    get() { try { return JSON.parse(localStorage.getItem(KEY) || 'null'); } catch (e) { return null; } },
+    set(v) { try { localStorage.setItem(KEY, JSON.stringify(v)); } catch (e) { /* storage blocked */ } },
+    clear() { try { localStorage.removeItem(KEY); } catch (e) { /* storage blocked */ } },
+  };
+
+  // ---------------------------------------------------------------------------
+  // Motion. All of it does nothing for people who prefer reduced motion.
+  // ---------------------------------------------------------------------------
+  const calm = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+  // Give every page the same hover behaviour: cards glow, feature cards also lift,
+  // and a soft light follows the cursor inside them.
+  function decorate(root) {
+    (root || document).querySelectorAll('.steps-grid > div, .two-col .card, .closing').forEach((el) => el.classList.add('lift', 'spot'));
+    (root || document).querySelectorAll('.card, .table, .asking, .video-frame').forEach((el) => {
+      if (!el.classList.contains('lift')) el.classList.add('glowable');
+      if (!el.classList.contains('video-frame')) el.classList.add('spot');
+    });
+  }
+  function initSpotlight() {
+    document.addEventListener('pointermove', (e) => {
+      const el = e.target.closest && e.target.closest('.spot');
+      if (!el) return;
+      const r = el.getBoundingClientRect();
+      el.style.setProperty('--mx', (e.clientX - r.left) + 'px');
+      el.style.setProperty('--my', (e.clientY - r.top) + 'px');
+    }, { passive: true });
+  }
+
+  // Text effect: split a heading into words that blur and rise in.
+  // Child elements (like a rolling word) move as one piece.
+  function textEffect(el) {
+    if (calm) return;
+    let i = 0;
+    el.setAttribute('aria-label', el.textContent.replace(/\s+/g, ' ').trim());
+    Array.from(el.childNodes).forEach((node) => {
+      if (node.nodeType === Node.TEXT_NODE) {
+        const frag = document.createDocumentFragment();
+        node.textContent.split(/(\s+)/).forEach((part) => {
+          if (!part) return;
+          if (/^\s+$/.test(part)) return frag.append(part);
+          const w = h('span', { class: 'te-word', 'aria-hidden': 'true' }, part);
+          w.style.setProperty('--i', i++);
+          frag.append(w);
+        });
+        node.replaceWith(frag);
+      } else if (node.nodeType === Node.ELEMENT_NODE) {
+        node.classList.add('te-word');
+        node.setAttribute('aria-hidden', 'true');
+        node.style.setProperty('--i', i++);
+      }
+    });
+  }
+
+  // Text loop: cycles through the words inside the element.
+  function textLoop(el) {
+    const words = Array.from(el.children);
+    if (!words.length) return;
+    let n = 0;
+    words[0].classList.add('on');
+    if (calm || words.length < 2) return;
+    setInterval(() => {
+      const cur = words[n];
+      n = (n + 1) % words.length;
+      cur.classList.remove('on');
+      cur.classList.add('out');
+      setTimeout(() => cur.classList.remove('out'), 600);
+      words[n].classList.add('on');
+    }, 2600);
+  }
+
+  // Sliding number: each digit rolls into place.
+  function slideNumber(el, value) {
+    const digits = String(value).split('');
+    el.setAttribute('aria-label', String(value));
+    if (calm) { el.textContent = String(value); return; }
+    if (!el.classList.contains('sn') || el.children.length !== digits.length) {
+      el.classList.add('sn');
+      el.replaceChildren(...digits.map(() => {
+        const col = h('span', { class: 'sn-col', 'aria-hidden': 'true' });
+        for (let d = 0; d <= 9; d++) col.append(h('span', null, String(d)));
+        return col;
+      }));
+      el.offsetHeight; // start from 0 so the first value rolls too
+    }
+    Array.from(el.children).forEach((col, i) => { col.style.transform = 'translateY(' + (-Number(digits[i]) * 1.25) + 'em)'; });
+  }
+
+  // Section headings rise in the first time they scroll into view.
+  function revealSections() {
+    if (calm || !('IntersectionObserver' in window)) return;
+    const io = new IntersectionObserver((entries) => entries.forEach((e) => {
+      if (e.isIntersecting) { e.target.classList.add('seen'); io.unobserve(e.target); }
+    }), { rootMargin: '0px 0px -15% 0px' });
+    document.querySelectorAll('.section').forEach((s) => io.observe(s));
+  }
+
   injectSprite();
   initThemeToggle();
+  decorate();
+  initSpotlight();
+  document.querySelectorAll('[data-text-effect]').forEach(textEffect);
+  document.querySelectorAll('.text-loop').forEach(textLoop);
+  revealSections();
   initAnalytics();
 
   window.RL = {
     cfg, rpc, errorText, track, events, check, withHttps, setFieldError,
-    h, icon, avatar, roleChips, safeLink, copyText, bindCopy, mailtoHref, toast, timeAgo, formatDate, pathParam, initials,
+    h, icon, avatar, roleChips, safeLink, copyText, decorate, slideNumber, savedDashboard, bindCopy, mailtoHref, toast, timeAgo, formatDate, pathParam, initials,
     DECLINE_REASONS,
   };
 })();

@@ -1,0 +1,236 @@
+<!doctype html>
+<html lang="en" >
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=1440, height=810" />
+    <script src="https://cdn.jsdelivr.net/npm/gsap@3.14.2/dist/gsap.min.js"></script>
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@500;600&display=block" />
+    <style>
+      /* ReferLink "how it works" film: Ledger look (white, slate ink, one indigo accent). */
+      :root {
+        --ground: #ffffff;
+        --subtle: #f8fafc;
+        --ink: #0f172a;
+        --ink-2: #475569;
+        --ink-3: #64748b;
+        --line: #e8ebef;
+        --line-2: #d6dbe1;
+        --accent: #4338ca;
+        --accent-soft: #eef2ff;
+        --ok: #047857;
+        --ok-soft: #d1fae5;
+        --pend: #b45309;
+        --pend-soft: #fef3c7;
+        --font-display: "Inter", system-ui, sans-serif;
+        --mono: "JetBrains Mono", ui-monospace, monospace;
+      }
+      * { margin: 0; padding: 0; box-sizing: border-box; }
+      html, body { width: 1440px; height: 810px; overflow: hidden; background: var(--ground); }
+      #root { position: relative; width: 100%; height: 100%; font-family: var(--font-display); color: var(--ink); -webkit-font-smoothing: antialiased; }
+      .clip { position: absolute; inset: 0; display: flex; flex-direction: column; align-items: center; justify-content: center; padding: 50px 90px; }
+
+      /* Shared pieces */
+      .step-label { font: 600 28px var(--mono); letter-spacing: 0.06em; text-transform: uppercase; color: var(--accent); margin-bottom: 22px; }
+      .headline { font-size: 64px; font-weight: 700; letter-spacing: -0.045em; line-height: 1.05; text-align: center; }
+      .sub { font-size: 30px; color: var(--ink-2); text-align: center; margin-top: 22px; line-height: 1.4; }
+      .card { background: #fff; border: 2px solid var(--line); border-radius: 22px; box-shadow: 0 2px 4px rgba(15, 23, 42, 0.04), 0 40px 80px -40px rgba(15, 23, 42, 0.35); }
+      .avatar { width: 64px; height: 64px; border-radius: 50%; background: var(--accent-soft); color: var(--accent); display: grid; place-items: center; font-weight: 600; font-size: 28px; flex: none; }
+      .btn { display: inline-flex; align-items: center; justify-content: center; height: 68px; padding: 0 30px; border-radius: 14px; font-weight: 600; font-size: 28px; }
+      .btn-primary { background: var(--accent); color: #fff; }
+      .btn-ink { background: var(--ink); color: #fff; }
+      .btn-line { border: 2px solid var(--line-2); color: var(--ink); background: #fff; }
+      .badge { display: inline-flex; align-items: center; height: 46px; padding: 0 16px; border-radius: 10px; font-weight: 600; font-size: 28px; }
+      .badge-pend { background: var(--pend-soft); color: var(--pend); }
+      .badge-ok { background: var(--ok-soft); color: var(--ok); }
+      .type { display: inline-block; overflow: hidden; white-space: nowrap; vertical-align: bottom; width: 0ch; font-family: var(--mono); }
+      .caret { display: inline-block; width: 3px; height: 34px; background: var(--ink); vertical-align: middle; margin-left: 2px; }
+
+      /* 1 · Hook: messy DMs */
+      .dms { display: flex; flex-direction: column; gap: 18px; width: 760px; margin-top: 50px; }
+      .dm { align-self: flex-start; padding: 20px 26px; border-radius: 22px 22px 22px 6px; background: var(--subtle); border: 2px solid var(--line); font-size: 30px; color: var(--ink-2); }
+      .dm:nth-child(even) { align-self: flex-end; border-radius: 22px 22px 6px 22px; }
+
+      /* 2 · Logo */
+      .logo { display: flex; align-items: center; gap: 22px; font-size: 76px; font-weight: 700; letter-spacing: -0.04em; }
+      .logo-mark { width: 92px; height: 92px; border-radius: 22px; background: var(--ink); display: grid; place-items: center; }
+      .logo-mark svg { width: 50px; height: 50px; stroke: #fff; fill: none; stroke-width: 3; stroke-linecap: round; stroke-linejoin: round; }
+
+      /* 3 · Share */
+      .share { width: 820px; padding: 40px; }
+      .who { display: flex; align-items: center; gap: 18px; margin-bottom: 26px; }
+      .who b { font-size: 30px; display: block; }
+      .who span { font-size: 28px; color: var(--ink-3); }
+      .linkbox { display: flex; align-items: center; gap: 16px; padding: 12px 12px 12px 26px; border-radius: 16px; background: var(--subtle); border: 2px solid var(--line); }
+      .linkbox .url { flex: 1; font: 600 30px var(--mono); color: var(--accent); }
+
+      /* 4 · Ask */
+      .ask { width: 820px; padding: 44px; }
+      .meta { display: flex; justify-content: space-between; font-size: 28px; color: var(--ink-3); }
+      .bar { height: 8px; border-radius: 4px; background: var(--line); margin: 18px 0 34px; overflow: hidden; }
+      .bar i { display: block; height: 100%; width: 40%; background: var(--accent); }
+      .q { font-size: 44px; font-weight: 700; letter-spacing: -0.035em; margin-bottom: 26px; }
+      .input { height: 84px; border: 2px solid var(--accent); box-shadow: 0 0 0 6px rgba(67, 56, 202, 0.15); border-radius: 16px; display: flex; align-items: center; padding: 0 26px; font-size: 34px; }
+      .hint { font-size: 28px; color: var(--ink-3); margin-top: 14px; }
+
+      /* 5 · Inbox */
+      .inbox { width: 860px; overflow: hidden; }
+      .inbox-head { display: flex; align-items: center; gap: 14px; padding: 24px 30px; border-bottom: 2px solid var(--line); font-size: 30px; font-weight: 600; }
+      .row { display: flex; align-items: center; gap: 18px; padding: 22px 30px; border-bottom: 2px solid var(--line); font-size: 30px; }
+      .row:last-child { border-bottom: 0; }
+      .row .name { flex: 1; }
+      .row .name b { display: block; }
+      .row .name span { font-size: 28px; color: var(--ink-3); }
+
+      /* 6 · Answer */
+      .answer { display: flex; flex-direction: column; gap: 28px; width: 820px; }
+      .req { display: flex; align-items: center; gap: 18px; padding: 26px 30px; }
+      .req b { flex: 1; font-size: 30px; }
+      .result { padding: 44px; text-align: center; }
+      .result .check { width: 84px; height: 84px; border-radius: 50%; background: var(--ok-soft); display: grid; place-items: center; margin: 0 auto 22px; }
+      .result .check svg { width: 44px; height: 44px; stroke: var(--ok); fill: none; stroke-width: 3; stroke-linecap: round; stroke-linejoin: round; }
+      .result h3 { font-size: 46px; letter-spacing: -0.035em; }
+      .result p { font-size: 30px; color: var(--ink-3); margin-top: 8px; }
+      .cursor { position: absolute; width: 44px; height: 44px; }
+
+      /* 7 · End card */
+      .end .logo { font-size: 64px; }
+      .end .logo-mark { width: 78px; height: 78px; border-radius: 18px; }
+      .end .logo-mark svg { width: 42px; height: 42px; }
+      .pills { display: flex; gap: 14px; margin-top: 30px; }
+      .pill { padding: 12px 22px; border-radius: 999px; background: var(--subtle); border: 2px solid var(--line); font-size: 28px; color: var(--ink-2); }
+    </style>
+  </head>
+  <body>
+    <div id="root" data-composition-id="main" data-start="0" data-duration="29" data-width="1440" data-height="810">
+
+      <!-- 1 · Hook (0–3.6s) -->
+      <section id="s1" class="clip" data-start="0" data-duration="3.6" data-track-index="0">
+        <div class="headline" id="s1-title">Drowning in referral DMs?</div>
+        <div class="dms">
+          <div class="dm">hey, can u refer me? 🙏</div>
+          <div class="dm">any openings at your company??</div>
+          <div class="dm">pls refer, resume attached somewhere</div>
+          <div class="dm">can you refer me for any role?</div>
+        </div>
+      </section>
+
+      <!-- 2 · Logo (3.6–7s) -->
+      <section id="s2" class="clip" data-start="3.6" data-duration="3.4" data-track-index="0">
+        <div class="logo" id="s2-logo"><span class="logo-mark"><svg viewBox="0 0 24 24"><path d="M20 6 9 17l-5-5"/></svg></span>ReferLink</div>
+        <div class="sub" id="s2-sub">Every referral request in one inbox.</div>
+      </section>
+
+      <!-- 3 · Share (7–11.5s) -->
+      <section id="s3" class="clip" data-start="7" data-duration="4.5" data-track-index="0">
+        <div class="step-label" id="s3-label">1 · Share one link</div>
+        <div class="card share" id="s3-card">
+          <div class="who"><span class="avatar">PS</span><div><b>Priya Sharma</b><span>Software Engineer at Google</span></div></div>
+          <div class="sub" style="text-align:left;font-size:28px;margin:0 0 20px;color:var(--ink)">Want a referral from me? Request it here:</div>
+          <div class="linkbox"><span class="url"><span class="type" id="s3-type">referlink.app/r/priya</span></span><span class="btn btn-ink" id="s3-copy">Copy</span></div>
+        </div>
+      </section>
+
+      <!-- 4 · Ask (11.5–16s) -->
+      <section id="s4" class="clip" data-start="11.5" data-duration="4.5" data-track-index="0">
+        <div class="step-label" id="s4-label">2 · Candidates ask properly</div>
+        <div class="card ask" id="s4-card">
+          <div class="meta"><span>Asking Priya Sharma · Google</span><span>Step 3 of 5</span></div>
+          <div class="bar"><i id="s4-bar"></i></div>
+          <div class="q">Which job are you applying for?</div>
+          <div class="input"><span class="type" id="s4-type">JR-104523</span><span class="caret"></span></div>
+          <div class="hint">Requests without a job ID usually get ignored.</div>
+        </div>
+      </section>
+
+      <!-- 5 · Inbox (16–20.5s) -->
+      <section id="s5" class="clip" data-start="16" data-duration="4.5" data-track-index="0">
+        <div class="step-label" id="s5-label">3 · It lands in your inbox</div>
+        <div class="card inbox" id="s5-card">
+          <div class="inbox-head">Requests <span class="badge badge-pend">1 new</span></div>
+          <div class="row" id="s5-new"><span class="avatar">AI</span><span class="name"><b>Ananya Iyer</b><span>Data Analyst II · JR-104523</span></span><span class="badge badge-pend">New</span></div>
+          <div class="row"><span class="avatar">RV</span><span class="name"><b>Rahul Verma</b><span>Backend Engineer</span></span><span class="badge badge-ok">Referred</span></div>
+          <div class="row"><span class="avatar">KM</span><span class="name"><b>Karan Malhotra</b><span>Data Engineer</span></span><span class="badge badge-ok">Referred</span></div>
+        </div>
+      </section>
+
+      <!-- 6 · Answer (20.5–25s) -->
+      <section id="s6" class="clip" data-start="20.5" data-duration="4.5" data-track-index="0">
+        <div class="step-label" id="s6-label">4 · Answer in one click</div>
+        <div class="answer">
+          <div class="card req" id="s6-req"><span class="avatar">AI</span><b>Ananya Iyer</b><span class="btn btn-primary" id="s6-refer">Refer</span><span class="btn btn-line">Decline</span></div>
+          <div class="card result" id="s6-result">
+            <div class="check"><svg viewBox="0 0 24 24"><path d="M20 6 9 17l-5-5"/></svg></div>
+            <h3>You were referred</h3>
+            <p>Priya referred you at Google</p>
+          </div>
+        </div>
+        <svg class="cursor" id="s6-cursor" viewBox="0 0 24 24" style="left:770px;top:520px"><path d="M4 2l16 10-7 1.5L9.5 21z" fill="#0f172a" stroke="#fff" stroke-width="1.5" stroke-linejoin="round"/></svg>
+      </section>
+
+      <!-- 7 · End card (25–29s) -->
+      <section id="s7" class="clip end" data-start="25" data-duration="4" data-track-index="0">
+        <div class="logo" id="s7-logo"><span class="logo-mark"><svg viewBox="0 0 24 24"><path d="M20 6 9 17l-5-5"/></svg></span>ReferLink</div>
+        <div class="headline" id="s7-title" style="font-size:54px;margin-top:34px">Clear your referral DMs.</div>
+        <div class="pills" id="s7-pills"><span class="pill">Free</span><span class="pill">No sign-up</span><span class="pill">Takes a minute</span></div>
+      </section>
+    </div>
+
+    <script>
+      const tl = gsap.timeline({ paused: true });
+      const ease = "power3.out";
+
+      // 1 · Hook: title drops in, DMs stack up, then everything fades
+      // The title is on screen from frame 0: that frame is the social thumbnail.
+      gsap.utils.toArray("#s1 .dm").forEach((dm, i) => {
+        tl.from(dm, { opacity: 0, y: 24, scale: 0.96, duration: 0.45, ease }, 0.6 + i * 0.4);
+      });
+      tl.to("#s1", { opacity: 0, duration: 0.35 }, 3.25);
+
+      // 2 · Logo reveal
+      tl.from("#s2-logo", { opacity: 0, scale: 0.9, duration: 0.7, ease: "back.out(1.6)" }, 3.7);
+      tl.from("#s2-sub", { opacity: 0, y: 20, duration: 0.6, ease }, 4.3);
+      tl.to("#s2", { opacity: 0, duration: 0.35 }, 6.65);
+
+      // 3 · Share: link types itself, then "Copied"
+      tl.from("#s3-label", { opacity: 0, y: 16, duration: 0.5, ease }, 7.05);
+      tl.from("#s3-card", { opacity: 0, y: 40, duration: 0.6, ease }, 7.2);
+      tl.to("#s3-type", { width: "21ch", duration: 1.3, ease: "steps(21)" }, 7.9);
+      tl.to("#s3-copy", { scale: 0.92, duration: 0.12 }, 9.6);
+      tl.to("#s3-copy", { scale: 1, duration: 0.2 }, 9.72);
+      tl.set("#s3-copy", { textContent: "Copied ✓" }, 9.75);
+      tl.to("#s3", { opacity: 0, duration: 0.35 }, 11.15);
+
+      // 4 · Ask: job ID types in, progress moves on
+      tl.from("#s4-label", { opacity: 0, y: 16, duration: 0.5, ease }, 11.55);
+      tl.from("#s4-card", { opacity: 0, y: 40, duration: 0.6, ease }, 11.7);
+      tl.to("#s4-type", { width: "9ch", duration: 0.9, ease: "steps(9)" }, 12.5);
+      tl.to("#s4-bar", { width: "60%", duration: 0.8, ease }, 13.8);
+      tl.to("#s4", { opacity: 0, duration: 0.35 }, 15.65);
+
+      // 5 · Inbox: the new request slides in on top
+      tl.from("#s5-label", { opacity: 0, y: 16, duration: 0.5, ease }, 16.05);
+      tl.from("#s5-card", { opacity: 0, y: 40, duration: 0.6, ease }, 16.2);
+      tl.from("#s5-new", { opacity: 0, y: -40, duration: 0.6, ease }, 17.1);
+      tl.to("#s5", { opacity: 0, duration: 0.35 }, 20.15);
+
+      // 6 · Answer: cursor clicks Refer, the candidate's answer appears
+      tl.from("#s6-label", { opacity: 0, y: 16, duration: 0.5, ease }, 20.55);
+      tl.from("#s6-req", { opacity: 0, y: 40, duration: 0.6, ease }, 20.7);
+      tl.from("#s6-cursor", { opacity: 0, x: 140, y: 160, duration: 0.8, ease: "power2.inOut" }, 21.2);
+      tl.to("#s6-refer", { scale: 0.92, duration: 0.12 }, 22.0);
+      tl.to("#s6-refer", { scale: 1, duration: 0.2 }, 22.12);
+      tl.to("#s6-cursor", { opacity: 0, duration: 0.3 }, 22.4);
+      tl.from("#s6-result", { opacity: 0, y: 40, scale: 0.96, duration: 0.6, ease: "back.out(1.4)" }, 22.4);
+      tl.to("#s6", { opacity: 0, duration: 0.35 }, 24.65);
+
+      // 7 · End card
+      tl.from("#s7-logo", { opacity: 0, y: 20, duration: 0.6, ease }, 25.1);
+      tl.from("#s7-title", { opacity: 0, y: 20, duration: 0.6, ease }, 25.4);
+      tl.from("#s7 .pill", { opacity: 0, y: 16, duration: 0.45, ease, stagger: 0.12 }, 25.8);
+
+      window.__timelines = window.__timelines || {};
+      window.__timelines["main"] = tl;
+      tl.seek(0);
+    </script>
+  </body>
+</html>

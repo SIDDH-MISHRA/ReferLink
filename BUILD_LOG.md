@@ -157,3 +157,16 @@ One entry per real decision or problem. Newest at the bottom.
 - Who: Siddh (picked option 1), Claude (build)
 - Evidence: The file loads at 1080×1080 and plays muted. Byte-range requests return 206, matching how Vercel serves video. It starts by itself when on screen (the headless test showed "Pause" after load), and there's no sideways scroll at 375px.
 - Result: Done. The local test server now supports video byte ranges, like Vercel.
+
+## 2026-10-24 · Live inbox on the homepage, hover motion, contrast fixes
+- Decision:
+  - A new "Remember my dashboard on this device" option, ticked by default. If it's on, the homepage card shows the employee's real latest requests and opens their dashboard, with no sign-in. The dashboard has "Forget this device". New visitors still see the example.
+  - Hovering the card splits it 2:1: the list inverts colour and an indigo panel invites the click.
+  - Every page gets hover glow, lift and a cursor spotlight on cards and buttons.
+  - The headline gets a word blur-in, a rolling word ("answered / sorted / tracked") and a highlighter sweep.
+  - Contrast fix: grey page with white cards in light mode, and lifted cards in dark mode.
+  - The site gets a wide 16:9 video so the frame hugs it. Fixed the checkbox gap and removed the "No sound" line.
+- Why: Siddh's review: the video frame was too tall, the checkbox text was far away, the cards blended into the background, the text felt bland, and pages were inconsistent. Siddh also wanted the homepage to show the real dashboard.
+- Who: Siddh (all requests, and the live-dashboard idea), Claude (the no-sign-in design and the build). The hover split is Claude's reading of Siddh's "2:1" description.
+- Evidence: Browser checks passed. The split measures exactly 2:1 (352:176px), and its colours are right in both themes. The live card shows real rows with a "Live" dot. Remember and forget work, the box is ticked by default, and there's no sideways scroll at 375px. A bug was found and fixed: the dashboard's device note crashed because a code insert landed inside the wrong function.
+- Result: New event `home_inbox_opened` shows whether employees come back through the homepage. The tradeoff: anyone using the same browser can open a remembered dashboard, which is why it's a visible checkbox and explained on the privacy page.

@@ -1,7 +1,7 @@
 // /d/<secret>: the employee's requests as a table. Refer or decline from the row;
 // click a row to read the full pitch, links and email underneath it.
 (function () {
-  const { rpc, track, h, icon, avatar, bindCopy, copyText, toast, timeAgo, formatDate, errorText, pathParam, DECLINE_REASONS } = window.RL;
+  const { rpc, track, h, icon, avatar, bindCopy, copyText, toast, timeAgo, formatDate, errorText, pathParam, DECLINE_REASONS, savedDashboard } = window.RL;
   const $ = (id) => document.getElementById(id);
   const token = pathParam();
 
@@ -35,6 +35,7 @@
       $('public-link').value = publicLink;
       bindCopy($('copy-public'), () => publicLink, () => track('public_link_copied', { where: 'dashboard', what: 'link', board_id: board.board_id }));
       $('refresh').classList.remove('hidden');
+      renderDeviceNote();
       show('app');
       track('dashboard_viewed', {
         board_id: board.board_id,
@@ -214,6 +215,21 @@
       document.querySelectorAll('#rows button').forEach((b) => { b.disabled = false; });
       toast(err.code === 'not_found' ? 'This request was deleted by the candidate.' : errorText(err));
     }
+  }
+
+  // "Remembered on this device" lets the homepage show this inbox. One click to undo.
+  function renderDeviceNote() {
+    const saved = savedDashboard.get();
+    const remembered = saved && saved.token === token;
+    const flip = () => {
+      if (remembered) savedDashboard.clear();
+      else savedDashboard.set({ token, slug: board.slug });
+      renderDeviceNote();
+      toast(remembered ? 'Forgotten on this device' : 'Remembered on this device');
+    };
+    $('device-note').replaceChildren(
+      remembered ? 'Remembered on this device, so the ReferLink homepage shows your inbox. ' : 'Not remembered on this device. ',
+      h('button', { class: 'copy-inline', type: 'button', style: 'padding:0', onclick: flip }, remembered ? 'Forget this device' : 'Remember on this device'));
   }
 
   document.querySelectorAll('.seg button').forEach((b) => {

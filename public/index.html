@@ -21,6 +21,7 @@
   <script src="/js/config.js" defer></script>
   <script src="/js/app.js" defer></script>
   <script src="/js/video.js" defer></script>
+  <script src="/js/home.js" defer></script>
 </head>
 <body>
   <header class="site-header">
@@ -39,7 +40,7 @@
       <section class="hero">
         <div>
           <span class="eyebrow">For employees who get referral DMs</span>
-          <h1>Every referral request in one inbox.</h1>
+          <h1 data-text-effect>Every referral request, <span class="text-loop"><span>answered</span><span>sorted</span><span>tracked</span></span> in <span class="hl">one inbox.</span></h1>
           <p class="lead">Share one link. Candidates send the job ID, resume and a short pitch. You answer in one click, and they always hear back.</p>
           <div class="hero-cta">
             <a class="btn btn-primary btn-lg" href="/create">Create your link <svg class="icon"><use href="#i-arrow"/></svg></a>
@@ -48,14 +49,26 @@
           <p class="fine">Free · No sign-up · Takes a minute</p>
         </div>
 
-        <!-- Static example of the inbox -->
-        <div class="product" role="img" aria-label="Example of the ReferLink inbox with three requests">
-          <div class="product-head"><strong class="small">Requests</strong><span class="badge badge-pending">2 pending</span><span class="grow"></span><span class="xs muted">Newest first</span></div>
-          <div class="prow"><span class="who"><span class="avatar avatar-sm">AI</span><span class="ellip"><b>Ananya Iyer</b><span class="muted">Data Analyst II</span></span></span><span class="muted ellip"><span class="mono">JR-104523</span> · Resume ✓</span><span class="btn btn-primary btn-sm" aria-hidden="true">Refer</span></div>
-          <div class="prow"><span class="who"><span class="avatar avatar-sm">RV</span><span class="ellip"><b>Rahul Verma</b><span class="muted">Backend Engineer</span></span></span><span class="muted ellip">Job ✓ · Resume ✓</span><span class="btn btn-primary btn-sm" aria-hidden="true">Refer</span></div>
-          <div class="prow"><span class="who"><span class="avatar avatar-sm">MN</span><span class="ellip"><b>Meera Nair</b><span class="muted">Payments SRE</span></span></span><span class="muted ellip">Job ✓ · Resume ✓</span><span class="badge badge-ok">Referred</span></div>
-        </div>
-      </section>
+        <!-- The inbox card. New visitors see example data; an employee who chose
+             "Remember on this device" sees their real latest requests (home.js). -->
+        <a class="product" id="home-inbox" href="/create" aria-label="Example inbox. Create your own link.">
+          <div class="product-inner">
+            <div class="product-list">
+              <div class="product-head"><strong class="small" id="inbox-title">Requests</strong><span class="badge badge-pending" id="inbox-pending"><span id="inbox-count">2</span>&nbsp;pending</span><span class="grow"></span><span class="xs muted" id="inbox-note">Example</span></div>
+              <div id="inbox-rows">
+                <div class="prow"><span class="who"><span class="avatar avatar-sm">AI</span><span class="ellip"><b>Ananya Iyer</b><span class="muted">Data Analyst II</span></span></span><span class="muted ellip"><span class="mono">JR-104523</span> · Resume ✓</span><span class="btn btn-primary btn-sm ref-btn" aria-hidden="true">Refer</span></div>
+                <div class="prow"><span class="who"><span class="avatar avatar-sm">RV</span><span class="ellip"><b>Rahul Verma</b><span class="muted">Backend Engineer</span></span></span><span class="muted ellip">Job ✓ · Resume ✓</span><span class="btn btn-primary btn-sm ref-btn" aria-hidden="true">Refer</span></div>
+                <div class="prow"><span class="who"><span class="avatar avatar-sm">MN</span><span class="ellip"><b>Meera Nair</b><span class="muted">Payments SRE</span></span></span><span class="muted ellip">Job ✓ · Resume ✓</span><span class="badge badge-ok">Referred</span></div>
+              </div>
+            </div>
+            <div class="product-cta" aria-hidden="true">
+              <span class="cta-icon"><svg class="icon"><use href="#i-arrow"/></svg></span>
+              <strong id="cta-title">Create your link</strong>
+              <span id="cta-sub">Free · takes a minute</span>
+            </div>
+          </div>
+        </a>
+            </section>
 
       <div class="steps-grid">
         <div><span class="step-num">01</span><h3>Share one link</h3><p>Put it on your LinkedIn profile, or reply to referral DMs with it.</p></div>
@@ -70,13 +83,12 @@
           <p>From a LinkedIn DM to a clear answer, without a single back-and-forth.</p>
         </div>
         <figure class="video-frame">
-          <video id="how-video" src="/media/how-it-works.mp4" poster="/media/how-it-works.jpg" width="1080" height="1080"
+          <video id="how-video" src="/media/how-it-works.mp4" poster="/media/how-it-works.jpg" width="1440" height="810"
                  muted loop playsinline preload="metadata"
                  aria-label="How ReferLink works: share one link, candidates ask with the job ID and resume, the request lands in your inbox, and you answer in one click."></video>
           <button class="btn btn-secondary btn-sm video-toggle" type="button" id="video-toggle">Pause</button>
         </figure>
-        <p class="xs muted" style="margin-top:10px">No sound. Example names.</p>
-      </section>
+              </section>
 
       <section class="section">
         <div class="section-head"><h2>Built for both sides</h2></div>

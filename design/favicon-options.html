@@ -1,0 +1,65 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>ReferLink favicon options</title>
+<style>
+  :root { --bg: #0a0714; --card: #110c20; --line: rgba(167,139,250,.18); --text: #f3f0ff; --muted: #8f88b0; }
+  body { margin: 0; background: var(--bg); color: var(--text); font: 15px/1.5 "Segoe UI", system-ui, sans-serif; padding: 24px 16px; }
+  h1 { font-size: 22px; margin: 0 0 4px; }
+  p.lead { color: var(--muted); margin: 0 0 24px; }
+  .grid { display: grid; gap: 16px; max-width: 980px; }
+  @media (min-width: 760px) { .grid { grid-template-columns: repeat(3, 1fr); } }
+  .opt { background: var(--card); border: 1px solid var(--line); border-radius: 18px; padding: 20px; }
+  .opt h2 { font-size: 17px; margin: 0 0 4px; }
+  .opt p { color: var(--muted); margin: 0 0 16px; font-size: 14px; }
+  .big { display: flex; gap: 14px; align-items: flex-end; margin-bottom: 16px; }
+  .light { background: #faf8ff; border-radius: 12px; padding: 12px; display: flex; gap: 12px; align-items: flex-end; margin-bottom: 14px; }
+  .tab { display: flex; align-items: center; gap: 8px; background: #1e1a2e; border-radius: 10px 10px 0 0; padding: 8px 12px; font-size: 13px; width: max-content; }
+  .tab.l { background: #ece9f5; color: #160f2e; }
+  .tabs { display: grid; gap: 6px; }
+  .num { display: inline-grid; place-items: center; width: 26px; height: 26px; border-radius: 50%; background: linear-gradient(135deg,#7c3aed,#d946ef); font-weight: 700; font-size: 13px; margin-right: 8px; }
+</style>
+</head>
+<body>
+<h1>Pick a favicon</h1>
+<p class="lead">Each shown large, at real browser-tab size (16px), and on light and dark tabs.</p>
+
+<svg width="0" height="0" style="position:absolute">
+  <defs>
+    <linearGradient id="g" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#7c3aed"/><stop offset=".5" stop-color="#a855f7"/><stop offset="1" stop-color="#d946ef"/></linearGradient>
+    <linearGradient id="gs" x1="0" y1="1" x2="1" y2="0"><stop offset="0" stop-color="#8b5cf6"/><stop offset="1" stop-color="#f0abfc"/></linearGradient>
+    <symbol id="o1" viewBox="0 0 32 32"><rect width="32" height="32" rx="9" fill="url(#g)"/><path d="M22.5 11 13.5 20.5 9.5 16.5" fill="none" stroke="#fff" stroke-width="3.2" stroke-linecap="round" stroke-linejoin="round"/></symbol>
+    <symbol id="o2" viewBox="0 0 32 32"><rect width="32" height="32" rx="9" fill="url(#g)"/><g transform="translate(5 5) scale(.917)" fill="none" stroke="#fff" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"/><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"/></g></symbol>
+    <symbol id="o3" viewBox="0 0 32 32"><rect x=".5" y=".5" width="31" height="31" rx="8.5" fill="#0a0714" stroke="#3b2a6b"/><path d="M9 23C9 15 14.5 9.5 22.5 9.5" fill="none" stroke="url(#gs)" stroke-width="3" stroke-linecap="round"/><path d="M18.5 5.5 22.8 9.5 18.5 13.5" fill="none" stroke="#f0abfc" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/><circle cx="9" cy="23" r="3" fill="#8b5cf6"/></symbol>
+  </defs>
+</svg>
+
+<div class="grid">
+  <div class="opt">
+    <h2><span class="num">1</span>Spark check</h2>
+    <p>The violet gradient tile with a check: "every request gets an answer". It's the safest, cleanest option and matches the buttons.</p>
+    <div class="big"><svg width="96" height="96"><use href="#o1"/></svg><svg width="48" height="48"><use href="#o1"/></svg><svg width="32" height="32"><use href="#o1"/></svg><svg width="16" height="16"><use href="#o1"/></svg></div>
+    <div class="light"><svg width="48" height="48"><use href="#o1"/></svg><svg width="16" height="16"><use href="#o1"/></svg></div>
+    <div class="tabs"><div class="tab"><svg width="16" height="16"><use href="#o1"/></svg>ReferLink</div><div class="tab l"><svg width="16" height="16"><use href="#o1"/></svg>ReferLink</div></div>
+  </div>
+
+  <div class="opt">
+    <h2><span class="num">2</span>Link loop</h2>
+    <p>Two chain links: the "Link" in ReferLink, two people connected. The meaning is literal and the shape is easy to recognise.</p>
+    <div class="big"><svg width="96" height="96"><use href="#o2"/></svg><svg width="48" height="48"><use href="#o2"/></svg><svg width="32" height="32"><use href="#o2"/></svg><svg width="16" height="16"><use href="#o2"/></svg></div>
+    <div class="light"><svg width="48" height="48"><use href="#o2"/></svg><svg width="16" height="16"><use href="#o2"/></svg></div>
+    <div class="tabs"><div class="tab"><svg width="16" height="16"><use href="#o2"/></svg>ReferLink</div><div class="tab l"><svg width="16" height="16"><use href="#o2"/></svg>ReferLink</div></div>
+  </div>
+
+  <div class="opt">
+    <h2><span class="num">3</span>Hand-off</h2>
+    <p>A dot passing a glowing arrow upward: one person referring another forward. It's the most distinctive, with a dark tile and a neon stroke.</p>
+    <div class="big"><svg width="96" height="96"><use href="#o3"/></svg><svg width="48" height="48"><use href="#o3"/></svg><svg width="32" height="32"><use href="#o3"/></svg><svg width="16" height="16"><use href="#o3"/></svg></div>
+    <div class="light"><svg width="48" height="48"><use href="#o3"/></svg><svg width="16" height="16"><use href="#o3"/></svg></div>
+    <div class="tabs"><div class="tab"><svg width="16" height="16"><use href="#o3"/></svg>ReferLink</div><div class="tab l"><svg width="16" height="16"><use href="#o3"/></svg>ReferLink</div></div>
+  </div>
+</div>
+</body>
+</html>

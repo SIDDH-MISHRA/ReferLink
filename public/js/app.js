@@ -200,6 +200,8 @@
     send: '<path d="M14.54 21.69a.5.5 0 0 0 .94-.03l6.5-19a.5.5 0 0 0-.64-.64l-19 6.5a.5.5 0 0 0-.03.94l7.93 3.18a2 2 0 0 1 1.11 1.11z"/><path d="m21.85 2.15-10.94 10.94"/>',
     pen: '<path d="M12 20h9"/><path d="M16.38 3.62a1 1 0 0 1 3 3L7.37 18.64a2 2 0 0 1-.86.5l-2.87.84a.5.5 0 0 1-.62-.62l.84-2.87a2 2 0 0 1 .5-.86z"/>',
     tap: '<path d="M9 9V4.5a1.5 1.5 0 0 1 3 0V12"/><path d="M12 11.5V10a1.5 1.5 0 0 1 3 0v2"/><path d="M15 11.5a1.5 1.5 0 0 1 3 0V16a6 6 0 0 1-6 6h-1.5a6 6 0 0 1-4.6-2.2L3.3 16.5a1.5 1.5 0 0 1 2.3-1.9L9 17"/>',
+    sun: '<circle cx="12" cy="12" r="4"/><path d="M12 2v2M12 20v2m-7.07-14.07 1.41 1.41m11.32 11.32 1.41 1.41M2 12h2m16 0h2M6.34 17.66l-1.41 1.41M19.07 4.93l-1.41 1.41"/>',
+    moon: '<path d="M12 3a6 6 0 0 0 9 9 9 9 0 1 1-9-9Z"/>',
     eye: '<path d="M2.06 12.35a1 1 0 0 1 0-.7 10.75 10.75 0 0 1 19.88 0 1 1 0 0 1 0 .7 10.75 10.75 0 0 1-19.88 0"/><circle cx="12" cy="12" r="3"/>',
   };
 
@@ -223,10 +225,12 @@
     return svg;
   }
 
-  // Coloured initials. The colour comes from the name, so it's stable per person.
+  // Coloured initials. The colour comes from the name, so it's stable per person,
+  // and stays in the indigo-to-pink range of the theme.
   function avatar(name, size) {
     let hash = 0;
-    for (const ch of name || '') hash = (hash * 31 + ch.charCodeAt(0)) % 360;
+    for (const ch of name || '') hash = (hash * 31 + ch.charCodeAt(0)) % 100;
+    hash += 235;
     const el = h('div', { class: 'avatar' + (size ? ' avatar-' + size : ''), 'aria-hidden': 'true' }, initials(name));
     el.style.setProperty('--h', hash);
     return el;
@@ -312,12 +316,140 @@
     other: { employee: 'Other', candidate: 'Not this time.' },
   };
 
+  // ---------------------------------------------------------------------------
+  // Theme: dark by default; the header toggle switches and remembers the choice
+  // in this browser only.
+  // ---------------------------------------------------------------------------
+  function setTheme(theme) {
+    document.documentElement.dataset.theme = theme;
+    try { localStorage.setItem('rl-theme', theme); } catch (e) { /* storage blocked: still works for this page */ }
+    const meta = document.querySelector('meta[name="theme-color"]');
+    if (meta) meta.content = theme === 'light' ? '#faf8ff' : '#0a0714';
+  }
+  function initThemeToggle() {
+    document.querySelectorAll('[data-theme-toggle]').forEach((btn) => {
+      const label = () => btn.setAttribute('aria-label',
+        document.documentElement.dataset.theme === 'light' ? 'Switch to dark mode' : 'Switch to light mode');
+      label();
+      btn.addEventListener('click', () => {
+        setTheme(document.documentElement.dataset.theme === 'light' ? 'dark' : 'light');
+        label();
+      });
+    });
+  }
+
+  // ---------------------------------------------------------------------------
+  // Motion helpers. All of them do nothing when the person prefers reduced motion.
+  // ---------------------------------------------------------------------------
+  const calm = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+  // Cursor spotlight on cards with class "spot" (CSS reads --mx / --my).
+  function initSpotlight() {
+    document.addEventListener('pointermove', (e) => {
+      const el = e.target.closest && e.target.closest('.spot');
+      if (!el) return;
+      const r = el.getBoundingClientRect();
+      el.style.setProperty('--mx', (e.clientX - r.left) + 'px');
+      el.style.setProperty('--my', (e.clientY - r.top) + 'px');
+    }, { passive: true });
+  }
+
+  // Depth parallax words: splits text into words that rise in one after another.
+  function depthWords(el) {
+    if (calm) return;
+    let i = 0;
+    const walk = (node) => {
+      Array.from(node.childNodes).forEach((child) => {
+        if (child.nodeType === Node.TEXT_NODE) {
+          const parts = child.textContent.split(/(\s+)/);
+          const frag = document.createDocumentFragment();
+          parts.forEach((part) => {
+            if (!part) return;
+            if (/^\s+$/.test(part)) { frag.append(part); return; }
+            const span = h('span', { class: 'dp-word', 'aria-hidden': 'true' }, part);
+            span.style.setProperty('--i', i++);
+            frag.append(span);
+          });
+          child.replaceWith(frag);
+        } else if (child.nodeType === Node.ELEMENT_NODE && !child.classList.contains('scramble')) {
+          walk(child);
+        } else if (child.nodeType === Node.ELEMENT_NODE) {
+          child.classList.add('dp-word');
+          child.style.setProperty('--i', i++);
+        }
+      });
+    };
+    el.setAttribute('aria-label', el.textContent.replace(/\s+/g, ' ').trim());
+    walk(el);
+  }
+
+  // Scramble text: random characters settle into the real text, left to right.
+  function scramble(el, delay) {
+    const target = el.dataset.text || el.textContent;
+    el.dataset.text = target;
+    if (calm) { el.textContent = target; return; }
+    const chars = 'abcdefghijklmnopqrstuvwxyz#%&*+=?';
+    const total = 22;
+    let frame = 0;
+    setTimeout(function tick() {
+      const settled = Math.floor((frame / total) * target.length);
+      el.textContent = target.split('').map((c, i) =>
+        i < settled || c === ' ' ? c : chars[Math.floor(Math.random() * chars.length)]).join('');
+      if (frame++ < total) setTimeout(tick, 38);
+      else el.textContent = target;
+    }, delay || 0);
+  }
+
+  // Sliding number: each digit is a 0–9 column that slides to the right place.
+  function slideNumber(el, value) {
+    const digits = String(value).split('');
+    if (calm) { el.textContent = String(value); return; }
+    if (!el.classList.contains('sn') || el.children.length !== digits.length) {
+      el.classList.add('sn');
+      el.setAttribute('aria-label', String(value));
+      el.replaceChildren(...digits.map(() => {
+        const col = h('span', { class: 'sn-col', 'aria-hidden': 'true' });
+        for (let d = 0; d <= 9; d++) col.append(h('span', null, String(d)));
+        col.style.transform = 'translateY(0)';
+        return col;
+      }));
+      el.offsetHeight; // start from 0 so the first value also slides
+    }
+    el.setAttribute('aria-label', String(value));
+    Array.from(el.children).forEach((col, i) => {
+      col.style.transform = 'translateY(' + (-Number(digits[i]) * 1.2) + 'em)';
+    });
+  }
+
+  // Fade elements with class "reveal" in as they scroll into view; scramble kickers once.
+  function initReveal() {
+    const items = document.querySelectorAll('.reveal');
+    if (!('IntersectionObserver' in window) || calm) {
+      items.forEach((el) => el.classList.add('in'));
+      return;
+    }
+    const io = new IntersectionObserver((entries) => {
+      entries.forEach((entry) => {
+        if (!entry.isIntersecting) return;
+        entry.target.classList.add('in');
+        entry.target.querySelectorAll('[data-scramble]').forEach((s) => scramble(s, 150));
+        io.unobserve(entry.target);
+      });
+    }, { rootMargin: '0px 0px -10% 0px' });
+    items.forEach((el) => io.observe(el));
+  }
+
   injectSprite();
+  initThemeToggle();
+  initSpotlight();
+  initReveal();
+  document.querySelectorAll('[data-depth]').forEach(depthWords);
+  document.querySelectorAll('[data-scramble-now]').forEach((el) => scramble(el, Number(el.dataset.scrambleNow) || 0));
   initAnalytics();
 
   window.RL = {
     cfg, rpc, errorText, track, events, check, withHttps, setFieldError,
-    h, icon, avatar, roleChips, safeLink, copyText, bindCopy, mailtoHref, toast, timeAgo, formatDate, pathParam, initials,
+    h, icon, avatar, roleChips, safeLink, slideNumber, scramble, depthWords, copyText, bindCopy, mailtoHref, toast, timeAgo, formatDate, pathParam, initials,
     DECLINE_REASONS,
   };
 })();

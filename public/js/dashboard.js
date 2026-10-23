@@ -1,6 +1,6 @@
 // /d/<secret>: the employee works their queue. One tap to refer, two to decline.
 (function () {
-  const { rpc, track, h, icon, avatar, bindCopy, copyText, toast, timeAgo, formatDate, errorText, pathParam, DECLINE_REASONS } = window.RL;
+  const { rpc, track, h, icon, avatar, slideNumber, depthWords, bindCopy, copyText, toast, timeAgo, formatDate, errorText, pathParam, DECLINE_REASONS } = window.RL;
   const $ = (id) => document.getElementById(id);
   const token = pathParam();
 
@@ -27,7 +27,8 @@
 
     if (!isRefresh) {
       const publicLink = location.origin + '/r/' + board.slug;
-      $('greeting').textContent = 'Hi ' + board.name.split(/\s+/)[0];
+      $('greeting').replaceChildren('Hi ', h('span', { class: 'serif grad-text' }, board.name.split(/\s+/)[0]));
+      depthWords($('greeting'));
       $('board-meta').textContent = 'Your referral inbox · ' + board.company;
       $('public-link').value = publicLink;
       bindCopy($('copy-public'), () => publicLink, () => track('public_link_copied', { where: 'dashboard', what: 'link', board_id: board.board_id }));
@@ -96,7 +97,7 @@
     const counts = { pending: 0, referred: 0, declined: 0, all: requests.length };
     requests.forEach((r) => { counts[r.status]++; });
     document.querySelectorAll('.filter').forEach((tab) => {
-      tab.querySelector('b').textContent = counts[tab.dataset.filter];
+      slideNumber(tab.querySelector('b'), counts[tab.dataset.filter]);
       tab.setAttribute('aria-selected', String(tab.dataset.filter === filter));
     });
   }
@@ -117,7 +118,7 @@
   }
 
   function card(r) {
-    const el = h('article', { class: 'card req', id: 'req-' + r.id });
+    const el = h('article', { class: 'card req spot', id: 'req-' + r.id });
     fillCard(el, r);
     return el;
   }

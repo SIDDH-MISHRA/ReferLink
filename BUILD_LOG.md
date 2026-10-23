@@ -101,3 +101,10 @@ One entry per real decision or problem. Newest at the bottom.
 - Who: Siddh (the call to redesign), Claude (the direction)
 - Evidence: Siddh suggested the "ui-ux-pro-max" skill from GitHub. Claude read it and didn't install it, because it's mainly a Python search over style spreadsheets, which means running outside code for little gain. Its checklist was used instead: no emoji icons, dark mode, reduced-motion support, visible focus rings, 44px+ tap targets.
 - Result: Every flow retested in the browser at desktop and phone width (375px), with no sideways scrolling. Same plain HTML/CSS/JS with no framework. Fonts now load from Google Fonts, and the privacy page says so.
+
+## 2026-10-24 · Dark violet theme, motion and theme toggle
+- Decision: Changed the colour theme to a dark violet base with a violet-to-magenta gradient. Dark is the default, and a header toggle switches to light; the choice is saved in that browser. Added motion: depth word reveal, scramble text, rolling digit counts, cursor spotlight on cards, light sweep on buttons, and scroll reveals. All of it turns off for people who ask their device for reduced motion.
+- Why: Siddh wanted a "wow" but professional look, and an on-site toggle rather than following the device setting.
+- Who: Siddh (direction, reference sites), Claude (choices and build)
+- Evidence: Siddh's references were Motion Primitives, SmoothUI, unlumen UI, Realtime Colors and Haikei. They're all React or design tools, so each effect was rebuilt in plain JS/CSS, with no new libraries.
+- Result: Retested landing, create, board, dashboard and status in both themes and at phone width, with no sideways scrolling. A bug was found and fixed: animations that held their end frame could leave text invisible if the browser paused them, so the resting state is now always visible.

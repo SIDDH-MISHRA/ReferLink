@@ -2,16 +2,16 @@
 <html lang="en">
 <head>
   <meta charset="utf-8">
-  <script>try{document.documentElement.dataset.theme=localStorage.getItem('rl-theme')||'dark'}catch(e){document.documentElement.dataset.theme='dark'}document.documentElement.classList.add('js')</script>
-  <meta name="theme-color" content="#0a0714">
+  <script>try{document.documentElement.dataset.theme=localStorage.getItem('rl-theme')||'light'}catch(e){document.documentElement.dataset.theme='light'}</script>
+  <meta name="theme-color" content="#faf8f4">
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <meta name="referrer" content="no-referrer">
   <title>Create your referral link · ReferLink</title>
-  <meta name="description" content="Create your personal referral inbox in under a minute.">
+  <meta name="description" content="Create your personal referral inbox in about a minute.">
   <link rel="icon" href="/favicon.svg" type="image/svg+xml">
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Geist:wght@400;500;600;700&family=Geist+Mono:wght@400;500&family=Instrument+Serif:ital@0;1&display=swap">
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=Newsreader:opsz,wght@6..72,400;6..72,500&display=swap">
   <link rel="stylesheet" href="/css/style.css">
   <script src="/js/config.js" defer></script>
   <script src="/js/app.js" defer></script>
@@ -19,52 +19,45 @@
 </head>
 <body>
   <header class="site-header">
-    <div class="container wide nav-pill">
-      <a class="logo" href="/" aria-label="ReferLink home"><span class="logo-mark"><svg class="icon" viewBox="0 0 24 24" aria-hidden="true"><path d="M20 6 9 17l-5-5"/></svg></span>ReferLink</a>
-      <button class="btn btn-ghost btn-icon theme-toggle" type="button" data-theme-toggle aria-label="Switch colour theme"><svg class="icon icon-sun"><use href="#i-sun"/></svg><svg class="icon icon-moon"><use href="#i-moon"/></svg></button>
+    <div class="container wide nav">
+      <a class="logo" href="/" aria-label="ReferLink home"><span class="logo-mark"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M20 6 9 17l-5-5"/></svg></span>ReferLink</a>
+      <button class="btn btn-ghost btn-icon theme-toggle" type="button" data-theme-toggle aria-label="Switch to dark mode"><svg class="icon icon-moon"><use href="#i-moon"/></svg><svg class="icon icon-sun"><use href="#i-sun"/></svg></button>
     </div>
   </header>
 
   <main>
-    <!-- Step 1: the form -->
-    <section id="form-view" class="container mid view">
-      <div class="page-head">
-        <h1 data-depth>Create your referral <span class="serif grad-text">link</span></h1>
-        <p>Takes under a minute. No sign-up.</p>
-      </div>
+    <div class="container">
+      <!-- Step 1: the form -->
+      <section id="form-view" class="view">
+        <div class="page-head">
+          <h1>Create your referral link</h1>
+          <p>Candidates will see your name, company and note.</p>
+        </div>
 
-      <div class="create-layout">
         <form id="create-form" class="card" novalidate>
           <div id="form-error" class="form-error hidden" role="alert"></div>
 
-          <div class="form-section">
-            <h2 class="form-section-title"><svg class="icon"><use href="#i-user"/></svg>About you</h2>
-            <div class="field">
-              <label for="name">Full name</label>
-              <input id="name" name="name" type="text" autocomplete="name" maxlength="80" placeholder="Priya Sharma" required>
-            </div>
-            <div class="field">
-              <label for="company">Company you work at</label>
-              <input id="company" name="company" type="text" autocomplete="organization" maxlength="80" placeholder="Google" required>
-            </div>
-            <div class="field">
-              <label for="linkedin">LinkedIn profile URL</label>
-              <input id="linkedin" name="linkedin" type="url" inputmode="url" autocomplete="url" placeholder="linkedin.com/in/your-name" required>
-              <div class="hint">Shown to candidates so they know the link is really yours.</div>
-            </div>
+          <div class="field">
+            <label for="name">Your full name</label>
+            <input id="name" name="name" type="text" autocomplete="name" maxlength="80" required>
           </div>
-
-          <div class="form-section">
-            <h2 class="form-section-title"><svg class="icon"><use href="#i-inbox"/></svg>For candidates</h2>
-            <div class="field">
-              <label for="refers_for">Teams or roles you refer for <span class="optional">Optional</span></label>
-              <input id="refers_for" name="refers_for" type="text" maxlength="200" placeholder="Backend, Data, Product">
-              <div class="hint">Separate with commas.</div>
-            </div>
-            <div class="field">
-              <label for="note">A short note <span class="optional"><span class="counter" id="note-counter">0 / 200</span></span></label>
-              <textarea id="note" name="note" maxlength="200" placeholder="I only refer for engineering roles in Bengaluru."></textarea>
-            </div>
+          <div class="field">
+            <label for="company">Company you work at</label>
+            <input id="company" name="company" type="text" autocomplete="organization" maxlength="80" required>
+          </div>
+          <div class="field">
+            <label for="linkedin">Your LinkedIn profile URL</label>
+            <input id="linkedin" name="linkedin" type="url" inputmode="url" autocomplete="url" placeholder="linkedin.com/in/your-name" required>
+            <div class="hint">Shown to candidates so they know the link is really yours.</div>
+          </div>
+          <div class="field">
+            <label for="refers_for">Teams or roles you refer for <span class="optional">Optional</span></label>
+            <input id="refers_for" name="refers_for" type="text" maxlength="200" placeholder="Backend, Data, Product">
+            <div class="hint">Separate with commas.</div>
+          </div>
+          <div class="field">
+            <label for="note">A short note for candidates <span class="counter" id="note-counter">0 / 200</span></label>
+            <textarea id="note" name="note" maxlength="200" placeholder="I only refer for engineering roles in Bengaluru."></textarea>
           </div>
 
           <div class="honeypot" aria-hidden="true">
@@ -72,80 +65,50 @@
             <input id="website" name="website" type="text" tabindex="-1" autocomplete="off">
           </div>
 
-          <div class="form-footer">
-            <button class="btn btn-primary btn-lg btn-block" type="submit">Create my link <svg class="icon"><use href="#i-arrow"/></svg></button>
-          </div>
+          <button class="btn btn-primary btn-lg btn-block" type="submit">Create my link</button>
+          <p class="privacy-line">No sign-up. You'll get a private link to manage requests.</p>
         </form>
+      </section>
 
-        <!-- Live preview of the public board (desktop only) -->
-        <aside class="live-preview" aria-hidden="true">
-          <div class="live-preview-label"><span class="live-dot"></span>What candidates will see</div>
-          <div class="card profile spot">
-            <div class="profile-top">
-              <div class="avatar avatar-lg" id="pv-avatar">?</div>
-              <div>
-                <h1 id="pv-name">Your name</h1>
-                <span class="company"><svg class="icon"><use href="#i-building"/></svg><span id="pv-company">Company</span></span>
-              </div>
-            </div>
-            <div class="profile-meta hidden" id="pv-roles-wrap">
-              <div class="label">Refers for</div>
-              <div class="chips" id="pv-roles"></div>
-            </div>
-            <p class="note hidden" id="pv-note"></p>
-          </div>
-        </aside>
-      </div>
-    </section>
-
-    <!-- Step 2: save your links -->
-    <section id="done-view" class="container hidden view">
-      <div class="page-head">
-        <div class="success-mark"><svg class="icon"><use href="#i-check"/></svg></div>
-        <h1>Your links are <span class="serif grad-text">ready</span></h1>
-        <p>One to share, one to keep private.</p>
-      </div>
-
-      <div class="stack">
-        <div class="card">
-          <div class="link-card-head">
-            <div class="link-card-icon"><svg class="icon"><use href="#i-link"/></svg></div>
-            <div>
-              <h2>Your public link</h2>
-              <p>Add it to your LinkedIn profile, or reply to referral DMs with it.</p>
-            </div>
-          </div>
-          <div class="copy-field">
-            <input id="public-link" type="text" readonly aria-label="Your public link">
-            <button id="copy-public" class="btn btn-primary btn-sm" type="button"><svg class="icon"><use href="#i-copy"/></svg>Copy</button>
-          </div>
-          <p class="xs muted" style="margin:18px 0 8px;font-weight:500">Ready-made line for LinkedIn</p>
-          <div id="linkedin-line" class="quote-box"></div>
-          <button id="copy-line" class="btn btn-secondary btn-sm" type="button"><svg class="icon"><use href="#i-copy"/></svg>Copy text</button>
+      <!-- Step 2: save your links -->
+      <section id="done-view" class="hidden view">
+        <div class="page-head">
+          <div class="done-mark"><svg class="icon"><use href="#i-check"/></svg></div>
+          <h1>Your links are ready</h1>
+          <p>One to share, one to keep private.</p>
         </div>
 
         <div class="card">
-          <div class="link-card-head">
-            <div class="link-card-icon"><svg class="icon"><use href="#i-lock"/></svg></div>
-            <div>
-              <h2>Your private dashboard</h2>
-              <p>Where you see and answer requests.</p>
+          <div class="link-block">
+            <h2>Your public link</h2>
+            <p>Add it to your LinkedIn profile, or reply to referral DMs with it.</p>
+            <div class="copy-field">
+              <input id="public-link" type="text" readonly aria-label="Your public link">
+              <button id="copy-public" class="btn btn-primary btn-sm" type="button"><svg class="icon"><use href="#i-copy"/></svg>Copy</button>
             </div>
+            <p class="xs muted" style="margin:18px 0 0">A line you can post on LinkedIn:</p>
+            <div id="linkedin-line" class="quote-box"></div>
+            <button id="copy-line" class="btn btn-secondary btn-sm" type="button"><svg class="icon"><use href="#i-copy"/></svg>Copy text</button>
           </div>
-          <div class="callout callout-warn" style="margin-bottom:14px">
-            <svg class="icon"><use href="#i-alert"/></svg>
-            <div><strong>Keep this link private</strong><p>Anyone with it can manage your requests. There's no password, so we can't recover it if you lose it.</p></div>
+
+          <div class="link-block">
+            <h2>Your private dashboard</h2>
+            <p>This is where you read and answer requests.</p>
+            <div class="callout" style="margin-bottom:14px">
+              <svg class="icon"><use href="#i-alert"/></svg>
+              <p><strong style="color:var(--text)">Keep this link private.</strong> Anyone with it can manage your requests. There's no password, so we can't recover it if you lose it.</p>
+            </div>
+            <div class="copy-field">
+              <input id="dashboard-link" type="text" readonly aria-label="Your private dashboard link">
+              <button id="copy-dashboard" class="btn btn-secondary btn-sm" type="button"><svg class="icon"><use href="#i-copy"/></svg>Copy</button>
+            </div>
+            <a id="email-dashboard" class="btn btn-secondary btn-block" style="margin-top:10px" href="#"><svg class="icon"><use href="#i-mail"/></svg>Email this link to myself</a>
           </div>
-          <div class="copy-field">
-            <input id="dashboard-link" type="text" readonly aria-label="Your private dashboard link">
-            <button id="copy-dashboard" class="btn btn-secondary btn-sm" type="button"><svg class="icon"><use href="#i-copy"/></svg>Copy</button>
-          </div>
-          <a id="email-dashboard" class="btn btn-secondary btn-block" style="margin-top:10px" href="#"><svg class="icon"><use href="#i-mail"/></svg>Email this link to myself</a>
         </div>
 
-        <a id="open-dashboard" class="btn btn-primary btn-lg btn-block" href="#">Open my dashboard <svg class="icon"><use href="#i-arrow"/></svg></a>
-      </div>
-    </section>
+        <a id="open-dashboard" class="btn btn-primary btn-lg btn-block" style="margin-top:20px" href="#">Open my dashboard <svg class="icon"><use href="#i-arrow"/></svg></a>
+      </section>
+    </div>
   </main>
 
   <footer class="site-footer">

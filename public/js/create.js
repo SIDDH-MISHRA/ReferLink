@@ -1,6 +1,6 @@
 // /create: the employee creates a board, then saves their two links.
 (function () {
-  const { rpc, track, check, withHttps, setFieldError, bindCopy, mailtoHref, errorText, avatar, roleChips } = window.RL;
+  const { rpc, track, check, withHttps, setFieldError, bindCopy, mailtoHref, errorText } = window.RL;
   const $ = (id) => document.getElementById(id);
 
   const form = $('create-form');
@@ -27,23 +27,6 @@
   });
   Object.values(inputs).forEach((input) => input.addEventListener('input', () => setFieldError(input, null)));
 
-  // Live preview of the public board, updated as the employee types (desktop only).
-  function updatePreview() {
-    const name = inputs.name.value.trim();
-    const roles = inputs.refers_for.value.trim();
-    const note = inputs.note.value.trim();
-    const av = avatar(name || '?', 'lg');
-    av.id = 'pv-avatar';
-    $('pv-avatar').replaceWith(av);
-    $('pv-name').textContent = name || 'Your name';
-    $('pv-company').textContent = inputs.company.value.trim() || 'Company';
-    $('pv-roles').replaceChildren(...roleChips(roles));
-    $('pv-roles-wrap').classList.toggle('hidden', !roles);
-    $('pv-note').textContent = note;
-    $('pv-note').classList.toggle('hidden', !note);
-  }
-  $('create-form').addEventListener('input', updatePreview);
-  updatePreview();
 
   function validate(v) {
     const bad = [];

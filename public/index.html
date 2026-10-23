@@ -2,165 +2,105 @@
 <html lang="en">
 <head>
   <meta charset="utf-8">
-  <script>try{document.documentElement.dataset.theme=localStorage.getItem('rl-theme')||'dark'}catch(e){document.documentElement.dataset.theme='dark'}document.documentElement.classList.add('js')</script>
-  <meta name="theme-color" content="#0a0714">
+  <script>try{document.documentElement.dataset.theme=localStorage.getItem('rl-theme')||'light'}catch(e){document.documentElement.dataset.theme='light'}</script>
+  <meta name="theme-color" content="#faf8f4">
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <meta name="referrer" content="no-referrer">
-  <title>ReferLink: your referral inbox</title>
-  <meta name="description" content="One link for every referral request. Candidates send complete requests, you decide in one tap, and nobody gets ghosted.">
-  <meta property="og:title" content="ReferLink: your referral inbox">
-  <meta property="og:description" content="One link for every referral request. Candidates send complete requests, you decide in one tap, and nobody gets ghosted.">
+  <title>ReferLink: a kinder way to handle referral requests</title>
+  <meta name="description" content="One link for referral requests. Candidates ask properly, you answer every one of them.">
+  <meta property="og:title" content="ReferLink: a kinder way to handle referral requests">
+  <meta property="og:description" content="One link for referral requests. Candidates ask properly, you answer every one of them.">
   <meta property="og:image" content="/og.png">
   <meta property="og:type" content="website">
   <meta name="twitter:card" content="summary_large_image">
   <link rel="icon" href="/favicon.svg" type="image/svg+xml">
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Geist:wght@400;500;600;700&family=Geist+Mono:wght@400;500&family=Instrument+Serif:ital@0;1&display=swap">
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=Newsreader:opsz,wght@6..72,400;6..72,500&display=swap">
   <link rel="stylesheet" href="/css/style.css">
   <script src="/js/config.js" defer></script>
   <script src="/js/app.js" defer></script>
 </head>
 <body>
   <header class="site-header">
-    <div class="container wide nav-pill">
-      <a class="logo" href="/" aria-label="ReferLink home"><span class="logo-mark"><svg class="icon" viewBox="0 0 24 24" aria-hidden="true"><path d="M20 6 9 17l-5-5"/></svg></span>ReferLink</a>
-      <a class="btn btn-secondary btn-sm" href="/create">Create my link</a>
-      <button class="btn btn-ghost btn-icon theme-toggle" type="button" data-theme-toggle aria-label="Switch colour theme"><svg class="icon icon-sun"><use href="#i-sun"/></svg><svg class="icon icon-moon"><use href="#i-moon"/></svg></button>
+    <div class="container wide nav">
+      <a class="logo" href="/" aria-label="ReferLink home"><span class="logo-mark"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M20 6 9 17l-5-5"/></svg></span>ReferLink</a>
+      <a class="nav-link" href="#how">How it works</a>
+      <a class="nav-link" href="/privacy">Privacy</a>
+      <a class="btn btn-primary btn-sm" href="/create">Create your link</a>
+      <button class="btn btn-ghost btn-icon theme-toggle" type="button" data-theme-toggle aria-label="Switch to dark mode"><svg class="icon icon-moon"><use href="#i-moon"/></svg><svg class="icon icon-sun"><use href="#i-sun"/></svg></button>
     </div>
   </header>
 
-  <main style="overflow-x:clip">
-    <div class="container wide">
+  <main>
+    <div class="container">
       <section class="hero">
-        <div class="hero-bg" aria-hidden="true"></div>
-        <span class="eyebrow view"><span class="eyebrow-dot">Free</span>For employees who get referral DMs</span>
-        <h1 data-depth>Referral requests, <span class="serif grad-text scramble" data-scramble-now="650">sorted.</span></h1>
-        <p class="hero-sub view" style="animation-delay:.45s">One link for every "can you refer me?" message. Candidates send complete requests, you decide in one tap, and nobody gets ghosted.</p>
-        <div class="hero-cta view" style="animation-delay:.6s">
-          <a class="btn btn-primary btn-lg" href="/create">Create my referral link <svg class="icon"><use href="#i-arrow"/></svg></a>
-          <a class="btn btn-secondary btn-lg" href="#how">See how it works</a>
-        </div>
-        <div class="trust-row view" style="animation-delay:.75s">
-          <span><svg class="icon"><use href="#i-check"/></svg>No sign-up</span>
-          <span><svg class="icon"><use href="#i-check"/></svg>Under a minute</span>
-          <span><svg class="icon"><use href="#i-check"/></svg>Candidates can delete their data</span>
+        <h1>A kinder way to handle referral requests.</h1>
+        <p class="lead">You get dozens of "can you refer me?" messages. ReferLink gives you one link where candidates ask properly, and one place where you answer every one of them.</p>
+        <div class="hero-cta">
+          <a class="btn btn-primary btn-lg" href="/create">Create your link <svg class="icon"><use href="#i-arrow"/></svg></a>
+          <span class="small muted">Free, no sign-up, about a minute.</span>
         </div>
 
-        <!-- Static example of a request card in the employee's inbox -->
-        <div class="preview-wrap reveal">
-        <div class="preview" role="img" aria-label="Example of a referral request in the ReferLink inbox">
-          <div class="preview-bar" aria-hidden="true"><i></i><i></i><i></i><div class="preview-url">referlink · your private inbox</div></div>
-          <div class="preview-body" aria-hidden="true">
-            <article class="card req">
-              <div class="req-head">
-                <div class="avatar avatar-sm" style="--h:270">AI</div>
-                <div class="req-who">
-                  <div class="req-name">Ananya Iyer</div>
-                  <div class="req-time">2 hours ago</div>
-                </div>
-                <span class="badge badge-pending"><svg class="icon"><use href="#i-clock"/></svg>Pending</span>
-              </div>
-              <p class="why">2 years as a data analyst, SQL and Python daily. Applying for Data Analyst II, which asks for exactly this.</p>
-              <div class="req-links">
-                <span class="link-chip good"><svg class="icon"><use href="#i-briefcase"/></svg><span>Google job</span><svg class="icon"><use href="#i-external"/></svg></span>
-                <span class="link-chip good"><svg class="icon"><use href="#i-file"/></svg><span>Resume · Google Drive</span><svg class="icon"><use href="#i-external"/></svg></span>
-                <span class="link-chip good"><svg class="icon"><use href="#i-user"/></svg><span>LinkedIn</span><svg class="icon"><use href="#i-external"/></svg></span>
-              </div>
-              <div class="req-actions">
-                <span class="btn btn-success"><svg class="icon"><use href="#i-check"/></svg>Referred</span>
-                <span class="btn btn-secondary">Decline</span>
-              </div>
-            </article>
+        <!-- A static example of a request, styled like a letter -->
+        <figure class="letter" aria-label="Example of a referral request" style="margin-left:0;margin-right:0;margin-bottom:0">
+          <div class="letter-head">
+            <div class="avatar avatar-sm" aria-hidden="true">AI</div>
+            <div>
+              <div><strong>Ananya Iyer</strong> <span class="small muted">· Data Analyst II · <span class="mono">JR-104523</span></span></div>
+              <div class="xs muted">2 hours ago</div>
+            </div>
+            <span class="badge badge-pending">Waiting for you</span>
           </div>
-        </div>
-        </div>
-        <span class="preview-label">Example request. The name is made up.</span>
+          <blockquote class="quote">"Two years as a data analyst, SQL and Python daily. The role asks for exactly this."</blockquote>
+          <div class="hero-cta" style="gap:8px">
+            <span class="btn btn-primary btn-sm" aria-hidden="true">Refer</span>
+            <span class="btn btn-secondary btn-sm" aria-hidden="true">Not this time</span>
+          </div>
+        </figure>
+        <p class="example-note">Example request. The name is made up.</p>
       </section>
 
-      <section class="section reveal" id="how">
-        <div class="section-head">
-          <span class="kicker" data-scramble>How it works</span>
-          <h2>From messy DMs to a clear answer</h2>
-          <p>Three steps, no accounts, no back-and-forth.</p>
-        </div>
-        <div class="features">
-          <div class="card feature spot">
-            <div class="feature-icon"><svg class="icon"><use href="#i-link"/></svg></div>
-            <span class="step-num">01</span>
-            <h3>Share one link</h3>
-            <p>Add it to your LinkedIn profile, or reply to referral DMs with it.</p>
-          </div>
-          <div class="card feature spot">
-            <div class="feature-icon"><svg class="icon"><use href="#i-file"/></svg></div>
-            <span class="step-num">02</span>
-            <h3>Get complete requests</h3>
-            <p>Job link, resume and a short pitch. Incomplete requests can't be sent.</p>
-          </div>
-          <div class="card feature spot">
-            <div class="feature-icon"><svg class="icon"><use href="#i-tap"/></svg></div>
-            <span class="step-num">03</span>
-            <h3>Decide in one tap</h3>
-            <p>Referred or Decline. The candidate sees your answer on their own status page.</p>
-          </div>
-        </div>
+      <section class="section" id="how">
+        <h2 class="section-title">How it works</h2>
+        <ol class="steps">
+          <li><span class="step-n">1</span><div><h3>Share your link</h3><p>Add it to your LinkedIn profile, or reply to referral DMs with it.</p></div></li>
+          <li><span class="step-n">2</span><div><h3>Candidates ask properly</h3><p>Job ID, resume and a short pitch, one question at a time. Nothing goes missing.</p></div></li>
+          <li><span class="step-n">3</span><div><h3>Everyone hears back</h3><p>One tap from you. A clear answer on their own status page.</p></div></li>
+        </ol>
       </section>
 
-      <section class="section reveal">
-        <div class="section-head">
-          <span class="kicker" data-scramble>Built for both sides</span>
-          <h2>Less guilt. Fewer ghosts.</h2>
-        </div>
-        <div class="split">
-          <div class="card spot">
-            <div class="feature-icon"><svg class="icon"><use href="#i-inbox"/></svg></div>
-            <h3>For employees</h3>
-            <ul class="list-check">
-              <li><svg class="icon"><use href="#i-check"/></svg>A private inbox for referral requests. No account needed.</li>
-              <li><svg class="icon"><use href="#i-check"/></svg>Quick checks on every request: job link, resume, LinkedIn.</li>
-              <li><svg class="icon"><use href="#i-check"/></svg>Decline politely with one tap. We send the kind wording.</li>
+      <section class="section">
+        <h2 class="section-title">Good for both sides</h2>
+        <div class="two-col">
+          <div>
+            <h3>If you're the employee</h3>
+            <ul>
+              <li>A private inbox for requests. No account.</li>
+              <li>Every request has the job, resume and pitch.</li>
+              <li>Decline kindly in one tap. We word it gently.</li>
             </ul>
           </div>
-          <div class="card spot">
-            <div class="feature-icon"><svg class="icon"><use href="#i-send"/></svg></div>
-            <h3>For candidates</h3>
-            <ul class="list-check">
-              <li><svg class="icon"><use href="#i-check"/></svg>A clear form, so your request actually gets read.</li>
-              <li><svg class="icon"><use href="#i-check"/></svg>Your own status page with the answer. No more guessing.</li>
-              <li><svg class="icon"><use href="#i-check"/></svg>Delete your details any time, in one tap.</li>
+          <div>
+            <h3>If you're asking</h3>
+            <ul>
+              <li>A short form that gets your request read.</li>
+              <li>Your own page with the answer. No more guessing.</li>
+              <li>Delete your details any time.</li>
             </ul>
           </div>
         </div>
       </section>
 
-      <section class="section reveal">
-        <div class="section-head">
-          <span class="kicker" data-scramble>Safe by design</span>
-          <h2>Career data, handled with care</h2>
-        </div>
-        <div class="features">
-          <div class="card feature spot">
-            <div class="feature-icon"><svg class="icon"><use href="#i-lock"/></svg></div>
-            <h3>No passwords</h3>
-            <p>Private links with 64 random characters. Impossible to guess.</p>
-          </div>
-          <div class="card feature spot">
-            <div class="feature-icon"><svg class="icon"><use href="#i-shield"/></svg></div>
-            <h3>Only the person you asked</h3>
-            <p>A candidate's details are shown only to the employee they sent them to.</p>
-          </div>
-          <div class="card feature spot">
-            <div class="feature-icon"><svg class="icon"><use href="#i-trash"/></svg></div>
-            <h3>Delete any time</h3>
-            <p>Candidates can wipe their details from their status page. <a href="/privacy">How we handle data</a></p>
-          </div>
-        </div>
+      <section class="section">
+        <h2 class="section-title">Your data, handled with care</h2>
+        <p class="muted" style="margin:0">No passwords. You get private links that can't be guessed. A candidate's details are shown only to the person they asked. <a href="/privacy">Read how we handle data</a>.</p>
       </section>
 
-      <section class="cta-band reveal">
-        <h2>Stop sorting referral DMs.</h2>
-        <p>Create your link in under a minute. It's free.</p>
-        <a class="btn btn-lg" href="/create">Create my referral link <svg class="icon"><use href="#i-arrow"/></svg></a>
+      <section class="closing">
+        <h2 class="section-title">Ready when your next DM arrives.</h2>
+        <p class="muted">Create your link in about a minute. It's free.</p>
+        <a class="btn btn-primary btn-lg" href="/create">Create your link <svg class="icon"><use href="#i-arrow"/></svg></a>
       </section>
     </div>
   </main>

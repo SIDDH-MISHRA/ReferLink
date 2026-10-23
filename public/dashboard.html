@@ -2,8 +2,8 @@
 <html lang="en">
 <head>
   <meta charset="utf-8">
-  <script>try{document.documentElement.dataset.theme=localStorage.getItem('rl-theme')||'dark'}catch(e){document.documentElement.dataset.theme='dark'}document.documentElement.classList.add('js')</script>
-  <meta name="theme-color" content="#0a0714">
+  <script>try{document.documentElement.dataset.theme=localStorage.getItem('rl-theme')||'light'}catch(e){document.documentElement.dataset.theme='light'}</script>
+  <meta name="theme-color" content="#faf8f4">
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <meta name="referrer" content="no-referrer">
   <meta name="robots" content="noindex, nofollow">
@@ -11,7 +11,7 @@
   <link rel="icon" href="/favicon.svg" type="image/svg+xml">
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Geist:wght@400;500;600;700&family=Geist+Mono:wght@400;500&family=Instrument+Serif:ital@0;1&display=swap">
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=Newsreader:opsz,wght@6..72,400;6..72,500&display=swap">
   <link rel="stylesheet" href="/css/style.css">
   <script src="/js/config.js" defer></script>
   <script src="/js/app.js" defer></script>
@@ -19,64 +19,57 @@
 </head>
 <body>
   <header class="site-header">
-    <div class="container wide nav-pill">
-      <a class="logo" href="/" aria-label="ReferLink home"><span class="logo-mark"><svg class="icon" viewBox="0 0 24 24" aria-hidden="true"><path d="M20 6 9 17l-5-5"/></svg></span>ReferLink</a>
+    <div class="container wide nav">
+      <a class="logo" href="/" aria-label="ReferLink home"><span class="logo-mark"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M20 6 9 17l-5-5"/></svg></span>ReferLink</a>
       <button id="refresh" class="btn btn-secondary btn-sm hidden" type="button"><svg class="icon"><use href="#i-refresh"/></svg>Refresh</button>
-      <button class="btn btn-ghost btn-icon theme-toggle" type="button" data-theme-toggle aria-label="Switch colour theme"><svg class="icon icon-sun"><use href="#i-sun"/></svg><svg class="icon icon-moon"><use href="#i-moon"/></svg></button>
+      <button class="btn btn-ghost btn-icon theme-toggle" type="button" data-theme-toggle aria-label="Switch to dark mode"><svg class="icon icon-moon"><use href="#i-moon"/></svg><svg class="icon icon-sun"><use href="#i-sun"/></svg></button>
     </div>
   </header>
 
-  <main>
-    <div class="container mid">
+  <main style="padding-top:36px">
+    <div class="container wide">
       <div id="loading" class="loading"><div class="spinner"></div>Loading your requests…</div>
 
-      <section id="not-found" class="card empty hidden view">
-        <div class="empty-icon"><svg class="icon"><use href="#i-lock"/></svg></div>
+      <section id="not-found" class="empty hidden view">
         <h3>This dashboard link doesn't work</h3>
         <p>Check that you copied the whole link. If you've lost it, you'll need to create a new referral link.</p>
         <a class="btn btn-secondary" style="margin-top:16px" href="/create">Create a new link</a>
       </section>
 
-      <section id="load-error" class="card empty hidden view">
-        <div class="empty-icon"><svg class="icon"><use href="#i-alert"/></svg></div>
+      <section id="load-error" class="empty hidden view">
         <h3>Couldn't load your requests</h3>
         <p id="load-error-text"></p>
-        <button class="btn btn-secondary" style="margin-top:16px" type="button" onclick="location.reload()"><svg class="icon"><use href="#i-refresh"/></svg>Try again</button>
+        <button class="btn btn-secondary" style="margin-top:16px" type="button" onclick="location.reload()">Try again</button>
       </section>
 
       <section id="app" class="hidden view">
-        <div class="dash-head">
+        <div class="dash-top">
           <div>
             <h1 id="greeting"></h1>
             <p id="board-meta"></p>
           </div>
-        </div>
-
-        <div class="card share-card spot">
-          <div class="label"><svg class="icon"><use href="#i-link"/></svg>Your public link</div>
-          <div class="copy-field">
-            <input id="public-link" type="text" readonly aria-label="Your public link">
-            <button id="copy-public" class="btn btn-secondary btn-sm" type="button"><svg class="icon"><use href="#i-copy"/></svg>Copy</button>
+          <div class="share">
+            <span class="small muted" style="white-space:nowrap">Your link</span>
+            <div class="copy-field">
+              <input id="public-link" type="text" readonly aria-label="Your public link">
+              <button id="copy-public" class="btn btn-secondary btn-sm" type="button">Copy</button>
+            </div>
           </div>
         </div>
 
-        <div class="filters" role="tablist" aria-label="Filter requests">
-          <button class="filter" role="tab" data-filter="pending" aria-selected="true"><b>0</b>Pending</button>
-          <button class="filter" role="tab" data-filter="referred" aria-selected="false"><b>0</b>Referred</button>
-          <button class="filter" role="tab" data-filter="declined" aria-selected="false"><b>0</b>Declined</button>
-          <button class="filter" role="tab" data-filter="all" aria-selected="false"><b>0</b>All</button>
+        <div class="tabs" role="tablist" aria-label="Filter requests">
+          <button class="tab" role="tab" data-filter="pending" aria-selected="true">Inbox<span class="count"></span></button>
+          <button class="tab" role="tab" data-filter="referred" aria-selected="false">Referred<span class="count"></span></button>
+          <button class="tab" role="tab" data-filter="declined" aria-selected="false">Declined<span class="count"></span></button>
+          <button class="tab" role="tab" data-filter="all" aria-selected="false">All<span class="count"></span></button>
         </div>
 
-        <p class="dash-tip"><svg class="icon"><use href="#i-info"/></svg>Tap Referred after you've submitted the referral in your company's tool.</p>
-
-        <div id="list" class="stack"></div>
-        <div id="empty" class="card empty hidden">
-          <div class="empty-icon"><svg class="icon"><use href="#i-inbox"/></svg></div>
-          <h3 id="empty-title"></h3>
-          <p id="empty-text"></p>
+        <div class="inbox" id="inbox">
+          <div class="list" id="list" role="list"></div>
+          <div class="detail" id="detail" aria-live="polite"></div>
         </div>
 
-        <p class="dash-tip" style="margin-top:28px;justify-content:center"><svg class="icon"><use href="#i-lock"/></svg>Bookmark this page. This private link is your only way back in.</p>
+        <p class="dash-note"><svg class="icon"><use href="#i-lock"/></svg> Bookmark this page. This private link is your only way back in. Tap <strong>Refer</strong> after you've submitted the referral in your company's tool.</p>
       </section>
     </div>
   </main>

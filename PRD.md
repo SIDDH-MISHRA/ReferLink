@@ -66,7 +66,7 @@ Accounts and passwords · file uploads · email or WhatsApp alerts · AI screeni
 
 ### B. Candidate submits a request
 1. Opens the public link and sees the employee's name, company, the roles they refer for and their note.
-2. Fills in name, email, LinkedIn URL, job link or job ID, resume link and "Why you fit" (max 300 characters).
+2. Answers one question per screen in 5 short steps: name and email, LinkedIn URL, job link or job ID, resume link, and "Why you fit" (max 300 characters).
 3. Ticks consent: "My details are shared only with this employee."
 4. The form checks every field before submitting and explains what's wrong in plain words, e.g. "No job ID? Find it on the job posting. Requests without one usually get ignored."
 5. Gets a **private status link** (`/s/<long token>`) with Copy and Email-to-myself buttons.
@@ -147,7 +147,7 @@ It only counts requests that are at least 7 days old. Why this metric: the produ
 
 ### Analytics events
 `board_created`, `public_link_copied`, `request_form_viewed`, `request_form_started`, `request_submitted`, `dashboard_viewed`, `decision_made` (type, reason), `status_page_viewed`.
-**One addition:** `request_form_blocked` (which field failed). It powers KPI 3.
+**Two additions:** `request_form_blocked` (which field failed) powers KPI 3. `request_form_step_viewed` (step 1–5) shows exactly which question candidates drop off at.
 
 ---
 

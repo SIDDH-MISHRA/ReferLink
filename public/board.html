@@ -2,8 +2,8 @@
 <html lang="en">
 <head>
   <meta charset="utf-8">
-  <script>try{document.documentElement.dataset.theme=localStorage.getItem('rl-theme')||'dark'}catch(e){document.documentElement.dataset.theme='dark'}document.documentElement.classList.add('js')</script>
-  <meta name="theme-color" content="#0a0714">
+  <script>try{document.documentElement.dataset.theme=localStorage.getItem('rl-theme')||'light'}catch(e){document.documentElement.dataset.theme='light'}</script>
+  <meta name="theme-color" content="#faf8f4">
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <meta name="referrer" content="no-referrer">
   <meta name="robots" content="noindex">
@@ -17,7 +17,7 @@
   <link rel="icon" href="/favicon.svg" type="image/svg+xml">
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Geist:wght@400;500;600;700&family=Geist+Mono:wght@400;500&family=Instrument+Serif:ital@0;1&display=swap">
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=Newsreader:opsz,wght@6..72,400;6..72,500&display=swap">
   <link rel="stylesheet" href="/css/style.css">
   <script src="/js/config.js" defer></script>
   <script src="/js/app.js" defer></script>
@@ -25,138 +25,117 @@
 </head>
 <body>
   <header class="site-header">
-    <div class="container wide nav-pill">
-      <a class="logo" href="/" aria-label="ReferLink home"><span class="logo-mark"><svg class="icon" viewBox="0 0 24 24" aria-hidden="true"><path d="M20 6 9 17l-5-5"/></svg></span>ReferLink</a>
-      <button class="btn btn-ghost btn-icon theme-toggle" type="button" data-theme-toggle aria-label="Switch colour theme"><svg class="icon icon-sun"><use href="#i-sun"/></svg><svg class="icon icon-moon"><use href="#i-moon"/></svg></button>
+    <div class="container wide nav">
+      <a class="logo" href="/" aria-label="ReferLink home"><span class="logo-mark"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M20 6 9 17l-5-5"/></svg></span>ReferLink</a>
+      <button class="btn btn-ghost btn-icon theme-toggle" type="button" data-theme-toggle aria-label="Switch to dark mode"><svg class="icon icon-moon"><use href="#i-moon"/></svg><svg class="icon icon-sun"><use href="#i-sun"/></svg></button>
     </div>
   </header>
 
   <main>
-    <div class="container">
+    <div class="container" style="max-width:560px">
       <div id="loading" class="loading"><div class="spinner"></div>Loading…</div>
 
-      <section id="not-found" class="card empty hidden view">
-        <div class="empty-icon"><svg class="icon"><use href="#i-link"/></svg></div>
+      <section id="not-found" class="empty hidden view">
         <h3>This link doesn't work</h3>
         <p>Check the link with the person who shared it. It may have a typo or be cut off.</p>
       </section>
 
-      <section id="load-error" class="card empty hidden view">
-        <div class="empty-icon"><svg class="icon"><use href="#i-alert"/></svg></div>
+      <section id="load-error" class="empty hidden view">
         <h3>Couldn't load this page</h3>
         <p id="load-error-text"></p>
-        <button class="btn btn-secondary" style="margin-top:16px" type="button" onclick="location.reload()"><svg class="icon"><use href="#i-refresh"/></svg>Try again</button>
+        <button class="btn btn-secondary" style="margin-top:16px" type="button" onclick="location.reload()">Try again</button>
       </section>
 
-      <!-- The request form -->
-      <section id="form-view" class="hidden stack view">
-        <div class="card profile spot">
-          <div class="profile-top">
-            <div id="avatar" class="avatar avatar-lg"></div>
-            <div style="min-width:0">
-              <h1 id="employee-name"></h1>
-              <span class="company"><svg class="icon"><use href="#i-building"/></svg><span id="employee-company"></span></span>
-            </div>
+      <!-- The request, one question per screen -->
+      <section id="form-view" class="hidden view">
+        <div class="asking">
+          <div id="avatar" class="avatar avatar-lg"></div>
+          <div>
+            <div class="asking-sub">You're asking</div>
+            <div class="asking-name" id="employee-name"></div>
+            <div class="asking-sub" id="employee-company"></div>
           </div>
-          <div class="profile-meta hidden" id="refers-wrap">
-            <div class="label">Refers for</div>
-            <div class="chips" id="refers-for"></div>
-          </div>
-          <p class="note hidden" id="employee-note"></p>
-          <span id="employee-linkedin"></span>
         </div>
 
-        <form id="request-form" class="card" novalidate>
-          <div style="margin-bottom:24px">
-            <h2 style="font-size:1.25rem">Request a referral</h2>
-            <p class="muted small" style="margin:0">Complete requests get answers, so every field is needed.</p>
-          </div>
+        <!-- Shown on the first step only -->
+        <div class="about" id="about">
+          <div id="refers-wrap" class="hidden"><span class="small muted">Refers for</span><div class="chips" id="refers-for"></div></div>
+          <blockquote class="quote hidden" id="employee-note"></blockquote>
+          <p class="small" style="margin:14px 0 0"><span id="employee-linkedin"></span></p>
+        </div>
+
+        <div class="step-top">
+          <button id="back" class="text-btn" type="button" style="visibility:hidden"><svg class="icon"><use href="#i-back"/></svg>Back</button>
+          <span id="step-count" aria-live="polite"></span>
+        </div>
+        <div class="progress" aria-hidden="true"><i id="progress-bar"></i></div>
+
+        <form id="request-form" novalidate>
           <div id="form-error" class="form-error hidden" role="alert"></div>
 
-          <div class="form-section">
-            <h3 class="form-section-title"><svg class="icon"><use href="#i-user"/></svg>About you</h3>
-            <div class="field">
-              <label for="name">Full name</label>
-              <input id="name" type="text" autocomplete="name" maxlength="80" required>
-            </div>
-            <div class="field">
-              <label for="email">Email</label>
-              <input id="email" type="email" inputmode="email" autocomplete="email" maxlength="254" placeholder="you@gmail.com" required>
-              <div class="hint">Employees need it to fill in the referral form.</div>
-            </div>
-            <div class="field">
-              <label for="linkedin">LinkedIn profile URL</label>
-              <input id="linkedin" type="url" inputmode="url" placeholder="linkedin.com/in/your-name" required>
-            </div>
+          <div class="step" data-step="1">
+            <h1 class="q-title">What's your name and email?</h1>
+            <p class="q-sub"><span class="employee-first"></span> needs these to fill in the referral form.</p>
+            <div class="field"><label for="name">Full name</label><input id="name" type="text" autocomplete="name" maxlength="80" required></div>
+            <div class="field"><label for="email">Email</label><input id="email" type="email" inputmode="email" autocomplete="email" maxlength="254" placeholder="you@gmail.com" required></div>
           </div>
 
-          <div class="form-section">
-            <h3 class="form-section-title"><svg class="icon"><use href="#i-briefcase"/></svg>The job</h3>
-            <div class="field">
-              <label for="job_ref">Job link or job ID</label>
-              <input id="job_ref" type="text" placeholder="Paste the link, or an ID like JR-104523" maxlength="500" required>
-              <div class="hint">No job ID? Find it on the job posting. Requests without one usually get ignored.</div>
-            </div>
-            <div class="field">
-              <label for="resume">Resume link</label>
-              <input id="resume" type="url" inputmode="url" placeholder="Google Drive, Dropbox or similar" required>
-              <div class="hint">Set sharing to "Anyone with the link", or it won't open.</div>
-            </div>
+          <div class="step hidden" data-step="2">
+            <h1 class="q-title">Your LinkedIn profile</h1>
+            <p class="q-sub">So <span class="employee-first"></span> can see your experience.</p>
+            <div class="field"><label for="linkedin">LinkedIn profile URL</label><input id="linkedin" type="url" inputmode="url" placeholder="linkedin.com/in/your-name" required></div>
           </div>
 
-          <div class="form-section">
-            <h3 class="form-section-title"><svg class="icon"><use href="#i-pen"/></svg>Your pitch</h3>
-            <div class="field">
-              <label for="why">Why you fit <span class="counter" id="why-counter">0 / 300</span></label>
-              <textarea id="why" maxlength="300" placeholder="3 years building payment APIs in Java. This role needs the same stack." required></textarea>
-              <div class="hint">2–3 lines. Be specific: skills, years, and why this role.</div>
-            </div>
-            <div class="field">
-              <label class="check">
-                <input id="consent" type="checkbox" required>
-                <span>I agree to share these details with <strong class="employee-first"></strong> only. <a href="/privacy" target="_blank" rel="noopener">How we handle data</a></span>
-              </label>
-            </div>
+          <div class="step hidden" data-step="3">
+            <h1 class="q-title">Which job are you applying for?</h1>
+            <p class="q-sub">Paste the job link, or the job ID from the posting.</p>
+            <div class="field"><label for="job_ref">Job link or job ID</label><input id="job_ref" type="text" maxlength="500" placeholder="JR-104523 or https://…" required>
+              <div class="hint">No job ID? It's usually near the top of the posting. Requests without one usually get ignored.</div></div>
           </div>
 
-          <div class="honeypot" aria-hidden="true">
-            <label for="website">Website</label>
-            <input id="website" type="text" tabindex="-1" autocomplete="off">
+          <div class="step hidden" data-step="4">
+            <h1 class="q-title">Where's your resume?</h1>
+            <p class="q-sub">A link to it on Google Drive, Dropbox or similar.</p>
+            <div class="field"><label for="resume">Resume link</label><input id="resume" type="url" inputmode="url" placeholder="drive.google.com/…" required>
+              <div class="hint">Set sharing to "Anyone with the link", or it won't open.</div></div>
           </div>
 
-          <div class="form-footer">
-            <button class="btn btn-primary btn-lg btn-block" type="submit"><svg class="icon"><use href="#i-send"/></svg>Send request</button>
-            <p class="xs muted center" style="margin:12px 0 0"><svg class="icon"><use href="#i-lock"/></svg> Only <span class="employee-first"></span> sees your details. You can delete them any time.</p>
+          <div class="step hidden" data-step="5">
+            <h1 class="q-title">Why are you a good fit?</h1>
+            <p class="q-sub">Two or three lines. Be specific: skills, years, and why this role.</p>
+            <div class="field"><label for="why">Your pitch <span class="counter" id="why-counter">0 / 300</span></label>
+              <textarea id="why" maxlength="300" placeholder="3 years building payment APIs in Java. This role needs the same stack." required></textarea></div>
+            <div class="field"><label class="check"><input id="consent" type="checkbox" required><span>Share these details with <strong class="employee-first"></strong> only. <a href="/privacy" target="_blank" rel="noopener">How we handle data</a></span></label></div>
           </div>
+
+          <div class="honeypot" aria-hidden="true"><label for="website">Website</label><input id="website" type="text" tabindex="-1" autocomplete="off"></div>
+
+          <div class="step-actions">
+            <button id="next" class="btn btn-primary btn-lg" type="submit">Continue</button>
+          </div>
+          <p class="privacy-line">Only <span class="employee-first"></span> sees your answers.</p>
         </form>
       </section>
 
       <!-- After sending -->
       <section id="done-view" class="hidden view">
-        <div class="page-head center">
-          <div class="success-mark" style="margin:0 auto 16px"><svg class="icon"><use href="#i-check"/></svg></div>
-          <h1>Request <span class="serif grad-text">sent</span></h1>
+        <div class="page-head">
+          <div class="done-mark"><svg class="icon"><use href="#i-check"/></svg></div>
+          <h1>Request sent</h1>
           <p><span class="employee-first"></span> will see it in their referral inbox.</p>
         </div>
-
-        <div class="stack">
-          <div class="card">
-            <div class="link-card-head">
-              <div class="link-card-icon"><svg class="icon"><use href="#i-link"/></svg></div>
-              <div>
-                <h2>Save your status link</h2>
-                <p>It's the only place to see the answer. We don't send emails.</p>
-              </div>
-            </div>
+        <div class="card">
+          <div class="link-block">
+            <h2>Save your status link</h2>
+            <p>It's the only place to see the answer. We don't send emails.</p>
             <div class="copy-field">
               <input id="status-link" type="text" readonly aria-label="Your status link">
               <button id="copy-status" class="btn btn-primary btn-sm" type="button"><svg class="icon"><use href="#i-copy"/></svg>Copy</button>
             </div>
             <a id="email-status" class="btn btn-secondary btn-block" style="margin-top:10px" href="#"><svg class="icon"><use href="#i-mail"/></svg>Email this link to myself</a>
           </div>
-
-          <a id="open-status" class="btn btn-primary btn-lg btn-block" href="#">Open my status page <svg class="icon"><use href="#i-arrow"/></svg></a>
         </div>
+        <a id="open-status" class="btn btn-primary btn-lg btn-block" style="margin-top:20px" href="#">Open my status page <svg class="icon"><use href="#i-arrow"/></svg></a>
       </section>
     </div>
   </main>

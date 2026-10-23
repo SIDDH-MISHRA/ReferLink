@@ -129,3 +129,10 @@ One entry per real decision or problem. Newest at the bottom.
 - Who: Siddh (call), Claude (directions and mockups)
 - Evidence: Rendered boards are in `design/ui-designs/`. All use made-up example data, and none promise features the product doesn't have.
 - Result: Pending Siddh's choice. Once chosen, the live site gets rebuilt in that direction.
+
+## 2026-10-24 · Rebuilt the site in the "Paper" design
+- Decision: Rebuilt every page in the Paper direction: warm paper tones, Newsreader serif headlines, Inter body text, one forest-green accent, and no effects. The candidate form is now one question per screen (5 steps). The dashboard is a two-pane inbox, and on phones the list and the open request take turns. Light is the default, with a warm dark mode on the toggle. The favicon is now the green check circle.
+- Why: Siddh picked Paper from the 5 directions because it feels calm and human, not "AI slop". One question per screen should feel lighter for candidates on a phone.
+- Who: Siddh (picked Paper), Claude (build)
+- Evidence: Browser tests passed for the step flow (blocks bad input, Back works, sends at the end) and the phone dashboard (tap to open, decline with reason, stays open). No page scrolls sideways at 375px, and the 11 database tests still pass. Two bugs were found and fixed: stretched avatars, and a stray "null" on the dashboard.
+- Result: Added `request_form_step_viewed`, so Step 8 can show exactly which question candidates drop off at.

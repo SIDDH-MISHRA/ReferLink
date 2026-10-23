@@ -1,4 +1,4 @@
-// /r/<slug>: a candidate reads the employee's board and sends a request.
+// /r/<slug>: a candidate asks for a referral, one question per screen.
 (function () {
   const { rpc, track, check, withHttps, setFieldError, bindCopy, mailtoHref, errorText, safeLink, avatar, roleChips, icon, pathParam } = window.RL;
   const $ = (id) => document.getElementById(id);
@@ -14,6 +14,12 @@
     why_fit: $('why'),
     consent: $('consent'),
   };
+
+  // Which step each field lives on.
+  const STEP_OF = { name: 1, email: 1, linkedin_url: 2, job_ref: 3, resume_url: 4, why_fit: 5, consent: 5 };
+  const STEP_NAMES = { 1: 'contact', 2: 'linkedin', 3: 'job', 4: 'resume', 5: 'pitch' };
+  const TOTAL = 5;
+  let step = 1;
 
   const MESSAGES = {
     name: 'Enter your full name.',
@@ -52,12 +58,34 @@
       $('employee-note').classList.remove('hidden');
     }
     const profile = safeLink(board.linkedin_url, first + "'s LinkedIn profile");
-    profile.className = 'profile-link';
-    profile.append(icon('external'));
+    profile.append(' ', icon('external'));
     $('employee-linkedin').replaceWith(profile);
     show('form-view');
     track('request_form_viewed', { board_id: board.board_id });
+    goTo(1, false);
   }
+
+  // ---------------------------------------------------------------------------
+  // Steps
+  // ---------------------------------------------------------------------------
+  function goTo(n, focus) {
+    step = n;
+    document.querySelectorAll('.step').forEach((el) => el.classList.toggle('hidden', Number(el.dataset.step) !== n));
+    $('about').classList.toggle('hidden', n !== 1);
+    $('back').style.visibility = n === 1 ? 'hidden' : 'visible';
+    $('step-count').textContent = 'Step ' + n + ' of ' + TOTAL;
+    $('progress-bar').style.width = (n / TOTAL) * 100 + '%';
+    $('next').textContent = n === TOTAL ? 'Send request' : 'Continue';
+    $('form-error').classList.add('hidden');
+    if (focus) {
+      const first = document.querySelector('.step[data-step="' + n + '"] input, .step[data-step="' + n + '"] textarea');
+      if (first) first.focus();
+      window.scrollTo(0, 0);
+    }
+    track('request_form_step_viewed', { board_id: board.board_id, step: n, step_name: STEP_NAMES[n] });
+  }
+
+  $('back').addEventListener('click', () => goTo(step - 1, true));
 
   // request_form_started: the first time the candidate types anything.
   let started = false;
@@ -76,7 +104,19 @@
     input.addEventListener(input.type === 'checkbox' ? 'change' : 'input', () => setFieldError(input, null));
   });
 
-  function validate(v) {
+  function values() {
+    return {
+      name: inputs.name.value.trim(),
+      email: inputs.email.value.trim(),
+      linkedin_url: inputs.linkedin_url.value.trim(),
+      job_ref: inputs.job_ref.value.trim(),
+      resume_url: inputs.resume_url.value.trim(),
+      why_fit: inputs.why_fit.value.trim(),
+      consent: inputs.consent.checked,
+    };
+  }
+
+  function invalidFields(v) {
     const bad = [];
     if (v.name.length < 2 || v.name.length > 80) bad.push('name');
     if (!check.email(v.email)) bad.push('email');
@@ -90,34 +130,28 @@
 
   $('request-form').addEventListener('submit', async function (e) {
     e.preventDefault();
-    const formError = $('form-error');
-    const button = this.querySelector('button[type="submit"]');
-    formError.classList.add('hidden');
 
     // Add https:// to links typed without it.
     inputs.linkedin_url.value = withHttps(inputs.linkedin_url.value);
     inputs.resume_url.value = withHttps(inputs.resume_url.value);
     inputs.job_ref.value = withHttps(inputs.job_ref.value);
 
-    const v = {
-      name: inputs.name.value.trim(),
-      email: inputs.email.value.trim(),
-      linkedin_url: inputs.linkedin_url.value.trim(),
-      job_ref: inputs.job_ref.value.trim(),
-      resume_url: inputs.resume_url.value.trim(),
-      why_fit: inputs.why_fit.value.trim(),
-      consent: inputs.consent.checked,
-    };
+    const v = values();
+    const bad = invalidFields(v);
 
-    const bad = validate(v);
-    Object.keys(inputs).forEach((k) => setFieldError(inputs[k], bad.includes(k) ? MESSAGES[k] : null));
-    if (bad.length) {
-      inputs[bad[0]].focus();
-      track('request_form_blocked', { board_id: board.board_id, fields: bad, source: 'browser' });
+    // Check only this step's fields before moving on.
+    const here = Object.keys(STEP_OF).filter((k) => STEP_OF[k] === step);
+    here.forEach((k) => setFieldError(inputs[k], bad.includes(k) ? MESSAGES[k] : null));
+    const badHere = here.filter((k) => bad.includes(k));
+    if (badHere.length) {
+      inputs[badHere[0]].focus();
+      track('request_form_blocked', { board_id: board.board_id, fields: badHere, source: 'browser', step });
       return;
     }
+    if (step < TOTAL) return goTo(step + 1, true);
 
-    const label = Array.from(button.childNodes).map((n) => n.cloneNode(true));
+    // Last step: earlier steps are already valid, so send.
+    const button = $('next');
     button.disabled = true;
     button.textContent = 'Sending…';
     try {
@@ -136,20 +170,20 @@
       showDone(res.status_token);
     } catch (err) {
       if (err.code === 'invalid' && inputs[err.field]) {
+        goTo(STEP_OF[err.field], false);
         setFieldError(inputs[err.field], MESSAGES[err.field]);
         inputs[err.field].focus();
-        track('request_form_blocked', { board_id: board.board_id, fields: [err.field], source: 'server' });
+        track('request_form_blocked', { board_id: board.board_id, fields: [err.field], source: 'server', step: STEP_OF[err.field] });
       } else {
-        formError.textContent = errorText(err);
-        formError.classList.remove('hidden');
-        formError.scrollIntoView({ block: 'center' });
+        $('form-error').textContent = errorText(err);
+        $('form-error').classList.remove('hidden');
         if (err.code === 'duplicate' || err.code === 'rate_limited') {
           track('request_form_blocked', { board_id: board.board_id, fields: [], source: 'server', reason: err.code });
         }
       }
     } finally {
       button.disabled = false;
-      button.replaceChildren(...label);
+      button.textContent = step === TOTAL ? 'Send request' : 'Continue';
     }
   });
 

@@ -97,7 +97,8 @@ Anti-spam checks inside the functions:
 | `public_link_copied` | Copy public link or LinkedIn text | `where` (save screen / dashboard), `what` |
 | `request_form_viewed` | Public board opens | `board_id` |
 | `request_form_started` | First typing in the form | `board_id` |
-| `request_form_blocked` | Submit stopped by a check | `board_id`, `fields`, `source` (browser / server) |
+| `request_form_step_viewed` | Each of the 5 question screens opens | `board_id`, `step`, `step_name` |
+| `request_form_blocked` | A step or submit stopped by a check | `board_id`, `fields`, `source` (browser / server), `step` |
 | `request_submitted` | Request saved | `board_id`, `job_ref_type` (link / id) |
 | `dashboard_viewed` | Dashboard opens | `board_id`, `pending_count`, `total_count` |
 | `decision_made` | Referred or Declined | `board_id`, `type`, `reason`, `hours_to_decision`, `is_first_decision` |

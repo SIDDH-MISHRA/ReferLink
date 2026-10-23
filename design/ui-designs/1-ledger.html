@@ -1,0 +1,101 @@
+<!doctype html>
+<html lang="en"><head><meta charset="utf-8"><title>1 · Ledger</title>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@500;600&display=swap">
+<link rel="stylesheet" href="ui.css">
+<style>
+:root {
+  --canvas: #eef0f3; --canvas-ink: #0f172a; --frame-line: #dfe3e8;
+  --bg: #ffffff; --panel: #ffffff; --chrome: #f6f7f9; --input-bg: #fff; --nav-bg: #fff; --nav-line: #eceef1;
+  --line: #eceef1; --line2: #d9dde3;
+  --ink: #0f172a; --ink2: #475569; --ink3: #94a3b8;
+  --acc: #4338ca; --acc-text: #4338ca; --on-acc: #fff; --focus: rgba(67,56,202,.15);
+  --pend: #b45309; --pend-bg: #fef3c7; --ok: #047857; --ok-bg: #d1fae5; --no: #475569; --no-bg: #f1f5f9;
+  --av-bg: #eef2ff; --av-ink: #4338ca; --logo-bg: #0f172a; --logo-ink: #fff;
+  --font: "Inter", system-ui, sans-serif; --head-font: "Inter", sans-serif; --head-weight: 650; --head-track: -0.035em;
+  --r-btn: 8px; --r-badge: 6px; --r-av: 50%; --r-input: 8px; --r-logo: 6px;
+}
+.hero { display: grid; grid-template-columns: 1fr 1.05fr; gap: 32px; padding: 44px 32px 36px; align-items: center; }
+.product { border: 1px solid var(--line2); border-radius: 12px; background: #fff; box-shadow: 0 1px 2px rgba(15,23,42,.04), 0 18px 40px -22px rgba(15,23,42,.25); overflow: hidden; }
+.prow { display: grid; grid-template-columns: 1.25fr 1.15fr auto; gap: 10px; align-items: center; padding: 10px 14px; border-top: 1px solid var(--line); font-size: 12px; }
+.steps { display: grid; grid-template-columns: repeat(3, 1fr); border-top: 1px solid var(--line); }
+.steps > div { padding: 20px 24px; border-right: 1px solid var(--line); }
+.steps > div:last-child { border-right: 0; }
+.num { font: 600 11px "JetBrains Mono", monospace; color: var(--acc); }
+table { width: 100%; border-collapse: collapse; font-size: 12.5px; }
+th { text-align: left; font: 600 11px var(--font); color: var(--ink3); text-transform: uppercase; letter-spacing: .04em; padding: 10px 14px; border-bottom: 1px solid var(--line); background: #fafbfc; }
+td { padding: 12px 14px; border-bottom: 1px solid var(--line); vertical-align: middle; }
+tr.sel td { background: #f8f9ff; }
+.stat { padding: 14px 18px; border: 1px solid var(--line); border-radius: 10px; }
+.stat b { display: block; font-size: 22px; letter-spacing: -0.02em; }
+</style></head>
+<body><div class="board">
+<svg width="0" height="0" style="position:absolute"><symbol id="chk" viewBox="0 0 24 24"><path d="M20 6 9 17l-5-5"/></symbol><symbol id="arr" viewBox="0 0 24 24"><path d="M5 12h14M12 5l7 7-7 7"/></symbol><symbol id="ext" viewBox="0 0 24 24"><path d="M7 7h10v10M7 17 17 7"/></symbol><symbol id="copy" viewBox="0 0 24 24"><rect x="8" y="8" width="13" height="13" rx="2"/><path d="M4 16V5a1 1 0 0 1 1-1h11"/></symbol><symbol id="lock" viewBox="0 0 24 24"><rect x="4" y="11" width="16" height="10" rx="2"/><path d="M8 11V7a4 4 0 0 1 8 0v4"/></symbol></svg>
+
+<div class="board-head">
+  <div><h1>1 · Ledger</h1><p>Crisp, white and precise, like Stripe or Linear's light mode. The product sits right beside the headline. The dashboard is a sortable table, built for speed when requests pile up.</p></div>
+  <div><div class="meta">Inter · Indigo accent</div><div class="swatches"><i style="background:#fff"></i><i style="background:#0f172a"></i><i style="background:#475569"></i><i style="background:#4338ca"></i><i style="background:#047857"></i></div></div>
+</div>
+
+<div class="row">
+  <div style="width:842px"><div class="cap">Landing · desktop</div>
+    <div class="frame"><div class="bar"><i></i><i></i><i></i><span>referlink.app</span></div>
+      <div class="nav"><div class="logo"><span class="logo-mark"><svg class="ic" style="width:12px;height:12px;stroke-width:3"><use href="#chk"/></svg></span>ReferLink</div><a>How it works</a><a>Privacy</a><span style="margin-left:auto" class="flex gap8"><span class="btn btn-ghost btn-sm">Open my inbox</span><span class="btn btn-ink btn-sm">Create your link</span></span></div>
+      <div class="hero">
+        <div>
+          <div class="eyebrow" style="margin-bottom:14px">For employees who get referral DMs</div>
+          <h2 class="h-xl">Every referral request in one inbox.</h2>
+          <p class="p" style="margin:14px 0 22px">Share one link. Candidates send the job ID, resume and a short pitch. You answer in one click, and they always hear back.</p>
+          <div class="flex gap8"><span class="btn btn-acc">Create your link <svg class="ic"><use href="#arr"/></svg></span><span class="btn btn-line">See an example</span></div>
+          <div class="xs" style="margin-top:14px">Free · No sign-up · Takes a minute</div>
+        </div>
+        <div class="product">
+          <div class="flex" style="padding:12px 14px;gap:8px"><span class="h-sm">Requests</span><span class="badge b-pend">3 pending</span><span class="xs" style="margin-left:auto">Newest first</span></div>
+          <div class="prow"><span class="flex gap8"><span class="av">AI</span><span><b>Ananya Iyer</b><br><span class="xs">Data Analyst II</span></span></span><span class="xs" style="white-space:nowrap">JR-104523 · Resume ✓</span><span class="btn btn-acc btn-sm">Refer</span></div>
+          <div class="prow"><span class="flex gap8"><span class="av">RV</span><span><b>Rahul Verma</b><br><span class="xs">Backend Engineer</span></span></span><span class="xs" style="white-space:nowrap">Job ✓ · Resume ✓</span><span class="btn btn-acc btn-sm">Refer</span></div>
+          <div class="prow"><span class="flex gap8"><span class="av">MN</span><span><b>Meera Nair</b><br><span class="xs">Payments SRE</span></span></span><span class="xs" style="white-space:nowrap">Job ✓ · Resume ✓</span><span class="badge b-ok">Referred</span></div>
+        </div>
+      </div>
+      <div class="steps">
+        <div><div class="num">01</div><div class="h-sm" style="margin:6px 0 4px">Share one link</div><div class="s">Put it on your LinkedIn profile or reply to DMs with it.</div></div>
+        <div><div class="num">02</div><div class="h-sm" style="margin:6px 0 4px">Get complete requests</div><div class="s">Job ID, resume and pitch are required. No more vague DMs.</div></div>
+        <div><div class="num">03</div><div class="h-sm" style="margin:6px 0 4px">Answer in one click</div><div class="s">Refer or decline. The candidate sees it on their status page.</div></div>
+      </div>
+    </div>
+  </div>
+
+  <div><div class="cap">Candidate form · phone</div>
+    <div class="phone"><div class="notch"><i></i></div>
+      <div style="padding:14px 18px 20px">
+        <div class="flex gap10" style="padding:12px;border:1px solid var(--line);border-radius:10px;margin-bottom:16px"><span class="av av-lg">PS</span><div><div class="h-sm">Priya Sharma</div><div class="xs">Software Engineer · Google</div><div class="flex gap6" style="margin-top:6px"><span class="tagchip">Backend</span><span class="tagchip">Data</span></div></div></div>
+        <div class="h-md" style="margin-bottom:4px">Request a referral</div>
+        <div class="xs" style="margin-bottom:14px">All fields are required. Takes about 2 minutes.</div>
+        <div class="field"><label>Full name</label><div class="input filled">Ananya Iyer</div></div>
+        <div class="field"><label>Email</label><div class="input filled">ananya@gmail.com</div></div>
+        <div class="field"><label>Job link or job ID</label><div class="input focus filled">JR-104523</div><div class="hint">Find it on the job posting. Requests without one usually get ignored.</div></div>
+        <div class="field"><label>Resume link</label><div class="input">Google Drive or Dropbox link</div></div>
+        <div class="field"><label>Why you fit <span class="xs" style="float:right;font-weight:400">0/300</span></label><div class="input tall">Skills, years, and why this role</div></div>
+        <span class="btn btn-acc btn-block">Send request</span>
+        <div class="xs flex gap6" style="justify-content:center;margin-top:10px"><svg class="ic" style="width:12px;height:12px"><use href="#lock"/></svg>Only Priya sees your details</div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="cap">Employee dashboard · desktop</div>
+<div class="frame"><div class="bar"><i></i><i></i><i></i><span>referlink.app/d/••••••••</span></div>
+  <div class="nav"><div class="logo"><span class="logo-mark"><svg class="ic" style="width:12px;height:12px;stroke-width:3"><use href="#chk"/></svg></span>ReferLink</div><span class="xs">Priya Sharma · Google</span><span style="margin-left:auto" class="flex gap8"><span class="tagchip mono">referlink.app/r/priya-google</span><span class="btn btn-line btn-sm"><svg class="ic"><use href="#copy"/></svg>Copy link</span></span></div>
+  <div style="padding:22px 28px 26px">
+    <div class="flex" style="justify-content:space-between;margin-bottom:16px"><h2 class="h-lg" style="font-size:24px">Requests</h2><div class="flex gap6"><span class="btn btn-ink btn-sm">Pending · 3</span><span class="btn btn-ghost btn-sm">Referred · 1</span><span class="btn btn-ghost btn-sm">Declined · 0</span><span class="btn btn-ghost btn-sm">All · 4</span></div></div>
+    <div style="border:1px solid var(--line);border-radius:10px;overflow:hidden">
+      <table>
+        <tr><th>Candidate</th><th>Role</th><th>Checks</th><th>Why they fit</th><th>Sent</th><th style="text-align:right">Decision</th></tr>
+        <tr class="sel"><td><div class="flex gap8"><span class="av">AI</span><div><b>Ananya Iyer</b><div class="xs">ananya@gmail.com</div></div></div></td><td>Data Analyst II<div class="xs mono">JR-104523</div></td><td><div class="flex gap6"><span class="badge b-ok">Job ✓</span><span class="badge b-ok">Resume ✓</span></div></td><td class="s" style="max-width:240px">2 yrs as a data analyst, SQL and Python daily…</td><td class="xs">2h ago</td><td style="text-align:right"><span class="flex gap6" style="justify-content:flex-end"><span class="btn btn-acc btn-sm">Refer</span><span class="btn btn-line btn-sm">Decline</span></span></td></tr>
+        <tr><td><div class="flex gap8"><span class="av">RV</span><div><b>Rahul Verma</b><div class="xs">rahul.v@gmail.com</div></div></div></td><td>Backend Engineer<div class="xs">careers.google.com ↗</div></td><td><div class="flex gap6"><span class="badge b-ok">Job ✓</span><span class="badge b-ok">Resume ✓</span></div></td><td class="s">3 yrs of Go at a fintech, this team uses Go…</td><td class="xs">5h ago</td><td style="text-align:right"><span class="flex gap6" style="justify-content:flex-end"><span class="btn btn-acc btn-sm">Refer</span><span class="btn btn-line btn-sm">Decline</span></span></td></tr>
+        <tr><td><div class="flex gap8"><span class="av">KM</span><div><b>Karan Malhotra</b><div class="xs">karan.m@outlook.com</div></div></div></td><td>Data Engineer<div class="xs">boards.greenhouse.io ↗</div></td><td><div class="flex gap6"><span class="badge b-pend">Job link elsewhere</span><span class="badge b-ok">Resume ✓</span></div></td><td class="s">Built pipelines in Airflow and dbt…</td><td class="xs">1d ago</td><td style="text-align:right"><span class="flex gap6" style="justify-content:flex-end"><span class="btn btn-acc btn-sm">Refer</span><span class="btn btn-line btn-sm">Decline</span></span></td></tr>
+        <tr><td><div class="flex gap8"><span class="av">MN</span><div><b>Meera Nair</b><div class="xs">meera.nair@gmail.com</div></div></div></td><td>Payments SRE<div class="xs">careers.google.com ↗</div></td><td><div class="flex gap6"><span class="badge b-ok">Job ✓</span><span class="badge b-ok">Resume ✓</span></div></td><td class="s">4 yrs on payment infra, on-call lead…</td><td class="xs">2d ago</td><td style="text-align:right"><span class="badge b-ok">Referred · 24 Oct</span></td></tr>
+      </table>
+    </div>
+    <div class="xs" style="margin-top:12px">Example data. Names are made up.</div>
+  </div>
+</div>
+</div></body></html>

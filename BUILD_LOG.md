@@ -122,3 +122,10 @@ One entry per real decision or problem. Newest at the bottom.
 - Who: Siddh (direction), Claude (build)
 - Evidence: Browser test: the glow shows over the background and stays off over cards, and sparkles fully clear after fading. Real screenshots of the landing page in all 6 themes are in `design/theme-shots/`.
 - Result: Pending Siddh's theme choice.
+
+## 2026-10-24 · Stepped back from effects; 5 UI design directions
+- Decision: Removed the background sparkle. Built 5 distinct UI directions (Ledger, Paper, Graphite, Signal, Harbor), each covering the landing page, the employee dashboard and the candidate phone form, to replace the effects-heavy look.
+- Why: Siddh said the UI read as "AI slop". Claude agreed that glows, gradient text, scramble text and sparkles are the tell, and that a professional look comes from layout, type and restraint.
+- Who: Siddh (call), Claude (directions and mockups)
+- Evidence: Rendered boards are in `design/ui-designs/`. All use made-up example data, and none promise features the product doesn't have.
+- Result: Pending Siddh's choice. Once chosen, the live site gets rebuilt in that direction.

@@ -1,0 +1,106 @@
+<!doctype html>
+<html lang="en"><head><meta charset="utf-8"><title>2 · Paper</title>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Newsreader:opsz,wght@6..72,400;6..72,500&family=JetBrains+Mono:wght@500;600&display=swap">
+<link rel="stylesheet" href="ui.css">
+<style>
+:root {
+  --canvas: #ebe7df; --canvas-ink: #1c1917; --frame-line: #ddd7cc;
+  --bg: #faf8f4; --panel: #ffffff; --chrome: #f1ede5; --input-bg: #fff; --nav-bg: #faf8f4; --nav-line: #ebe6dc;
+  --line: #ebe6dc; --line2: #d9d2c5;
+  --ink: #1c1917; --ink2: #57534e; --ink3: #a8a29e;
+  --acc: #1f5f4a; --acc-text: #1f5f4a; --on-acc: #fff; --focus: rgba(31,95,74,.14);
+  --pend: #92400e; --pend-bg: #fdf0d8; --ok: #1f5f4a; --ok-bg: #e3efe8; --no: #57534e; --no-bg: #efebe4;
+  --av-bg: #ece6da; --av-ink: #57534e; --logo-bg: #1f5f4a; --logo-ink: #fff;
+  --font: "Inter", system-ui, sans-serif; --head-font: "Newsreader", Georgia, serif; --head-weight: 500; --head-track: -0.02em;
+  --r-btn: 999px; --r-badge: 999px; --r-av: 50%; --r-input: 10px; --r-logo: 50%;
+}
+.col { max-width: 560px; padding: 48px 0 40px 64px; }
+.letter { margin-top: 30px; background: #fff; border: 1px solid var(--line); border-radius: 14px; padding: 18px 20px; box-shadow: 0 1px 0 rgba(0,0,0,.02); }
+.list li { display: flex; gap: 14px; padding: 14px 0; border-top: 1px solid var(--line); }
+.list { list-style: none; margin: 30px 0 0; padding: 0; }
+.list .n { font-family: var(--head-font); font-size: 22px; color: var(--acc); width: 22px; }
+.inbox { display: grid; grid-template-columns: 340px 1fr; min-height: 420px; }
+.ilist { border-right: 1px solid var(--line); background: #f6f3ed; }
+.item { padding: 14px 18px; border-bottom: 1px solid var(--line); display: flex; gap: 10px; }
+.item.sel { background: #fff; box-shadow: inset 3px 0 0 var(--acc); }
+.unread { width: 7px; height: 7px; border-radius: 50%; background: var(--acc); margin-top: 6px; flex: none; }
+.detail { padding: 26px 34px; background: #fff; }
+.quote { font-family: var(--head-font); font-size: 19px; line-height: 1.45; color: var(--ink); border-left: 2px solid var(--acc); padding-left: 16px; margin: 18px 0; }
+.kv { display: grid; grid-template-columns: 110px 1fr; gap: 9px 16px; font-size: 13px; }
+.kv dt { color: var(--ink3); } .kv dd { margin: 0; }
+.progress { height: 3px; background: var(--line); border-radius: 2px; margin: 6px 0 26px; }
+.progress i { display: block; height: 100%; width: 60%; background: var(--acc); border-radius: 2px; }
+</style></head>
+<body><div class="board">
+<svg width="0" height="0" style="position:absolute"><symbol id="chk" viewBox="0 0 24 24"><path d="M20 6 9 17l-5-5"/></symbol><symbol id="arr" viewBox="0 0 24 24"><path d="M5 12h14M12 5l7 7-7 7"/></symbol><symbol id="back" viewBox="0 0 24 24"><path d="M19 12H5M12 19l-7-7 7-7"/></symbol><symbol id="ext" viewBox="0 0 24 24"><path d="M7 7h10v10M7 17 17 7"/></symbol></svg>
+
+<div class="board-head">
+  <div><h1>2 · Paper</h1><p>Calm and human, like Notion or Read.cv. Warm paper tones, a serif for headlines, and lots of white space. The dashboard is an email-style inbox. On a phone, candidates answer one question per screen, which feels lighter than a long form.</p></div>
+  <div><div class="meta">Newsreader + Inter · Forest green</div><div class="swatches"><i style="background:#faf8f4"></i><i style="background:#1c1917"></i><i style="background:#57534e"></i><i style="background:#1f5f4a"></i><i style="background:#ece6da"></i></div></div>
+</div>
+
+<div class="row">
+  <div style="width:842px"><div class="cap">Landing · desktop</div>
+    <div class="frame"><div class="bar"><i></i><i></i><i></i><span>referlink.app</span></div>
+      <div class="nav" style="padding-left:64px"><div class="logo"><span class="logo-mark"><svg class="ic" style="width:12px;height:12px;stroke-width:3"><use href="#chk"/></svg></span>ReferLink</div><span style="margin-left:auto" class="flex gap16"><a>How it works</a><a>Privacy</a><span class="btn btn-acc btn-sm">Create your link</span></span></div>
+      <div class="col">
+        <h2 class="h-xl" style="font-size:50px">A kinder way to handle referral requests.</h2>
+        <p class="p" style="margin:18px 0 24px;font-size:16px">You get dozens of "can you refer me?" messages. ReferLink gives you one link where candidates ask properly, and one place where you answer every one of them.</p>
+        <div class="flex gap10"><span class="btn btn-acc">Create your link <svg class="ic"><use href="#arr"/></svg></span><span class="xs">Free, no sign-up</span></div>
+        <div class="letter">
+          <div class="flex gap10"><span class="av">AI</span><div class="grow"><div class="h-sm">Ananya Iyer <span class="xs" style="font-weight:400">· Data Analyst II · JR-104523</span></div><div class="xs">2 hours ago</div></div><span class="badge b-pend">Waiting for you</span></div>
+          <div class="quote" style="font-size:16px;margin:12px 0 14px">"Two years as a data analyst, SQL and Python daily. The role asks for exactly this."</div>
+          <div class="flex gap8"><span class="btn btn-acc btn-sm">Refer</span><span class="btn btn-line btn-sm">Not this time</span></div>
+        </div>
+        <ol class="list">
+          <li><span class="n">1</span><div><div class="h-sm">Share your link</div><div class="s">Add it to your LinkedIn profile, or reply to DMs with it.</div></div></li>
+          <li><span class="n">2</span><div><div class="h-sm">Candidates ask properly</div><div class="s">Job ID, resume and a short pitch. Nothing missing.</div></div></li>
+          <li><span class="n">3</span><div><div class="h-sm">Everyone hears back</div><div class="s">One tap from you, a clear answer for them.</div></div></li>
+        </ol>
+      </div>
+    </div>
+  </div>
+
+  <div><div class="cap">Candidate form · phone (one question per screen)</div>
+    <div class="phone"><div class="notch"><i></i></div>
+      <div style="padding:16px 22px 22px;min-height:640px;display:flex;flex-direction:column">
+        <div class="flex" style="justify-content:space-between"><span class="flex gap6 xs"><svg class="ic"><use href="#back"/></svg>Back</span><span class="xs">Step 3 of 5</span></div>
+        <div class="progress"><i></i></div>
+        <div class="xs" style="margin-bottom:8px">Asking <b style="color:var(--ink)">Priya Sharma</b> at Google</div>
+        <h2 class="h-lg" style="font-size:30px;margin-bottom:10px">Which job are you applying for?</h2>
+        <p class="s" style="margin:0 0 22px">Paste the job link, or the job ID from the posting.</p>
+        <div class="input focus filled" style="height:50px;font-size:15px">JR-104523</div>
+        <div class="hint" style="margin-top:8px">No job ID? It's usually near the top of the posting. Requests without one usually get ignored.</div>
+        <div style="margin-top:auto">
+          <span class="btn btn-acc btn-block" style="height:48px">Continue</span>
+          <div class="xs" style="text-align:center;margin-top:12px">Only Priya sees your answers</div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="cap">Employee dashboard · desktop (two-pane inbox)</div>
+<div class="frame"><div class="bar"><i></i><i></i><i></i><span>referlink.app/d/••••••••</span></div>
+  <div class="nav"><div class="logo"><span class="logo-mark"><svg class="ic" style="width:12px;height:12px;stroke-width:3"><use href="#chk"/></svg></span>ReferLink</div><span class="flex gap16" style="margin-left:24px"><a style="color:var(--ink);font-weight:600">Inbox · 3</a><a>Referred</a><a>Declined</a></span><span style="margin-left:auto" class="flex gap8"><span class="xs">Your link: <span class="mono" style="color:var(--ink2)">referlink.app/r/priya-google</span></span><span class="btn btn-line btn-sm">Copy</span></span></div>
+  <div class="inbox">
+    <div class="ilist">
+      <div class="item sel"><span class="unread"></span><div class="grow"><div class="flex"><b class="h-sm grow">Ananya Iyer</b><span class="xs">2h</span></div><div class="s">Data Analyst II</div><div class="xs ellipsis">Two years as a data analyst, SQL and Python…</div></div></div>
+      <div class="item"><span class="unread"></span><div class="grow"><div class="flex"><b class="h-sm grow">Rahul Verma</b><span class="xs">5h</span></div><div class="s">Backend Engineer</div><div class="xs ellipsis">Three years of Go at a fintech…</div></div></div>
+      <div class="item"><span class="unread"></span><div class="grow"><div class="flex"><b class="h-sm grow">Karan Malhotra</b><span class="xs">1d</span></div><div class="s">Data Engineer</div><div class="xs ellipsis">Built pipelines in Airflow and dbt…</div></div></div>
+      <div class="item" style="opacity:.6"><span class="unread" style="background:transparent"></span><div class="grow"><div class="flex"><b class="h-sm grow">Meera Nair</b><span class="badge b-ok">Referred</span></div><div class="s">Payments SRE</div></div></div>
+    </div>
+    <div class="detail">
+      <div class="flex gap12"><span class="av av-lg">AI</span><div class="grow"><h2 class="h-lg" style="font-size:26px">Ananya Iyer</h2><div class="s">Data Analyst II · sent 2 hours ago</div></div><span class="flex gap8"><span class="btn btn-acc">Refer</span><span class="btn btn-line">Not this time</span></span></div>
+      <div class="quote">"Two years as a data analyst at a fintech, writing SQL and Python every day. The Data Analyst II posting asks for exactly this, plus dashboarding, which I've done in Looker."</div>
+      <dl class="kv">
+        <dt>Job</dt><dd class="mono">JR-104523</dd>
+        <dt>Resume</dt><dd><a style="color:var(--acc)">Google Drive ↗</a></dd>
+        <dt>LinkedIn</dt><dd><a style="color:var(--acc)">linkedin.com/in/ananya-iyer ↗</a></dd>
+        <dt>Email</dt><dd>ananya@gmail.com <span class="xs">· Copy</span></dd>
+      </dl>
+      <div class="xs" style="margin-top:22px">Example data. Names are made up.</div>
+    </div>
+  </div>
+</div>
+</div></body></html>

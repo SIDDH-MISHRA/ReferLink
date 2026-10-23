@@ -1,0 +1,102 @@
+<!doctype html>
+<html lang="en"><head><meta charset="utf-8"><title>5 · Harbor</title>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Plus+Jakarta+Sans:wght@600;700;800&family=JetBrains+Mono:wght@500;600&display=swap">
+<link rel="stylesheet" href="ui.css">
+<style>
+:root {
+  --canvas: #e6ebf1; --canvas-ink: #0b1b33; --frame-line: #d5dde7;
+  --bg: #f5f7fa; --panel: #ffffff; --chrome: #eef2f6; --input-bg: #fff; --nav-bg: #f5f7fa; --nav-line: transparent;
+  --line: #e6ebf1; --line2: #d3dbe5;
+  --ink: #0b1b33; --ink2: #4a5a70; --ink3: #8a97a8;
+  --acc: #0f766e; --acc-text: #0f766e; --on-acc: #fff; --focus: rgba(15,118,110,.16);
+  --pend: #9a6700; --pend-bg: #fff4d6; --ok: #0f766e; --ok-bg: #dcf3ef; --no: #4a5a70; --no-bg: #edf1f5;
+  --av-bg: #dcf3ef; --av-ink: #0f766e; --logo-bg: #0f766e; --logo-ink: #fff;
+  --font: "Inter", system-ui, sans-serif; --head-font: "Plus Jakarta Sans", "Inter", sans-serif; --head-weight: 700; --head-track: -0.035em;
+  --r-btn: 11px; --r-badge: 999px; --r-av: 50%; --r-input: 11px; --r-logo: 7px;
+}
+.card { background: #fff; border: 1px solid var(--line); border-radius: 16px; box-shadow: 0 1px 2px rgba(11,27,51,.04), 0 10px 26px -18px rgba(11,27,51,.25); }
+.hero { text-align: center; padding: 40px 40px 10px; }
+.trio { display: grid; grid-template-columns: 1fr 1.3fr 1fr; gap: 14px; padding: 26px 28px 30px; align-items: start; }
+.mini-h { font: 600 11px var(--font); color: var(--ink3); text-transform: uppercase; letter-spacing: .05em; margin-bottom: 8px; }
+.status-ring { width: 44px; height: 44px; border-radius: 50%; background: var(--ok-bg); color: var(--ok); display: grid; place-items: center; margin: 0 auto 10px; }
+.stepper { display: flex; gap: 6px; margin: 4px 0 18px; }
+.stepper i { flex: 1; height: 4px; border-radius: 3px; background: var(--line2); }
+.stepper i.on { background: var(--acc); }
+.choice { display: flex; align-items: center; gap: 10px; padding: 11px 12px; border: 1px solid var(--line2); border-radius: 11px; background: #fff; margin-bottom: 8px; font-size: 13px; }
+.choice.on { border-color: var(--acc); box-shadow: 0 0 0 3px var(--focus); }
+.radio { width: 16px; height: 16px; border-radius: 50%; border: 1.5px solid var(--line2); flex: none; }
+.choice.on .radio { border: 5px solid var(--acc); }
+.rcards { display: grid; grid-template-columns: repeat(3, 1fr); gap: 16px; }
+.rc { padding: 16px; }
+.rc .s { margin: 10px 0 12px; }
+.summary { display: grid; grid-template-columns: repeat(4, 1fr); gap: 14px; margin-bottom: 20px; }
+.summary .card { padding: 14px 16px; }
+.summary b { display: block; font: 700 24px var(--head-font); letter-spacing: -0.03em; margin-top: 2px; }
+.summary .on { border-color: var(--acc); box-shadow: 0 0 0 3px var(--focus); }
+</style></head>
+<body><div class="board">
+<svg width="0" height="0" style="position:absolute"><symbol id="chk" viewBox="0 0 24 24"><path d="M20 6 9 17l-5-5"/></symbol><symbol id="arr" viewBox="0 0 24 24"><path d="M5 12h14M12 5l7 7-7 7"/></symbol><symbol id="link" viewBox="0 0 24 24"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"/><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"/></symbol></svg>
+
+<div class="board-head">
+  <div><h1>5 · Harbor</h1><p>Soft, friendly and reassuring, like Mercury or Cal.com. Rounded white cards on a cool grey, with deep navy text and a calm teal. The landing page shows the whole journey (link, inbox, answer), and the phone form walks candidates through short steps.</p></div>
+  <div><div class="meta">Plus Jakarta + Inter · Teal</div><div class="swatches"><i style="background:#f5f7fa"></i><i style="background:#0b1b33"></i><i style="background:#4a5a70"></i><i style="background:#0f766e"></i><i style="background:#dcf3ef"></i></div></div>
+</div>
+
+<div class="row">
+  <div style="width:842px"><div class="cap">Landing · desktop</div>
+    <div class="frame"><div class="bar"><i></i><i></i><i></i><span>referlink.app</span></div>
+      <div class="nav"><div class="logo"><span class="logo-mark"><svg class="ic" style="width:12px;height:12px;stroke-width:3"><use href="#chk"/></svg></span>ReferLink</div><span style="margin-left:auto" class="flex gap16"><a>How it works</a><a>Privacy</a><span class="btn btn-acc btn-sm">Create your link</span></span></div>
+      <div class="hero">
+        <span class="badge b-ok" style="height:26px;padding:0 12px">Free for employees · No sign-up</span>
+        <h2 class="h-xl" style="font-size:46px;margin:16px auto 12px;max-width:600px">Help the right people, without the DM chaos.</h2>
+        <p class="p" style="max-width:480px;margin:0 auto 22px">One link for referral requests. Complete details up front, a tidy inbox for you, and a clear answer for every candidate.</p>
+        <div class="flex gap8" style="justify-content:center"><span class="btn btn-acc" style="height:44px;padding:0 20px">Create your link <svg class="ic"><use href="#arr"/></svg></span><span class="btn btn-line" style="height:44px">How it works</span></div>
+      </div>
+      <div class="trio">
+        <div><div class="mini-h">1 · You share</div><div class="card" style="padding:14px"><div class="flex gap8" style="margin-bottom:10px"><span class="av">PS</span><div><div class="h-sm">Priya Sharma</div><div class="xs">Google</div></div></div><div class="flex gap6 xs" style="padding:8px 10px;background:var(--bg);border-radius:9px;color:var(--ink2)"><svg class="ic"><use href="#link"/></svg>referlink.app/r/priya</div></div></div>
+        <div><div class="mini-h">2 · You decide</div><div class="card" style="padding:14px"><div class="flex gap8"><span class="av">AI</span><div class="grow"><div class="h-sm">Ananya Iyer</div><div class="xs">Data Analyst II · JR-104523</div></div><span class="badge b-pend">New</span></div><div class="s" style="margin:10px 0 12px">2 years as a data analyst, SQL and Python daily.</div><div class="flex gap6"><span class="btn btn-acc btn-sm grow">Refer</span><span class="btn btn-line btn-sm grow">Not this time</span></div></div></div>
+        <div><div class="mini-h">3 · They hear back</div><div class="card" style="padding:16px;text-align:center"><div class="status-ring"><svg class="ic" style="width:20px;height:20px;stroke-width:2.6"><use href="#chk"/></svg></div><div class="h-sm">You were referred</div><div class="xs" style="margin-top:4px">Priya referred you at Google</div></div></div>
+      </div>
+    </div>
+  </div>
+
+  <div><div class="cap">Candidate form · phone (short steps)</div>
+    <div class="phone"><div class="notch"><i></i></div>
+      <div style="padding:14px 18px 22px">
+        <div class="flex gap8" style="margin-bottom:14px"><span class="av">PS</span><div><div class="h-sm">Priya Sharma</div><div class="xs">Refers for Backend, Data</div></div></div>
+        <div class="xs">Step 2 of 3 · The job</div>
+        <div class="stepper"><i class="on"></i><i class="on"></i><i></i></div>
+        <h2 class="h-lg" style="font-size:22px;margin-bottom:14px">Tell Priya which job</h2>
+        <div class="field"><label>Job link or job ID</label><div class="input focus filled">JR-104523</div><div class="hint">Find it on the job posting.</div></div>
+        <div class="field"><label>Which team is it?</label>
+          <div class="choice on"><span class="radio"></span>Data</div>
+          <div class="choice"><span class="radio"></span>Backend</div>
+          <div class="choice"><span class="radio"></span>Something else</div>
+        </div>
+        <div class="field"><label>Resume link</label><div class="input">Google Drive or Dropbox</div></div>
+        <div class="flex gap8"><span class="btn btn-line" style="height:44px">Back</span><span class="btn btn-acc grow" style="height:44px">Continue</span></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="cap">Employee dashboard · desktop (cards)</div>
+<div class="frame"><div class="bar"><i></i><i></i><i></i><span>referlink.app/d/••••••••</span></div>
+  <div class="nav"><div class="logo"><span class="logo-mark"><svg class="ic" style="width:12px;height:12px;stroke-width:3"><use href="#chk"/></svg></span>ReferLink</div><span style="margin-left:auto" class="flex gap8"><span class="xs">Priya Sharma · Google</span><span class="btn btn-line btn-sm"><svg class="ic"><use href="#link"/></svg>Copy my link</span></span></div>
+  <div style="padding:8px 28px 26px">
+    <h2 class="h-lg" style="font-size:26px;margin:10px 0 16px">Good morning, Priya</h2>
+    <div class="summary">
+      <div class="card on"><span class="xs">Waiting for you</span><b>3</b></div>
+      <div class="card"><span class="xs">Referred</span><b>1</b></div>
+      <div class="card"><span class="xs">Declined</span><b>0</b></div>
+      <div class="card"><span class="xs">All requests</span><b>4</b></div>
+    </div>
+    <div class="rcards">
+      <div class="card rc"><div class="flex gap8"><span class="av">AI</span><div class="grow"><div class="h-sm">Ananya Iyer</div><div class="xs">Data Analyst II · 2h ago</div></div></div><div class="s">2 years as a data analyst, SQL and Python daily. The role asks for exactly this.</div><div class="flex gap6" style="flex-wrap:wrap;margin-bottom:12px"><span class="tagchip">JR-104523</span><span class="tagchip">Resume ↗</span><span class="tagchip">LinkedIn ↗</span></div><div class="flex gap6"><span class="btn btn-acc btn-sm grow">Refer</span><span class="btn btn-line btn-sm grow">Not this time</span></div></div>
+      <div class="card rc"><div class="flex gap8"><span class="av">RV</span><div class="grow"><div class="h-sm">Rahul Verma</div><div class="xs">Backend Engineer · 5h ago</div></div></div><div class="s">3 years of Go at a fintech. This team's stack is Go and Postgres.</div><div class="flex gap6" style="flex-wrap:wrap;margin-bottom:12px"><span class="tagchip">Job link ↗</span><span class="tagchip">Resume ↗</span><span class="tagchip">LinkedIn ↗</span></div><div class="flex gap6"><span class="btn btn-acc btn-sm grow">Refer</span><span class="btn btn-line btn-sm grow">Not this time</span></div></div>
+      <div class="card rc"><div class="flex gap8"><span class="av">KM</span><div class="grow"><div class="h-sm">Karan Malhotra</div><div class="xs">Data Engineer · 1d ago</div></div></div><div class="s">Built the data pipeline at my last startup with Airflow and dbt.</div><div class="flex gap6" style="flex-wrap:wrap;margin-bottom:12px"><span class="tagchip">Job link ↗</span><span class="tagchip">Resume ↗</span><span class="tagchip">LinkedIn ↗</span></div><div class="flex gap6"><span class="btn btn-acc btn-sm grow">Refer</span><span class="btn btn-line btn-sm grow">Not this time</span></div></div>
+    </div>
+    <div class="xs" style="margin-top:14px">Example data. Names are made up.</div>
+  </div>
+</div>
+</div></body></html>

@@ -421,100 +421,6 @@
     });
   }
 
-  // Background sparkle: over empty background only (never cards, nav, buttons or form
-  // fields), a soft glow follows the mouse and small gradient sparkles twinkle out.
-  // Colours come from the theme (--spark-a / --spark-b). Mouse only; off for reduced motion.
-  function initBackgroundSparkle() {
-    if (calm || !window.matchMedia('(pointer: fine)').matches) return;
-    const glow = h('div', { class: 'bg-glow', 'aria-hidden': 'true' });
-    const canvas = h('canvas', { class: 'bg-sparkle', 'aria-hidden': 'true' });
-    document.body.prepend(glow, canvas);
-    const ctx = canvas.getContext('2d');
-    const sparks = [];
-    const MAX = 70;
-    let dpr = 1;
-    let colors;
-    let running = false;
-    let last = 0;
-
-    const hex = (v) => {
-      const m = v.trim().match(/^#?([0-9a-f]{6})$/i);
-      const n = parseInt(m ? m[1] : 'a855f7', 16);
-      return [(n >> 16) & 255, (n >> 8) & 255, n & 255];
-    };
-    const readColors = () => {
-      const s = getComputedStyle(document.documentElement);
-      colors = [hex(s.getPropertyValue('--spark-a')), hex(s.getPropertyValue('--spark-b'))];
-    };
-    const resize = () => {
-      dpr = Math.min(window.devicePixelRatio || 1, 2);
-      canvas.width = innerWidth * dpr;
-      canvas.height = innerHeight * dpr;
-    };
-    readColors();
-    resize();
-    window.addEventListener('resize', resize);
-    new MutationObserver(readColors).observe(document.documentElement, { attributes: true, attributeFilter: ['data-theme'] });
-
-    // Things that count as "not background".
-    const SOLID = '.card, .nav-pill, .cta-band, .preview, .btn, a, button, input, textarea, label, .copy-field, .toast';
-
-    // A four-point star.
-    function star(x, y, r) {
-      ctx.beginPath();
-      ctx.moveTo(x, y - r);
-      ctx.quadraticCurveTo(x, y, x + r, y);
-      ctx.quadraticCurveTo(x, y, x, y + r);
-      ctx.quadraticCurveTo(x, y, x - r, y);
-      ctx.quadraticCurveTo(x, y, x, y - r);
-      ctx.fill();
-    }
-
-    function frame(now) {
-      ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
-      ctx.clearRect(0, 0, innerWidth, innerHeight);
-      for (let i = sparks.length - 1; i >= 0; i--) {
-        const s = sparks[i];
-        const age = (now - s.born) / s.life; // 0 → 1
-        if (age >= 1) { sparks.splice(i, 1); continue; }
-        const twinkle = Math.sin(age * Math.PI); // grows then shrinks
-        const c = colors[0].map((v, k) => Math.round(v + (colors[1][k] - v) * s.mix));
-        ctx.fillStyle = 'rgba(' + c.join(',') + ',' + (0.9 * twinkle) + ')';
-        ctx.shadowColor = 'rgba(' + c.join(',') + ',' + (0.8 * twinkle) + ')';
-        ctx.shadowBlur = 10;
-        star(s.x + s.vx * age * 30, s.y + s.vy * age * 30, s.size * (0.4 + twinkle));
-      }
-      if (sparks.length) requestAnimationFrame(frame);
-      else { running = false; ctx.clearRect(0, 0, innerWidth, innerHeight); }
-    }
-
-    window.addEventListener('pointermove', (e) => {
-      if (e.pointerType !== 'mouse') return;
-      const onBackground = !(e.target.closest && e.target.closest(SOLID));
-      glow.classList.toggle('on', onBackground);
-      if (!onBackground) return;
-      glow.style.setProperty('--gx', e.clientX + 'px');
-      glow.style.setProperty('--gy', e.clientY + 'px');
-      const now = performance.now();
-      if (now - last < 45 || sparks.length >= MAX) return; // a few sparkles, not a spray
-      last = now;
-      const angle = Math.random() * Math.PI * 2;
-      const dist = 6 + Math.random() * 26;
-      sparks.push({
-        x: e.clientX + Math.cos(angle) * dist,
-        y: e.clientY + Math.sin(angle) * dist,
-        vx: Math.cos(angle) * 0.6,
-        vy: Math.sin(angle) * 0.6 - 0.4, // drift slightly upward
-        size: 2.5 + Math.random() * 3.5,
-        mix: Math.random(),
-        born: now,
-        life: 700 + Math.random() * 500,
-      });
-      if (!running) { running = true; requestAnimationFrame(frame); }
-    }, { passive: true });
-    document.addEventListener('pointerleave', () => glow.classList.remove('on'));
-  }
-
   // Fade elements with class "reveal" in as they scroll into view; scramble kickers once.
   function initReveal() {
     const items = document.querySelectorAll('.reveal');
@@ -536,7 +442,6 @@
   injectSprite();
   initThemeToggle();
   initSpotlight();
-  initBackgroundSparkle();
   initReveal();
   document.querySelectorAll('[data-depth]').forEach(depthWords);
   document.querySelectorAll('[data-scramble-now]').forEach((el) => scramble(el, Number(el.dataset.scrambleNow) || 0));

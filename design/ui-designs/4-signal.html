@@ -1,0 +1,113 @@
+<!doctype html>
+<html lang="en"><head><meta charset="utf-8"><title>4 · Signal</title>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Inter+Tight:wght@600;700;800&family=JetBrains+Mono:wght@500;600&display=swap">
+<link rel="stylesheet" href="ui.css">
+<style>
+:root {
+  --canvas: #f2f2f0; --canvas-ink: #0a0a0a; --frame-line: #0a0a0a;
+  --bg: #ffffff; --panel: #ffffff; --chrome: #ffffff; --input-bg: #fff; --nav-bg: #fff; --nav-line: #0a0a0a;
+  --line: #e5e5e5; --line2: #0a0a0a;
+  --ink: #0a0a0a; --ink2: #3f3f3f; --ink3: #8a8a8a;
+  --acc: #ff4d00; --acc-text: #ff4d00; --on-acc: #0a0a0a; --focus: rgba(255,77,0,.18);
+  --pend: #0a0a0a; --pend-bg: #ffe9dc; --ok: #fff; --ok-bg: #0a0a0a; --no: #0a0a0a; --no-bg: #ededed;
+  --av-bg: #0a0a0a; --av-ink: #fff; --logo-bg: #ff4d00; --logo-ink: #0a0a0a;
+  --font: "Inter", system-ui, sans-serif; --head-font: "Inter Tight", "Inter", sans-serif; --head-weight: 800; --head-track: -0.03em;
+  --r-btn: 2px; --r-badge: 2px; --r-av: 2px; --r-input: 2px; --r-logo: 2px;
+}
+.frame { border-width: 1.5px; border-radius: 4px; }
+.bar { border-bottom: 1.5px solid #0a0a0a; }
+.nav { border-bottom-width: 1.5px; }
+.btn-line { border-width: 1.5px; }
+.input { border-width: 1.5px; }
+.grid12 { display: grid; grid-template-columns: 1.35fr 1fr; border-bottom: 1.5px solid #0a0a0a; }
+.grid12 > div { padding: 34px 30px; }
+.grid12 > div + div { border-left: 1.5px solid #0a0a0a; background: #fafafa; }
+.big { font: 800 64px/0.98 var(--head-font); letter-spacing: -0.035em; word-spacing: 0.06em; margin: 0; }
+.big span { color: var(--acc); }
+.cells { display: grid; grid-template-columns: repeat(3, 1fr); }
+.cells > div { padding: 18px 22px; border-right: 1.5px solid #0a0a0a; }
+.cells > div:last-child { border-right: 0; }
+.idx { font: 600 11px "JetBrains Mono", monospace; color: var(--ink3); }
+.stat { font: 800 40px/1 var(--head-font); letter-spacing: -0.05em; }
+.lrow { display: grid; grid-template-columns: 28px 1.2fr 1fr 1.6fr 90px 170px; gap: 14px; align-items: center; padding: 12px 22px; border-bottom: 1px solid var(--line); font-size: 12.5px; }
+.lrow.head { font: 600 10.5px "JetBrains Mono", monospace; letter-spacing: .06em; text-transform: uppercase; color: var(--ink3); border-bottom: 1.5px solid #0a0a0a; }
+.lrow.open { background: #fff6f1; border-left: 4px solid var(--acc); padding-left: 18px; }
+.side { border-right: 1.5px solid #0a0a0a; padding: 20px; }
+.side a { display: flex; justify-content: space-between; padding: 8px 10px; font: 600 13px var(--font); color: var(--ink2); text-decoration: none; }
+.side a.on { background: #0a0a0a; color: #fff; }
+.sec { border: 1.5px solid #0a0a0a; margin-bottom: 12px; }
+.sec-h { display: flex; justify-content: space-between; padding: 8px 12px; border-bottom: 1.5px solid #0a0a0a; font: 600 11px "JetBrains Mono", monospace; letter-spacing: .06em; text-transform: uppercase; }
+.sec-b { padding: 12px; }
+</style></head>
+<body><div class="board">
+<svg width="0" height="0" style="position:absolute"><symbol id="chk" viewBox="0 0 24 24"><path d="M20 6 9 17l-5-5"/></symbol><symbol id="arr" viewBox="0 0 24 24"><path d="M5 12h14M12 5l7 7-7 7"/></symbol></svg>
+
+<div class="board-head">
+  <div><h1>4 · Signal</h1><p>Bold and confident, in the Swiss and Vercel tradition: black on white, heavy type, sharp edges, visible grid lines and one safety-orange accent. It's the most distinctive of the five. It looks like a tool built by someone with taste, not a template.</p></div>
+  <div><div class="meta">Inter Tight + Mono · Signal orange</div><div class="swatches"><i style="background:#fff"></i><i style="background:#0a0a0a"></i><i style="background:#8a8a8a"></i><i style="background:#ff4d00"></i><i style="background:#ffe9dc"></i></div></div>
+</div>
+
+<div class="row">
+  <div style="width:842px"><div class="cap">Landing · desktop</div>
+    <div class="frame"><div class="bar"><i></i><i></i><i></i><span>referlink.app</span></div>
+      <div class="nav"><div class="logo"><span class="logo-mark"><svg class="ic" style="width:12px;height:12px;stroke-width:3.2"><use href="#chk"/></svg></span>REFERLINK</div><a class="mono" style="font-size:11.5px">HOW IT WORKS</a><a class="mono" style="font-size:11.5px">PRIVACY</a><span style="margin-left:auto" class="btn btn-ink btn-sm">CREATE YOUR LINK →</span></div>
+      <div class="grid12">
+        <div>
+          <div class="idx" style="margin-bottom:14px">[ FOR EMPLOYEES WHO GET REFERRAL DMS ]</div>
+          <h2 class="big">Clear your<br>referral <span>DMs.</span></h2>
+          <p class="p" style="margin:20px 0 24px;max-width:380px">One link for every referral request. Candidates must include the job ID, resume and pitch. You decide in one click.</p>
+          <div class="flex gap8"><span class="btn btn-acc" style="height:44px;padding:0 20px">Create your link <svg class="ic"><use href="#arr"/></svg></span><span class="btn btn-line" style="height:44px">See an example</span></div>
+        </div>
+        <div>
+          <div class="idx" style="margin-bottom:12px">EXAMPLE REQUEST</div>
+          <div class="sec" style="background:#fff">
+            <div class="sec-h"><span>Ananya Iyer</span><span style="color:var(--acc)">● Pending</span></div>
+            <div class="sec-b"><div class="xs mono" style="margin-bottom:6px">DATA ANALYST II · JR-104523</div><div class="s" style="margin-bottom:12px">2 years as a data analyst, SQL and Python daily. The role asks for exactly this.</div><div class="flex gap6"><span class="btn btn-ink btn-sm">Refer</span><span class="btn btn-line btn-sm">Decline</span></div></div>
+          </div>
+          <div class="xs">The name is made up.</div>
+        </div>
+      </div>
+      <div class="cells">
+        <div><div class="idx">01</div><div class="h-sm" style="margin:6px 0 4px">Share one link</div><div class="s">LinkedIn profile, or reply to DMs.</div></div>
+        <div><div class="idx">02</div><div class="h-sm" style="margin:6px 0 4px">Complete requests only</div><div class="s">No job ID, no request.</div></div>
+        <div><div class="idx">03</div><div class="h-sm" style="margin:6px 0 4px">Everyone hears back</div><div class="s">A status page for every candidate.</div></div>
+      </div>
+    </div>
+  </div>
+
+  <div><div class="cap">Candidate form · phone (numbered sections)</div>
+    <div class="phone" style="border-radius:28px"><div class="notch"><i></i></div>
+      <div style="padding:14px 16px 20px">
+        <div class="idx" style="margin-bottom:4px">REQUEST → PRIYA SHARMA · GOOGLE</div>
+        <h2 class="h-lg" style="font-size:28px;margin-bottom:14px">Ask for a referral.</h2>
+        <div class="sec"><div class="sec-h"><span>01 · You</span><span style="color:var(--ink3)">✓ Done</span></div><div class="sec-b s">Ananya Iyer · ananya@gmail.com</div></div>
+        <div class="sec" style="border-color:var(--acc)"><div class="sec-h" style="border-color:var(--acc);background:#fff6f1"><span>02 · The job</span><span style="color:var(--acc)">Now</span></div><div class="sec-b">
+          <div class="field"><label>Job link or job ID</label><div class="input focus filled">JR-104523</div><div class="hint">Requests without a job ID usually get ignored.</div></div>
+          <div class="field" style="margin:0"><label>Resume link</label><div class="input">drive.google.com/…</div></div>
+        </div></div>
+        <div class="sec" style="opacity:.45"><div class="sec-h"><span>03 · Your pitch</span><span>0/300</span></div></div>
+        <span class="btn btn-ink btn-block" style="height:46px">Next →</span>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="cap">Employee dashboard · desktop (sidebar + list)</div>
+<div class="frame"><div class="bar"><i></i><i></i><i></i><span>referlink.app/d/••••••••</span></div>
+  <div class="nav"><div class="logo"><span class="logo-mark"><svg class="ic" style="width:12px;height:12px;stroke-width:3.2"><use href="#chk"/></svg></span>REFERLINK</div><span class="mono xs">PRIYA SHARMA / GOOGLE</span><span style="margin-left:auto" class="flex gap8"><span class="mono xs" style="color:var(--ink)">referlink.app/r/priya-google</span><span class="btn btn-acc btn-sm">Copy link</span></span></div>
+  <div style="display:grid;grid-template-columns:220px 1fr">
+    <div class="side">
+      <div class="stat">3</div><div class="idx" style="margin:4px 0 18px">WAITING ON YOU</div>
+      <a class="on">Pending <span>3</span></a><a>Referred <span>1</span></a><a>Declined <span>0</span></a><a>All <span>4</span></a>
+    </div>
+    <div>
+      <div class="lrow head"><span></span><span>Candidate</span><span>Role</span><span>Pitch</span><span>Sent</span><span style="text-align:right">Decision</span></div>
+      <div class="lrow open"><span class="av">AI</span><span><b>Ananya Iyer</b><div class="xs">ananya@gmail.com</div></span><span>Data Analyst II<div class="xs mono">JR-104523</div></span><span class="s">2 yrs as a data analyst, SQL and Python daily. Asks for exactly this.</span><span class="xs mono">2H AGO</span><span class="flex gap6" style="justify-content:flex-end"><span class="btn btn-ink btn-sm">Refer</span><span class="btn btn-line btn-sm">Decline</span></span></div>
+      <div class="lrow"><span class="av">RV</span><span><b>Rahul Verma</b><div class="xs">rahul.v@gmail.com</div></span><span>Backend Engineer<div class="xs">careers.google.com ↗</div></span><span class="s ellipsis">3 yrs of Go at a fintech…</span><span class="xs mono">5H AGO</span><span class="flex gap6" style="justify-content:flex-end"><span class="btn btn-ink btn-sm">Refer</span><span class="btn btn-line btn-sm">Decline</span></span></div>
+      <div class="lrow"><span class="av">KM</span><span><b>Karan Malhotra</b><div class="xs">karan.m@outlook.com</div></span><span>Data Engineer<div class="xs">greenhouse.io ↗</div></span><span class="s ellipsis">Airflow, dbt, BigQuery…</span><span class="xs mono">1D AGO</span><span class="flex gap6" style="justify-content:flex-end"><span class="btn btn-ink btn-sm">Refer</span><span class="btn btn-line btn-sm">Decline</span></span></div>
+      <div class="lrow"><span class="av" style="background:#ededed;color:#0a0a0a">MN</span><span><b>Meera Nair</b><div class="xs">meera.nair@gmail.com</div></span><span>Payments SRE</span><span class="s ellipsis">4 yrs on payment infra…</span><span class="xs mono">2D AGO</span><span style="text-align:right"><span class="badge b-ok">REFERRED</span></span></div>
+      <div class="xs" style="padding:14px 22px">Example data. Names are made up.</div>
+    </div>
+  </div>
+</div>
+</div></body></html>

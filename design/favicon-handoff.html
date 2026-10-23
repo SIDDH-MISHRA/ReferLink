@@ -1,0 +1,104 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Hand-off favicon variations</title>
+<style>
+  :root { --f1: #7c3aed; --f2: #a855f7; --f3: #f0abfc; --tile: #0a0714; --edge: #3b2a6b; }
+  * { box-sizing: border-box; }
+  body { margin: 0; background: #08080b; color: #ededf2; font: 15px/1.5 "Segoe UI", system-ui, sans-serif; padding: 24px 16px 48px; }
+  h1 { font-size: 22px; margin: 0 0 4px; }
+  .lead { color: #9a9aa8; margin: 0 0 16px; }
+  .pick { display: flex; flex-wrap: wrap; gap: 8px; margin-bottom: 22px; }
+  .pick button { display: inline-flex; align-items: center; gap: 8px; padding: 6px 12px; border-radius: 999px; border: 1px solid #2a2a35; background: #121218; color: #ededf2; font: inherit; font-size: 13px; cursor: pointer; }
+  .pick button[aria-pressed="true"] { border-color: #ededf2; }
+  .pick i { width: 14px; height: 14px; border-radius: 50%; }
+  .grid { display: grid; gap: 14px; max-width: 1100px; }
+  @media (min-width: 700px) { .grid { grid-template-columns: repeat(2, 1fr); } }
+  @media (min-width: 1050px) { .grid { grid-template-columns: repeat(4, 1fr); } }
+  .opt { background: #111117; border: 1px solid #23232d; border-radius: 16px; padding: 16px; }
+  .opt h2 { font-size: 15px; margin: 0 0 2px; }
+  .opt p { color: #9a9aa8; font-size: 12.5px; margin: 0 0 12px; min-height: 36px; }
+  .sizes { display: flex; gap: 12px; align-items: flex-end; margin-bottom: 12px; }
+  .tabs { display: grid; gap: 5px; }
+  .tab { display: flex; align-items: center; gap: 8px; padding: 6px 10px; border-radius: 8px 8px 0 0; font-size: 12.5px; width: max-content; background: #202028; }
+  .tab.l { background: #ebebf0; color: #15151d; }
+  .n { display: inline-grid; place-items: center; width: 22px; height: 22px; border-radius: 6px; background: #23232d; font-size: 12px; margin-right: 6px; }
+</style>
+</head>
+<body>
+<h1>Hand-off favicon: 8 variations</h1>
+<p class="lead">Each is shown large, at 32px, and at real 16px tab size. Use the buttons to recolour all of them in each theme's colours.</p>
+
+<div class="pick" id="pick"></div>
+
+<svg width="0" height="0" style="position:absolute">
+  <defs>
+    <linearGradient id="g" x1="0" y1="1" x2="1" y2="0"><stop offset="0" style="stop-color:var(--f1)"/><stop offset=".55" style="stop-color:var(--f2)"/><stop offset="1" style="stop-color:var(--f3)"/></linearGradient>
+    <linearGradient id="gt" x1="0" y1="0" x2="1" y2="1"><stop offset="0" style="stop-color:var(--f1)"/><stop offset="1" style="stop-color:var(--f2)"/></linearGradient>
+    <filter id="blur" x="-50%" y="-50%" width="200%" height="200%"><feGaussianBlur stdDeviation="2.2"/></filter>
+
+    <!-- 1 Original: dark tile, gradient arc, start dot -->
+    <symbol id="v1" viewBox="0 0 32 32"><rect x=".5" y=".5" width="31" height="31" rx="8.5" style="fill:var(--tile);stroke:var(--edge)"/><path d="M9 23C9 15 14.5 9.5 22.5 9.5" fill="none" stroke="url(#g)" stroke-width="3" stroke-linecap="round"/><path d="M18.5 5.5 22.8 9.5 18.5 13.5" fill="none" style="stroke:var(--f3)" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/><circle cx="9" cy="23" r="3" style="fill:var(--f1)"/></symbol>
+    <!-- 2 Inverted: gradient tile, white mark -->
+    <symbol id="v2" viewBox="0 0 32 32"><rect width="32" height="32" rx="9" fill="url(#gt)"/><path d="M9 23C9 15 14.5 9.5 22.5 9.5" fill="none" stroke="#fff" stroke-width="3" stroke-linecap="round"/><path d="M18.5 5.5 22.8 9.5 18.5 13.5" fill="none" stroke="#fff" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/><circle cx="9" cy="23" r="3" fill="#fff"/></symbol>
+    <!-- 3 Two people: filled dot hands off to a ring -->
+    <symbol id="v3" viewBox="0 0 32 32"><rect x=".5" y=".5" width="31" height="31" rx="8.5" style="fill:var(--tile);stroke:var(--edge)"/><circle cx="8.5" cy="23.5" r="3.2" style="fill:var(--f1)"/><circle cx="23.5" cy="8.5" r="3.6" fill="none" style="stroke:var(--f3)" stroke-width="2.4"/><path d="M10.5 19.5C11.5 14.5 14.5 11.5 19.2 10.4" fill="none" stroke="url(#g)" stroke-width="2.6" stroke-linecap="round" stroke-dasharray="0.1 4.2"/></symbol>
+    <!-- 4 Round badge with gradient ring -->
+    <symbol id="v4" viewBox="0 0 32 32"><circle cx="16" cy="16" r="14.5" style="fill:var(--tile)" stroke="url(#gt)" stroke-width="2.2"/><path d="M10 22C10 15.5 14.5 11 21 11" fill="none" stroke="url(#g)" stroke-width="2.8" stroke-linecap="round"/><path d="M17.5 7.6 21.2 11 17.5 14.4" fill="none" style="stroke:var(--f3)" stroke-width="2.8" stroke-linecap="round" stroke-linejoin="round"/><circle cx="10" cy="22" r="2.6" style="fill:var(--f1)"/></symbol>
+    <!-- 5 Mark only, no tile -->
+    <symbol id="v5" viewBox="0 0 32 32"><path d="M6.5 25.5C6.5 14.5 14 7 25 7" fill="none" stroke="url(#g)" stroke-width="4" stroke-linecap="round"/><path d="M19.5 2.5 25.5 7 19.5 11.5" fill="none" style="stroke:var(--f3)" stroke-width="4" stroke-linecap="round" stroke-linejoin="round"/><circle cx="6.5" cy="25.5" r="4" style="fill:var(--f1)"/></symbol>
+    <!-- 6 Relay: dot, dot, arrow stepping up -->
+    <symbol id="v6" viewBox="0 0 32 32"><rect x=".5" y=".5" width="31" height="31" rx="8.5" style="fill:var(--tile);stroke:var(--edge)"/><circle cx="8" cy="24" r="2.6" style="fill:var(--f1)"/><circle cx="14.5" cy="17.5" r="2.6" style="fill:var(--f2)"/><path d="M18.5 13.5 24.5 7.5M18.8 7.5h5.7v5.7" fill="none" style="stroke:var(--f3)" stroke-width="2.8" stroke-linecap="round" stroke-linejoin="round"/></symbol>
+    <!-- 7 Glow: original mark with a neon glow underneath -->
+    <symbol id="v7" viewBox="0 0 32 32"><rect x=".5" y=".5" width="31" height="31" rx="8.5" style="fill:var(--tile);stroke:var(--edge)"/><path d="M9 23C9 15 14.5 9.5 22.5 9.5" fill="none" stroke="url(#g)" stroke-width="4.5" stroke-linecap="round" filter="url(#blur)" opacity=".9"/><path d="M9 23C9 15 14.5 9.5 22.5 9.5" fill="none" stroke="url(#g)" stroke-width="2.6" stroke-linecap="round"/><path d="M18.5 5.5 22.8 9.5 18.5 13.5" fill="none" style="stroke:var(--f3)" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"/><circle cx="9" cy="23" r="2.8" style="fill:var(--f1)"/></symbol>
+    <!-- 8 R monogram whose leg is the hand-off arrow -->
+    <symbol id="v8" viewBox="0 0 32 32"><rect width="32" height="32" rx="9" fill="url(#gt)"/><path d="M10.5 24V8h6a4.5 4.5 0 0 1 0 9h-6" fill="none" stroke="#fff" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/><path d="M15.5 17 22.5 24M22.5 18.5V24H17" fill="none" stroke="#fff" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/></symbol>
+  </defs>
+</svg>
+
+<div class="grid" id="grid"></div>
+
+<script>
+const VARIANTS = [
+  ['v1', 'Original', 'Dark tile, glowing arc arrow, start dot. The one you picked.'],
+  ['v2', 'Inverted', 'Gradient tile, white mark. Pops hardest in a row of tabs.'],
+  ['v3', 'Two people', 'A filled dot (you) passing a dotted path to a ring (them). The story is the most literal.'],
+  ['v4', 'Round badge', 'A circle with a gradient ring. Feels like an app icon or avatar.'],
+  ['v5', 'Mark only', 'No tile, just a bold arrow. The most minimal, and it fills the tab space best.'],
+  ['v6', 'Relay', 'Dot, dot, arrow stepping up: referral as a step forward.'],
+  ['v7', 'Neon glow', 'The original with a soft neon glow. The "wow" option.'],
+  ['v8', 'R monogram', 'An "R" whose leg is the hand-off arrow. Reads as the brand initial.'],
+];
+const THEMES = [
+  ['Violet', '#7c3aed', '#a855f7', '#f0abfc', '#0a0714', '#3b2a6b'],
+  ['Nocturne', '#352a7b', '#6754d8', '#a7a0d2', '#060609', '#2b2650'],
+  ['Glacier', '#2b5e6f', '#3ea3c5', '#9dc3cf', '#050809', '#1d3a44'],
+  ['Aurora', '#6366f1', '#a855f7', '#22d3ee', '#05060d', '#2a2d5c'],
+  ['Ember', '#ea580c', '#f43f5e', '#fdba74', '#0b0807', '#4a2615'],
+  ['Emerald', '#047857', '#10b981', '#67e8f9', '#040a09', '#16443a'],
+];
+const use = (id, s) => `<svg width="${s}" height="${s}"><use href="#${id}"/></svg>`;
+document.getElementById('grid').innerHTML = VARIANTS.map(([id, name, desc], i) => `
+  <div class="opt">
+    <h2><span class="n">${i + 1}</span>${name}</h2>
+    <p>${desc}</p>
+    <div class="sizes">${use(id, 88)}${use(id, 32)}${use(id, 16)}</div>
+    <div class="tabs"><div class="tab">${use(id, 16)}ReferLink</div><div class="tab l">${use(id, 16)}ReferLink</div></div>
+  </div>`).join('');
+const pick = document.getElementById('pick');
+THEMES.forEach(([name, a, b, c, tile, edge], i) => {
+  const btn = document.createElement('button');
+  btn.innerHTML = `<i style="background:linear-gradient(135deg,${a},${c})"></i>${name}`;
+  btn.setAttribute('aria-pressed', i === 0);
+  btn.onclick = () => {
+    const r = document.documentElement.style;
+    r.setProperty('--f1', a); r.setProperty('--f2', b); r.setProperty('--f3', c); r.setProperty('--tile', tile); r.setProperty('--edge', edge);
+    pick.querySelectorAll('button').forEach((x) => x.setAttribute('aria-pressed', x === btn));
+  };
+  pick.appendChild(btn);
+});
+</script>
+</body>
+</html>

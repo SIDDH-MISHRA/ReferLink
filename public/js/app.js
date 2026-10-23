@@ -200,7 +200,7 @@
     send: '<path d="M14.54 21.69a.5.5 0 0 0 .94-.03l6.5-19a.5.5 0 0 0-.64-.64l-19 6.5a.5.5 0 0 0-.03.94l7.93 3.18a2 2 0 0 1 1.11 1.11z"/><path d="m21.85 2.15-10.94 10.94"/>',
     pen: '<path d="M12 20h9"/><path d="M16.38 3.62a1 1 0 0 1 3 3L7.37 18.64a2 2 0 0 1-.86.5l-2.87.84a.5.5 0 0 1-.62-.62l.84-2.87a2 2 0 0 1 .5-.86z"/>',
     tap: '<path d="M9 9V4.5a1.5 1.5 0 0 1 3 0V12"/><path d="M12 11.5V10a1.5 1.5 0 0 1 3 0v2"/><path d="M15 11.5a1.5 1.5 0 0 1 3 0V16a6 6 0 0 1-6 6h-1.5a6 6 0 0 1-4.6-2.2L3.3 16.5a1.5 1.5 0 0 1 2.3-1.9L9 17"/>',
-    sun: '<circle cx="12" cy="12" r="4"/><path d="M12 2v2M12 20v2m-7.07-14.07 1.41 1.41m11.32 11.32 1.41 1.41M2 12h2m16 0h2M6.34 17.66l-1.41 1.41M19.07 4.93l-1.41 1.41"/>',
+    sun: '<circle cx="12" cy="12" r="4"/><path d="M12 2v2M12 20v2M4.93 4.93l1.41 1.41M17.66 17.66l1.41 1.41M2 12h2M20 12h2M6.34 17.66l-1.41 1.41M19.07 4.93l-1.41 1.41"/>',
     moon: '<path d="M12 3a6 6 0 0 0 9 9 9 9 0 1 1-9-9Z"/>',
     eye: '<path d="M2.06 12.35a1 1 0 0 1 0-.7 10.75 10.75 0 0 1 19.88 0 1 1 0 0 1 0 .7 10.75 10.75 0 0 1-19.88 0"/><circle cx="12" cy="12" r="3"/>',
   };
@@ -421,6 +421,70 @@
     });
   }
 
+  // Cursor trail: a short gradient ribbon that follows the mouse and fades out.
+  // Colours come from the theme (--trail-a / --trail-b). Mouse only, not touch.
+  function initCursorTrail() {
+    if (calm || !window.matchMedia('(pointer: fine)').matches) return;
+    const canvas = h('canvas', { class: 'cursor-trail', 'aria-hidden': 'true' });
+    document.body.append(canvas);
+    const ctx = canvas.getContext('2d');
+    const LIFE = 420; // ms a point stays visible
+    const points = [];
+    let dpr = 1;
+    let colors;
+    let running = false;
+
+    const hex = (v) => {
+      const m = v.trim().match(/^#?([0-9a-f]{6})$/i);
+      const n = parseInt(m ? m[1] : 'a855f7', 16);
+      return [(n >> 16) & 255, (n >> 8) & 255, n & 255];
+    };
+    const readColors = () => {
+      const s = getComputedStyle(document.documentElement);
+      colors = [hex(s.getPropertyValue('--trail-a')), hex(s.getPropertyValue('--trail-b'))];
+    };
+    const resize = () => {
+      dpr = Math.min(window.devicePixelRatio || 1, 2);
+      canvas.width = innerWidth * dpr;
+      canvas.height = innerHeight * dpr;
+    };
+    readColors();
+    resize();
+    window.addEventListener('resize', resize);
+    new MutationObserver(readColors).observe(document.documentElement, { attributes: true, attributeFilter: ['data-theme'] });
+
+    function frame(now) {
+      while (points.length && now - points[0].t > LIFE) points.shift();
+      ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+      ctx.clearRect(0, 0, innerWidth, innerHeight);
+      ctx.lineCap = 'round';
+      for (let i = 1; i < points.length; i++) {
+        const a = points[i - 1];
+        const b = points[i];
+        const life = Math.max(0, 1 - (now - b.t) / LIFE); // 1 = fresh, 0 = gone
+        const along = i / (points.length - 1); // 0 = tail, 1 = head
+        const c = colors[0].map((v, k) => Math.round(v + (colors[1][k] - v) * along));
+        const rgb = 'rgba(' + c.join(',') + ',';
+        ctx.strokeStyle = rgb + (0.85 * life) + ')';
+        ctx.shadowColor = rgb + (0.6 * life) + ')';
+        ctx.shadowBlur = 14;
+        ctx.lineWidth = 1 + 6 * life * along;
+        ctx.beginPath();
+        ctx.moveTo(a.x, a.y);
+        ctx.lineTo(b.x, b.y);
+        ctx.stroke();
+      }
+      if (points.length) requestAnimationFrame(frame);
+      else { running = false; ctx.clearRect(0, 0, innerWidth, innerHeight); }
+    }
+
+    window.addEventListener('pointermove', (e) => {
+      if (e.pointerType !== 'mouse') return;
+      points.push({ x: e.clientX, y: e.clientY, t: performance.now() });
+      if (!running) { running = true; requestAnimationFrame(frame); }
+    }, { passive: true });
+  }
+
   // Fade elements with class "reveal" in as they scroll into view; scramble kickers once.
   function initReveal() {
     const items = document.querySelectorAll('.reveal');
@@ -442,6 +506,7 @@
   injectSprite();
   initThemeToggle();
   initSpotlight();
+  initCursorTrail();
   initReveal();
   document.querySelectorAll('[data-depth]').forEach(depthWords);
   document.querySelectorAll('[data-scramble-now]').forEach((el) => scramble(el, Number(el.dataset.scrambleNow) || 0));

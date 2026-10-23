@@ -108,3 +108,10 @@ One entry per real decision or problem. Newest at the bottom.
 - Who: Siddh (direction, reference sites), Claude (choices and build)
 - Evidence: Siddh's references were Motion Primitives, SmoothUI, unlumen UI, Realtime Colors and Haikei. They're all React or design tools, so each effect was rebuilt in plain JS/CSS, with no new libraries.
 - Result: Retested landing, create, board, dashboard and status in both themes and at phone width, with no sideways scrolling. A bug was found and fixed: animations that held their end frame could leave text invisible if the browser paused them, so the resting state is now always visible.
+
+## 2026-10-24 · Cursor trail, sun icon fix, theme and favicon options
+- Decision: Added a gradient cursor trail that takes its colours from the theme. It shows for mouse only and is off for reduced motion. Fixed the sun icon, which had two rays drawn from the wrong point. Built preview pages for 6 colour themes and 8 hand-off favicon variations, so Siddh can choose.
+- Why: Siddh wasn't satisfied with the violet theme, wanted more interactivity, and asked to see themes pictured before choosing.
+- Who: Siddh (requests, 2 palettes), Claude (4 more themes, favicon variants, build)
+- Evidence: Trail tested in the browser: it draws while the mouse moves and fully clears within a second. The sun was checked at large size.
+- Result: Pending Siddh's theme and favicon choice.

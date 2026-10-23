@@ -1,0 +1,191 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>ReferLink theme options</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Geist:wght@400;500;600;700&family=Geist+Mono:wght@400;500&family=Instrument+Serif:ital@0;1&display=swap">
+<style>
+  * { box-sizing: border-box; }
+  body { margin: 0; background: #070709; color: #ededf2; font: 15px/1.5 "Geist", system-ui, sans-serif; padding: 28px 16px 60px; -webkit-font-smoothing: antialiased; }
+  .page-title { max-width: 1180px; margin: 0 auto 28px; }
+  .page-title h1 { font-size: 28px; letter-spacing: -0.03em; margin: 0 0 6px; }
+  .page-title p { color: #9a9aa8; margin: 0; }
+  .grid { display: grid; gap: 22px; max-width: 1180px; margin: 0 auto; }
+  @media (min-width: 900px) { .grid { grid-template-columns: 1fr 1fr; } }
+
+  /* One theme = one set of variables on .theme */
+  .theme { border-radius: 22px; overflow: hidden; border: 1px solid var(--border); background: var(--bg); color: var(--text); }
+  .th-head { display: flex; justify-content: space-between; gap: 12px; align-items: flex-start; padding: 18px 20px 6px; }
+  .th-head h2 { margin: 0; font-size: 18px; letter-spacing: -0.02em; display: flex; align-items: center; gap: 10px; }
+  .th-num { display: inline-grid; place-items: center; width: 26px; height: 26px; border-radius: 8px; background: linear-gradient(135deg, var(--g1), var(--g2), var(--g3)); color: #fff; font-size: 13px; }
+  .tag { font: 500 11px "Geist Mono", monospace; padding: 3px 8px; border-radius: 999px; border: 1px solid var(--border); color: var(--text3); text-transform: uppercase; letter-spacing: .05em; }
+  .th-head p { margin: 4px 0 0; color: var(--text2); font-size: 13.5px; max-width: 34ch; }
+  .sw { display: flex; gap: 5px; flex: none; margin-top: 4px; }
+  .sw i { width: 18px; height: 18px; border-radius: 6px; border: 1px solid rgba(255,255,255,.12); }
+
+  .mock { margin: 12px; border-radius: 16px; border: 1px solid var(--border); background: var(--bg); position: relative; overflow: hidden; }
+  .mock::before { content: ""; position: absolute; inset: -40% -10% auto; height: 300px; background:
+      radial-gradient(260px 160px at 30% 40%, color-mix(in srgb, var(--g1) 55%, transparent), transparent 70%),
+      radial-gradient(240px 150px at 75% 30%, color-mix(in srgb, var(--g3) 40%, transparent), transparent 70%);
+    filter: blur(28px); opacity: .7; }
+  .mock::after { content: ""; position: absolute; inset: 0; pointer-events: none; background:
+      linear-gradient(var(--grid) 1px, transparent 1px) 0 0 / 32px 32px,
+      linear-gradient(90deg, var(--grid) 1px, transparent 1px) 0 0 / 32px 32px;
+    -webkit-mask-image: radial-gradient(ellipse 80% 60% at 50% 15%, #000 20%, transparent 75%); mask-image: radial-gradient(ellipse 80% 60% at 50% 15%, #000 20%, transparent 75%); }
+  .mock > * { position: relative; z-index: 1; }
+  .nav { margin: 10px; display: flex; align-items: center; gap: 8px; height: 40px; padding: 0 10px; border-radius: 12px; border: 1px solid var(--border); background: color-mix(in srgb, var(--bg) 70%, transparent); backdrop-filter: blur(8px); font-weight: 600; font-size: 13.5px; }
+  .mk { width: 20px; height: 20px; border-radius: 6px; background: linear-gradient(135deg, var(--g1), var(--g2), var(--g3)); display: grid; place-items: center; }
+  .nav .sun { margin-left: auto; color: var(--text2); }
+  svg.i { width: 15px; height: 15px; stroke: currentColor; fill: none; stroke-width: 2; stroke-linecap: round; stroke-linejoin: round; }
+  .hero { text-align: center; padding: 18px 16px 6px; }
+  .eyebrow { display: inline-flex; align-items: center; gap: 6px; padding: 3px 10px 3px 4px; border-radius: 999px; border: 1px solid var(--border); background: color-mix(in srgb, var(--surface) 80%, transparent); font-size: 11.5px; color: var(--text2); }
+  .eyebrow b { padding: 1px 7px; border-radius: 999px; background: linear-gradient(135deg, var(--g1), var(--g3)); color: #fff; font-weight: 600; }
+  .hero h3 { font-size: clamp(26px, 4vw, 34px); line-height: 1.02; letter-spacing: -0.045em; margin: 12px 0 8px; font-weight: 600; }
+  .hero h3 em { font-family: "Instrument Serif", serif; font-weight: 400; letter-spacing: -0.01em; font-size: 1.08em; background: linear-gradient(100deg, var(--g3), var(--g2), var(--g3)); -webkit-background-clip: text; background-clip: text; color: transparent; padding-right: .08em; }
+  .hero p { color: var(--text2); font-size: 13px; margin: 0 auto 14px; max-width: 32ch; }
+  .btns { display: flex; gap: 8px; justify-content: center; }
+  .b1 { display: inline-flex; align-items: center; gap: 6px; height: 34px; padding: 0 14px; border-radius: 10px; background: linear-gradient(135deg, var(--g1), var(--g2), var(--g3)); color: #fff; font-size: 12.5px; font-weight: 500; box-shadow: inset 0 1px 0 rgba(255,255,255,.25), 0 8px 22px -8px color-mix(in srgb, var(--g2) 70%, transparent); }
+  .b2 { display: inline-flex; align-items: center; height: 34px; padding: 0 14px; border-radius: 10px; border: 1px solid var(--border2); background: var(--surface); font-size: 12.5px; font-weight: 500; }
+  .card { margin: 16px 12px 12px; border-radius: 14px; border: 1px solid var(--border); background: linear-gradient(180deg, rgba(255,255,255,.03), transparent 60%), var(--surface); padding: 14px; }
+  .row { display: flex; align-items: center; gap: 10px; }
+  .av { width: 32px; height: 32px; border-radius: 50%; background: linear-gradient(135deg, var(--g2), var(--g3)); color: #fff; font-size: 11.5px; font-weight: 600; display: grid; place-items: center; }
+  .nm { font-weight: 600; font-size: 13.5px; }
+  .tm { font-size: 11.5px; color: var(--text3); }
+  .badge { margin-left: auto; font-size: 11px; font-weight: 600; padding: 2px 8px; border-radius: 999px; background: rgba(245,158,11,.12); color: #fbbf24; border: 1px solid rgba(245,158,11,.3); }
+  .why { margin: 10px 0; padding-left: 10px; border-left: 2px solid var(--g2); font-size: 12.5px; color: var(--text2); }
+  .chips { display: flex; flex-wrap: wrap; gap: 5px; margin-bottom: 12px; }
+  .chip { font-size: 11.5px; padding: 3px 8px; border-radius: 8px; border: 1px solid var(--border); background: color-mix(in srgb, var(--bg) 50%, var(--surface)); color: var(--text2); }
+  .acts { display: grid; grid-template-columns: 1fr 1fr; gap: 6px; padding-top: 10px; border-top: 1px solid var(--border); }
+  .ok { text-align: center; height: 32px; line-height: 32px; border-radius: 9px; background: linear-gradient(135deg, #16a34a, #22c55e); color: #fff; font-size: 12.5px; font-weight: 500; }
+  .no { text-align: center; height: 32px; line-height: 30px; border-radius: 9px; border: 1px solid var(--border2); font-size: 12.5px; }
+  .counts { display: grid; grid-template-columns: repeat(3, 1fr); gap: 4px; margin: 0 12px; padding: 4px; border-radius: 12px; background: color-mix(in srgb, var(--surface) 60%, var(--bg)); border: 1px solid var(--border); }
+  .counts div { padding: 6px 8px; border-radius: 9px; font-size: 11px; color: var(--text3); }
+  .counts b { display: block; font-size: 17px; color: var(--text); }
+  .counts .on { background: var(--surface); border: 1px solid var(--border2); }
+  .counts .on b { color: var(--acc); }
+
+  .light { margin: 0 12px 12px; border-radius: 14px; padding: 14px; background: var(--lbg); color: var(--ltext); display: flex; flex-wrap: wrap; gap: 10px 16px; align-items: center; border: 1px solid color-mix(in srgb, var(--lacc) 20%, transparent); }
+  .light .lt { font-weight: 600; letter-spacing: -0.03em; font-size: 17px; }
+  .light .lt em { font-family: "Instrument Serif", serif; font-weight: 400; color: var(--lacc); }
+  .light .b1 { height: 30px; font-size: 12px; background: linear-gradient(135deg, var(--lacc), var(--lacc2)); }
+  .light small { color: color-mix(in srgb, var(--ltext) 60%, transparent); font-size: 11.5px; width: 100%; }
+
+  .verdict { padding: 4px 20px 18px; font-size: 13px; color: var(--text2); }
+  .verdict b { color: var(--text); }
+  canvas#trail { position: fixed; inset: 0; width: 100%; height: 100%; pointer-events: none; z-index: 10; }
+</style>
+</head>
+<body>
+<div class="page-title">
+  <h1>Pick a colour theme</h1>
+  <p>Each one is the real ReferLink hero, a request card and the inbox counts, plus a light-mode strip. Move your mouse across a theme to feel its cursor trail.</p>
+</div>
+
+<svg width="0" height="0" style="position:absolute"><symbol id="sun" viewBox="0 0 24 24"><circle cx="12" cy="12" r="4"/><path d="M12 2v2M12 20v2M4.93 4.93l1.41 1.41M17.66 17.66l1.41 1.41M2 12h2M20 12h2M6.34 17.66l-1.41 1.41M19.07 4.93l-1.41 1.41"/></symbol><symbol id="chk" viewBox="0 0 24 24"><path d="M20 6 9 17l-5-5"/></symbol><symbol id="arr" viewBox="0 0 24 24"><path d="M5 12h14M12 5l7 7-7 7"/></symbol></svg>
+
+<div class="grid" id="grid"></div>
+
+<template id="tpl">
+  <section class="theme">
+    <div class="th-head">
+      <div><h2><span class="th-num"></span><span class="name"></span><span class="tag"></span></h2><p class="desc"></p></div>
+      <div class="sw"></div>
+    </div>
+    <div class="mock">
+      <div class="nav"><span class="mk"><svg class="i" style="color:#fff;width:12px;height:12px;stroke-width:3"><use href="#chk"/></svg></span>ReferLink<span class="sun"><svg class="i"><use href="#sun"/></svg></span></div>
+      <div class="hero">
+        <span class="eyebrow"><b>Free</b>For employees who get referral DMs</span>
+        <h3>Referral requests, <em>sorted.</em></h3>
+        <p>One link for every "can you refer me?" message. Nobody gets ghosted.</p>
+        <div class="btns"><span class="b1">Create my referral link <svg class="i" style="width:13px;height:13px"><use href="#arr"/></svg></span><span class="b2">See how it works</span></div>
+      </div>
+      <div class="card">
+        <div class="row"><span class="av">AI</span><div><div class="nm">Ananya Iyer</div><div class="tm">2 hours ago</div></div><span class="badge">Pending</span></div>
+        <div class="why">2 years as a data analyst, SQL and Python daily.</div>
+        <div class="chips"><span class="chip">Google job ↗</span><span class="chip">Resume · Google Drive ↗</span><span class="chip">LinkedIn ↗</span></div>
+        <div class="acts"><span class="ok">✓ Referred</span><span class="no">Decline</span></div>
+      </div>
+      <div class="counts" style="margin-bottom:12px"><div class="on"><b>3</b>Pending</div><div><b>12</b>Referred</div><div><b>4</b>Declined</div></div>
+    </div>
+    <div class="light"><span class="lt">Referral requests, <em>sorted.</em></span><span class="b1">Create my link</span><small>Light mode</small></div>
+    <p class="verdict"></p>
+  </section>
+</template>
+
+<script>
+// [name, tag, description, verdict, dark tokens, light tokens]
+const THEMES = [
+  ['Violet', 'current', 'Deep violet-black with a violet to magenta gradient.',
+   '<b>Feel:</b> bold, creative, "wow". Risk: pink-magenta can read playful rather than serious.',
+   { bg: '#0a0714', surface: '#110c20', border: 'rgba(167,139,250,.16)', border2: 'rgba(167,139,250,.3)', text: '#f3f0ff', text2: '#c9c2e8', text3: '#8f88b0', g1: '#7c3aed', g2: '#a855f7', g3: '#d946ef', acc: '#c4b5fd', grid: 'rgba(167,139,250,.08)' },
+   { lbg: '#faf8ff', ltext: '#160f2e', lacc: '#7c3aed', lacc2: '#c026d3' }],
+  ['Nocturne', 'your pick B', 'Near-black with calm indigo and periwinkle. Your second palette.',
+   '<b>Feel:</b> premium, quiet confidence (Linear-like). Most "professional" of the purples.',
+   { bg: '#060609', surface: '#0e0d16', border: 'rgba(167,160,210,.15)', border2: 'rgba(167,160,210,.3)', text: '#eeeef1', text2: '#c4c2d6', text3: '#8a87a3', g1: '#352a7b', g2: '#6754d8', g3: '#a7a0d2', acc: '#a7a0d2', grid: 'rgba(167,160,210,.07)' },
+   { lbg: '#f7f7fb', ltext: '#12111f', lacc: '#4f3fc4', lacc2: '#6754d8' }],
+  ['Glacier', 'your pick A', 'Ink-black with ocean teal and ice blue. Your first palette.',
+   '<b>Feel:</b> calm, trustworthy, clean (fintech-like). Least flashy of the six.',
+   { bg: '#050809', surface: '#0b1214', border: 'rgba(157,195,207,.14)', border2: 'rgba(157,195,207,.28)', text: '#e2e8ea', text2: '#b6c6cb', text3: '#7d9097', g1: '#2b5e6f', g2: '#3ea3c5', g3: '#9dc3cf', acc: '#9dc3cf', grid: 'rgba(157,195,207,.07)' },
+   { lbg: '#f5f9fa', ltext: '#0a1418', lacc: '#1f7a99', lacc2: '#3ea3c5' }],
+  ['Aurora', 'new', 'Midnight blue with an indigo to violet to cyan gradient, like the northern lights.',
+   '<b>Feel:</b> the most "wow" while staying professional. Keeps the purple you liked, and cyan adds freshness.',
+   { bg: '#05060d', surface: '#0c0e1a', border: 'rgba(129,140,248,.16)', border2: 'rgba(129,140,248,.3)', text: '#eef0ff', text2: '#c3c7e6', text3: '#868ab0', g1: '#6366f1', g2: '#a855f7', g3: '#22d3ee', acc: '#a5b4fc', grid: 'rgba(129,140,248,.08)' },
+   { lbg: '#f7f8ff', ltext: '#0f1130', lacc: '#4f46e5', lacc2: '#0891b2' }],
+  ['Ember', 'new', 'Warm charcoal with an orange to rose gradient.',
+   '<b>Feel:</b> energetic and human, and it stands out from every purple SaaS. Risk: less "calm and safe".',
+   { bg: '#0b0807', surface: '#15100d', border: 'rgba(251,146,60,.14)', border2: 'rgba(251,146,60,.28)', text: '#fbf3ee', text2: '#dbc8bd', text3: '#a08b7f', g1: '#ea580c', g2: '#f43f5e', g3: '#fb923c', acc: '#fdba74', grid: 'rgba(251,146,60,.07)' },
+   { lbg: '#fffaf6', ltext: '#24140c', lacc: '#c2410c', lacc2: '#e11d48' }],
+  ['Emerald', 'new', 'Deep green-black with an emerald to aqua gradient.',
+   '<b>Feel:</b> fresh, growth, "go". Risk: the green "Referred" button blends into the brand colour.',
+   { bg: '#040a09', surface: '#0a1513', border: 'rgba(52,211,153,.14)', border2: 'rgba(52,211,153,.28)', text: '#ecfdf7', text2: '#bfe3d6', text3: '#7fa69a', g1: '#047857', g2: '#10b981', g3: '#67e8f9', acc: '#6ee7b7', grid: 'rgba(52,211,153,.07)' },
+   { lbg: '#f5fbf9', ltext: '#062019', lacc: '#047857', lacc2: '#0891b2' }],
+];
+
+const grid = document.getElementById('grid');
+const tpl = document.getElementById('tpl');
+THEMES.forEach(([name, tag, desc, verdict, dark, light], i) => {
+  const el = tpl.content.firstElementChild.cloneNode(true);
+  Object.entries({ ...dark, ...light }).forEach(([k, v]) => el.style.setProperty('--' + k, v));
+  el.dataset.trail = dark.g2 + ',' + dark.g3;
+  el.querySelector('.th-num').textContent = i + 1;
+  el.querySelector('.name').textContent = name;
+  el.querySelector('.tag').textContent = tag;
+  el.querySelector('.desc').textContent = desc;
+  el.querySelector('.verdict').innerHTML = verdict;
+  el.querySelector('.sw').innerHTML = [dark.bg, dark.g1, dark.g2, dark.g3, dark.text].map((c) => `<i style="background:${c}" title="${c}"></i>`).join('');
+  grid.appendChild(el);
+});
+
+// Gradient cursor trail, coloured by the theme under the mouse.
+(() => {
+  if (matchMedia('(prefers-reduced-motion: reduce)').matches) return;
+  const c = document.createElement('canvas'); c.id = 'trail'; document.body.appendChild(c);
+  const ctx = c.getContext('2d'); const LIFE = 420; const pts = []; let running = false;
+  const dpr = Math.min(devicePixelRatio || 1, 2);
+  const size = () => { c.width = innerWidth * dpr; c.height = innerHeight * dpr; }; size(); addEventListener('resize', size);
+  const hex = (h) => { const n = parseInt(h.slice(1), 16); return [(n >> 16) & 255, (n >> 8) & 255, n & 255]; };
+  let cols = [hex('#a855f7'), hex('#f0abfc')];
+  function frame(now) {
+    while (pts.length && now - pts[0].t > LIFE) pts.shift();
+    ctx.setTransform(dpr, 0, 0, dpr, 0, 0); ctx.clearRect(0, 0, innerWidth, innerHeight); ctx.lineCap = 'round';
+    for (let i = 1; i < pts.length; i++) {
+      const a = pts[i - 1], b = pts[i], life = Math.max(0, 1 - (now - b.t) / LIFE), al = i / (pts.length - 1);
+      const col = b.c[0].map((v, k) => Math.round(v + (b.c[1][k] - v) * al)).join(',');
+      ctx.strokeStyle = `rgba(${col},${0.85 * life})`; ctx.shadowColor = `rgba(${col},${0.6 * life})`; ctx.shadowBlur = 14;
+      ctx.lineWidth = 1 + 6 * life * al; ctx.beginPath(); ctx.moveTo(a.x, a.y); ctx.lineTo(b.x, b.y); ctx.stroke();
+    }
+    if (pts.length) requestAnimationFrame(frame); else { running = false; ctx.clearRect(0, 0, innerWidth, innerHeight); }
+  }
+  addEventListener('pointermove', (e) => {
+    const th = e.target.closest && e.target.closest('.theme');
+    if (th) cols = th.dataset.trail.split(',').map(hex);
+    pts.push({ x: e.clientX, y: e.clientY, t: performance.now(), c: cols });
+    if (!running) { running = true; requestAnimationFrame(frame); }
+  }, { passive: true });
+})();
+</script>
+</body>
+</html>

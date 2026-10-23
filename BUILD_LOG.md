@@ -115,3 +115,10 @@ One entry per real decision or problem. Newest at the bottom.
 - Who: Siddh (requests, 2 palettes), Claude (4 more themes, favicon variants, build)
 - Evidence: Trail tested in the browser: it draws while the mouse moves and fully clears within a second. The sun was checked at large size.
 - Result: Pending Siddh's theme and favicon choice.
+
+## 2026-10-24 · Background sparkle replaces cursor trail; theme screenshots
+- Decision: Removed the cursor trail. Hovering over empty background now shows a soft glow and small twinkling gradient sparkles, never over cards, nav or buttons. The hero glow now takes its colours from the theme instead of a fixed violet image.
+- Why: Siddh didn't like the trail and asked for a sparkle on the background only.
+- Who: Siddh (direction), Claude (build)
+- Evidence: Browser test: the glow shows over the background and stays off over cards, and sparkles fully clear after fading. Real screenshots of the landing page in all 6 themes are in `design/theme-shots/`.
+- Result: Pending Siddh's theme choice.

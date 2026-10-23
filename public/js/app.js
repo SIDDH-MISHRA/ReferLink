@@ -421,18 +421,21 @@
     });
   }
 
-  // Cursor trail: a short gradient ribbon that follows the mouse and fades out.
-  // Colours come from the theme (--trail-a / --trail-b). Mouse only, not touch.
-  function initCursorTrail() {
+  // Background sparkle: over empty background only (never cards, nav, buttons or form
+  // fields), a soft glow follows the mouse and small gradient sparkles twinkle out.
+  // Colours come from the theme (--spark-a / --spark-b). Mouse only; off for reduced motion.
+  function initBackgroundSparkle() {
     if (calm || !window.matchMedia('(pointer: fine)').matches) return;
-    const canvas = h('canvas', { class: 'cursor-trail', 'aria-hidden': 'true' });
-    document.body.append(canvas);
+    const glow = h('div', { class: 'bg-glow', 'aria-hidden': 'true' });
+    const canvas = h('canvas', { class: 'bg-sparkle', 'aria-hidden': 'true' });
+    document.body.prepend(glow, canvas);
     const ctx = canvas.getContext('2d');
-    const LIFE = 420; // ms a point stays visible
-    const points = [];
+    const sparks = [];
+    const MAX = 70;
     let dpr = 1;
     let colors;
     let running = false;
+    let last = 0;
 
     const hex = (v) => {
       const m = v.trim().match(/^#?([0-9a-f]{6})$/i);
@@ -441,7 +444,7 @@
     };
     const readColors = () => {
       const s = getComputedStyle(document.documentElement);
-      colors = [hex(s.getPropertyValue('--trail-a')), hex(s.getPropertyValue('--trail-b'))];
+      colors = [hex(s.getPropertyValue('--spark-a')), hex(s.getPropertyValue('--spark-b'))];
     };
     const resize = () => {
       dpr = Math.min(window.devicePixelRatio || 1, 2);
@@ -453,36 +456,63 @@
     window.addEventListener('resize', resize);
     new MutationObserver(readColors).observe(document.documentElement, { attributes: true, attributeFilter: ['data-theme'] });
 
+    // Things that count as "not background".
+    const SOLID = '.card, .nav-pill, .cta-band, .preview, .btn, a, button, input, textarea, label, .copy-field, .toast';
+
+    // A four-point star.
+    function star(x, y, r) {
+      ctx.beginPath();
+      ctx.moveTo(x, y - r);
+      ctx.quadraticCurveTo(x, y, x + r, y);
+      ctx.quadraticCurveTo(x, y, x, y + r);
+      ctx.quadraticCurveTo(x, y, x - r, y);
+      ctx.quadraticCurveTo(x, y, x, y - r);
+      ctx.fill();
+    }
+
     function frame(now) {
-      while (points.length && now - points[0].t > LIFE) points.shift();
       ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
       ctx.clearRect(0, 0, innerWidth, innerHeight);
-      ctx.lineCap = 'round';
-      for (let i = 1; i < points.length; i++) {
-        const a = points[i - 1];
-        const b = points[i];
-        const life = Math.max(0, 1 - (now - b.t) / LIFE); // 1 = fresh, 0 = gone
-        const along = i / (points.length - 1); // 0 = tail, 1 = head
-        const c = colors[0].map((v, k) => Math.round(v + (colors[1][k] - v) * along));
-        const rgb = 'rgba(' + c.join(',') + ',';
-        ctx.strokeStyle = rgb + (0.85 * life) + ')';
-        ctx.shadowColor = rgb + (0.6 * life) + ')';
-        ctx.shadowBlur = 14;
-        ctx.lineWidth = 1 + 6 * life * along;
-        ctx.beginPath();
-        ctx.moveTo(a.x, a.y);
-        ctx.lineTo(b.x, b.y);
-        ctx.stroke();
+      for (let i = sparks.length - 1; i >= 0; i--) {
+        const s = sparks[i];
+        const age = (now - s.born) / s.life; // 0 → 1
+        if (age >= 1) { sparks.splice(i, 1); continue; }
+        const twinkle = Math.sin(age * Math.PI); // grows then shrinks
+        const c = colors[0].map((v, k) => Math.round(v + (colors[1][k] - v) * s.mix));
+        ctx.fillStyle = 'rgba(' + c.join(',') + ',' + (0.9 * twinkle) + ')';
+        ctx.shadowColor = 'rgba(' + c.join(',') + ',' + (0.8 * twinkle) + ')';
+        ctx.shadowBlur = 10;
+        star(s.x + s.vx * age * 30, s.y + s.vy * age * 30, s.size * (0.4 + twinkle));
       }
-      if (points.length) requestAnimationFrame(frame);
+      if (sparks.length) requestAnimationFrame(frame);
       else { running = false; ctx.clearRect(0, 0, innerWidth, innerHeight); }
     }
 
     window.addEventListener('pointermove', (e) => {
       if (e.pointerType !== 'mouse') return;
-      points.push({ x: e.clientX, y: e.clientY, t: performance.now() });
+      const onBackground = !(e.target.closest && e.target.closest(SOLID));
+      glow.classList.toggle('on', onBackground);
+      if (!onBackground) return;
+      glow.style.setProperty('--gx', e.clientX + 'px');
+      glow.style.setProperty('--gy', e.clientY + 'px');
+      const now = performance.now();
+      if (now - last < 45 || sparks.length >= MAX) return; // a few sparkles, not a spray
+      last = now;
+      const angle = Math.random() * Math.PI * 2;
+      const dist = 6 + Math.random() * 26;
+      sparks.push({
+        x: e.clientX + Math.cos(angle) * dist,
+        y: e.clientY + Math.sin(angle) * dist,
+        vx: Math.cos(angle) * 0.6,
+        vy: Math.sin(angle) * 0.6 - 0.4, // drift slightly upward
+        size: 2.5 + Math.random() * 3.5,
+        mix: Math.random(),
+        born: now,
+        life: 700 + Math.random() * 500,
+      });
       if (!running) { running = true; requestAnimationFrame(frame); }
     }, { passive: true });
+    document.addEventListener('pointerleave', () => glow.classList.remove('on'));
   }
 
   // Fade elements with class "reveal" in as they scroll into view; scramble kickers once.
@@ -506,7 +536,7 @@
   injectSprite();
   initThemeToggle();
   initSpotlight();
-  initCursorTrail();
+  initBackgroundSparkle();
   initReveal();
   document.querySelectorAll('[data-depth]').forEach(depthWords);
   document.querySelectorAll('[data-scramble-now]').forEach((el) => scramble(el, Number(el.dataset.scrambleNow) || 0));

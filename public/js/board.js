@@ -1,6 +1,6 @@
 // /r/<slug>: a candidate reads the employee's board and sends a request.
 (function () {
-  const { rpc, track, check, withHttps, setFieldError, bindCopy, mailtoHref, errorText, safeLink, initials, pathParam } = window.RL;
+  const { rpc, track, check, withHttps, setFieldError, bindCopy, mailtoHref, errorText, safeLink, avatar, roleChips, icon, pathParam } = window.RL;
   const $ = (id) => document.getElementById(id);
   const slug = pathParam();
   let board = null;
@@ -39,20 +39,22 @@
     }
     const first = board.name.split(/\s+/)[0];
     document.title = 'Request a referral from ' + board.name + ' · ReferLink';
-    $('avatar').textContent = initials(board.name);
+    $('avatar').replaceWith(avatar(board.name, 'lg'));
     $('employee-name').textContent = board.name;
     $('employee-company').textContent = board.company;
     document.querySelectorAll('.employee-first').forEach((el) => { el.textContent = first; });
     if (board.refers_for) {
-      $('refers-for').append(Object.assign(document.createElement('strong'), { textContent: 'Refers for: ' }), board.refers_for);
-    } else {
-      $('refers-for').classList.add('hidden');
+      $('refers-for').replaceChildren(...roleChips(board.refers_for));
+      $('refers-wrap').classList.remove('hidden');
     }
     if (board.note) {
       $('employee-note').textContent = board.note;
       $('employee-note').classList.remove('hidden');
     }
-    $('employee-linkedin').append(safeLink(board.linkedin_url, 'View ' + first + "'s LinkedIn profile ↗"));
+    const profile = safeLink(board.linkedin_url, first + "'s LinkedIn profile");
+    profile.className = 'profile-link';
+    profile.append(icon('external'));
+    $('employee-linkedin').replaceWith(profile);
     show('form-view');
     track('request_form_viewed', { board_id: board.board_id });
   }
@@ -115,6 +117,7 @@
       return;
     }
 
+    const label = Array.from(button.childNodes).map((n) => n.cloneNode(true));
     button.disabled = true;
     button.textContent = 'Sending…';
     try {
@@ -146,7 +149,7 @@
       }
     } finally {
       button.disabled = false;
-      button.textContent = 'Send request';
+      button.replaceChildren(...label);
     }
   });
 

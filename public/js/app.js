@@ -171,6 +171,73 @@
     return h('a', { href: url, target: '_blank', rel: 'noopener noreferrer' }, label || url);
   }
 
+  // ---------------------------------------------------------------------------
+  // Icons: one SVG sprite, used as <svg class="icon"><use href="#i-name"/></svg>.
+  // Line icons in the style of Lucide (ISC licence).
+  // ---------------------------------------------------------------------------
+  const ICONS = {
+    check: '<path d="M20 6 9 17l-5-5"/>',
+    'circle-check': '<circle cx="12" cy="12" r="10"/><path d="m9 12 2 2 4-4"/>',
+    'circle-minus': '<circle cx="12" cy="12" r="10"/><path d="M8 12h8"/>',
+    clock: '<circle cx="12" cy="12" r="10"/><path d="M12 6v6l4 2"/>',
+    x: '<path d="M18 6 6 18"/><path d="m6 6 12 12"/>',
+    copy: '<rect width="14" height="14" x="8" y="8" rx="2"/><path d="M4 16c-1.1 0-2-.9-2-2V4c0-1.1.9-2 2-2h10c1.1 0 2 .9 2 2"/>',
+    mail: '<rect width="20" height="16" x="2" y="4" rx="2"/><path d="m22 7-8.97 5.7a1.94 1.94 0 0 1-2.06 0L2 7"/>',
+    external: '<path d="M7 7h10v10"/><path d="M7 17 17 7"/>',
+    arrow: '<path d="M5 12h14"/><path d="m12 5 7 7-7 7"/>',
+    link: '<path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"/><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"/>',
+    lock: '<rect width="18" height="11" x="3" y="11" rx="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/>',
+    shield: '<path d="M20 13c0 5-3.5 7.5-7.66 8.95a1 1 0 0 1-.67-.01C7.5 20.5 4 18 4 13V6a1 1 0 0 1 1-1c2 0 4.5-1.2 6.24-2.72a1.17 1.17 0 0 1 1.52 0C14.51 3.81 17 5 19 5a1 1 0 0 1 1 1z"/><path d="m9 12 2 2 4-4"/>',
+    inbox: '<path d="M22 12h-6l-2 3h-4l-2-3H2"/><path d="M5.45 5.11 2 12v6a2 2 0 0 0 2 2h16a2 2 0 0 0 2-2v-6l-3.45-6.89A2 2 0 0 0 16.76 4H7.24a2 2 0 0 0-1.79 1.11z"/>',
+    refresh: '<path d="M21 12a9 9 0 1 1-9-9c2.52 0 4.93 1 6.74 2.74L21 8"/><path d="M21 3v5h-5"/>',
+    trash: '<path d="M3 6h18"/><path d="M19 6v14c0 1-1 2-2 2H7c-1 0-2-1-2-2V6"/><path d="M8 6V4c0-1 1-2 2-2h4c1 0 2 1 2 2v2"/>',
+    file: '<path d="M15 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V7Z"/><path d="M14 2v4a2 2 0 0 0 2 2h4"/><path d="M16 13H8"/><path d="M16 17H8"/><path d="M10 9H8"/>',
+    briefcase: '<path d="M16 20V4a2 2 0 0 0-2-2h-4a2 2 0 0 0-2 2v16"/><rect width="20" height="14" x="2" y="6" rx="2"/>',
+    building: '<rect width="16" height="20" x="4" y="2" rx="2"/><path d="M9 22v-4h6v4"/><path d="M8 6h.01M16 6h.01M12 6h.01M12 10h.01M12 14h.01M16 10h.01M16 14h.01M8 10h.01M8 14h.01"/>',
+    user: '<path d="M19 21v-2a4 4 0 0 0-4-4H9a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/>',
+    alert: '<path d="m21.73 18-8-14a2 2 0 0 0-3.48 0l-8 14A2 2 0 0 0 4 21h16a2 2 0 0 0 1.73-3"/><path d="M12 9v4"/><path d="M12 17h.01"/>',
+    info: '<circle cx="12" cy="12" r="10"/><path d="M12 16v-4"/><path d="M12 8h.01"/>',
+    send: '<path d="M14.54 21.69a.5.5 0 0 0 .94-.03l6.5-19a.5.5 0 0 0-.64-.64l-19 6.5a.5.5 0 0 0-.03.94l7.93 3.18a2 2 0 0 1 1.11 1.11z"/><path d="m21.85 2.15-10.94 10.94"/>',
+    pen: '<path d="M12 20h9"/><path d="M16.38 3.62a1 1 0 0 1 3 3L7.37 18.64a2 2 0 0 1-.86.5l-2.87.84a.5.5 0 0 1-.62-.62l.84-2.87a2 2 0 0 1 .5-.86z"/>',
+    tap: '<path d="M9 9V4.5a1.5 1.5 0 0 1 3 0V12"/><path d="M12 11.5V10a1.5 1.5 0 0 1 3 0v2"/><path d="M15 11.5a1.5 1.5 0 0 1 3 0V16a6 6 0 0 1-6 6h-1.5a6 6 0 0 1-4.6-2.2L3.3 16.5a1.5 1.5 0 0 1 2.3-1.9L9 17"/>',
+    eye: '<path d="M2.06 12.35a1 1 0 0 1 0-.7 10.75 10.75 0 0 1 19.88 0 1 1 0 0 1 0 .7 10.75 10.75 0 0 1-19.88 0"/><circle cx="12" cy="12" r="3"/>',
+  };
+
+  function injectSprite() {
+    const svg = document.createElementNS('http://www.w3.org/2000/svg', 'svg');
+    svg.setAttribute('aria-hidden', 'true');
+    svg.setAttribute('style', 'position:absolute;width:0;height:0;overflow:hidden');
+    svg.innerHTML = Object.keys(ICONS).map((k) =>
+      '<symbol id="i-' + k + '" viewBox="0 0 24 24">' + ICONS[k] + '</symbol>').join('');
+    document.body.prepend(svg);
+  }
+
+  function icon(name) {
+    const NS = 'http://www.w3.org/2000/svg';
+    const svg = document.createElementNS(NS, 'svg');
+    svg.setAttribute('class', 'icon');
+    svg.setAttribute('aria-hidden', 'true');
+    const use = document.createElementNS(NS, 'use');
+    use.setAttribute('href', '#i-' + name);
+    svg.appendChild(use);
+    return svg;
+  }
+
+  // Coloured initials. The colour comes from the name, so it's stable per person.
+  function avatar(name, size) {
+    let hash = 0;
+    for (const ch of name || '') hash = (hash * 31 + ch.charCodeAt(0)) % 360;
+    const el = h('div', { class: 'avatar' + (size ? ' avatar-' + size : ''), 'aria-hidden': 'true' }, initials(name));
+    el.style.setProperty('--h', hash);
+    return el;
+  }
+
+  // "Backend, Data" -> two chips
+  function roleChips(text) {
+    return (text || '').split(',').map((s) => s.trim()).filter(Boolean)
+      .map((role) => h('span', { class: 'chip' }, role));
+  }
+
   async function copyText(text) {
     try {
       await navigator.clipboard.writeText(text);
@@ -188,14 +255,14 @@
   }
 
   function bindCopy(button, getText, onCopied) {
-    const label = button.textContent;
+    const original = Array.from(button.childNodes).map((n) => n.cloneNode(true));
     button.addEventListener('click', async function () {
       const ok = await copyText(getText());
       // If copying is blocked, select the link next to the button so it can be copied by hand.
       const input = button.previousElementSibling;
       if (!ok && input && input.select) input.select();
-      button.textContent = ok ? 'Copied ✓' : 'Select and copy';
-      setTimeout(function () { button.textContent = label; }, 2000);
+      button.replaceChildren(icon(ok ? 'check' : 'info'), ok ? 'Copied' : 'Select and copy');
+      setTimeout(function () { button.replaceChildren(...original.map((n) => n.cloneNode(true))); }, 2000);
       if (ok && onCopied) onCopied();
     });
   }
@@ -206,7 +273,8 @@
   }
 
   function toast(message) {
-    const el = h('div', { class: 'toast', role: 'status' }, message);
+    document.querySelectorAll('.toast').forEach((t) => t.remove());
+    const el = h('div', { class: 'toast', role: 'status' }, icon('circle-check'), message);
     document.body.appendChild(el);
     setTimeout(function () { el.remove(); }, 2600);
   }
@@ -244,11 +312,12 @@
     other: { employee: 'Other', candidate: 'Not this time.' },
   };
 
+  injectSprite();
   initAnalytics();
 
   window.RL = {
     cfg, rpc, errorText, track, events, check, withHttps, setFieldError,
-    h, safeLink, copyText, bindCopy, mailtoHref, toast, timeAgo, formatDate, pathParam, initials,
+    h, icon, avatar, roleChips, safeLink, copyText, bindCopy, mailtoHref, toast, timeAgo, formatDate, pathParam, initials,
     DECLINE_REASONS,
   };
 })();

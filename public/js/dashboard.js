@@ -1,6 +1,6 @@
 // /d/<secret>: the employee works their queue. One tap to refer, two to decline.
 (function () {
-  const { rpc, track, h, safeLink, bindCopy, copyText, toast, timeAgo, formatDate, errorText, pathParam, DECLINE_REASONS } = window.RL;
+  const { rpc, track, h, icon, avatar, bindCopy, copyText, toast, timeAgo, formatDate, errorText, pathParam, DECLINE_REASONS } = window.RL;
   const $ = (id) => document.getElementById(id);
   const token = pathParam();
 
@@ -45,8 +45,9 @@
   }
 
   // ---------------------------------------------------------------------------
-  // Quick-check line: simple rules, no AI. Helps the employee judge at a glance.
+  // Quick checks: simple rules, no AI. Helps the employee judge at a glance.
   // ---------------------------------------------------------------------------
+  const isLink = (v) => /^https?:\/\//i.test(v || '');
   function host(url) {
     try { return new URL(url).hostname.replace(/^www\./, ''); } catch (e) { return ''; }
   }
@@ -56,50 +57,62 @@
     if (/(^|\.)dropbox\.com$/.test(hst)) return 'Dropbox';
     if (/(^|\.)(onedrive\.live\.com|1drv\.ms|sharepoint\.com)$/.test(hst)) return 'OneDrive';
     if (/(^|\.)notion\.(so|site)$/.test(hst)) return 'Notion';
-    return hst || 'link';
+    return null;
   }
-  function quickCheck(r) {
-    const parts = [];
-    if (/^https?:\/\//i.test(r.job_ref)) {
-      const key = board.company.toLowerCase().replace(/[^a-z0-9]/g, '');
-      const flat = r.job_ref.toLowerCase().replace(/[^a-z0-9]/g, '');
-      parts.push(key.length >= 3 && flat.includes(key) ? 'Job link mentions ' + board.company : 'Job link on ' + host(r.job_ref));
+  function jobMentionsCompany(url) {
+    const key = board.company.toLowerCase().replace(/[^a-z0-9]/g, '');
+    return key.length >= 3 && url.toLowerCase().replace(/[^a-z0-9]/g, '').includes(key);
+  }
+
+  // One row of links. A green icon means the quick check passed:
+  // the job link mentions the company, the resume is on a known host.
+  function linksRow(r) {
+    let job;
+    if (isLink(r.job_ref)) {
+      const mentions = jobMentionsCompany(r.job_ref);
+      job = linkChip(r.job_ref, 'briefcase', mentions ? board.company + ' job' : host(r.job_ref), mentions,
+        mentions ? 'Job link mentions ' + board.company : 'Job link on ' + host(r.job_ref));
     } else {
-      parts.push('Job ID only');
+      job = copyChip('briefcase', r.job_ref, 'Job ID only. Tap to copy');
     }
-    parts.push('Resume on ' + resumeHost(r.resume_url));
-    parts.push('LinkedIn ✓');
-    return parts.join(' · ');
+    const where = resumeHost(r.resume_url);
+    return h('div', { class: 'req-links' },
+      job,
+      linkChip(r.resume_url, 'file', where ? 'Resume · ' + where : 'Resume', !!where, where ? 'Resume on ' + where : 'Resume on ' + host(r.resume_url)),
+      linkChip(r.candidate_linkedin, 'user', 'LinkedIn', true, 'LinkedIn profile'),
+      copyChip('mail', r.candidate_email, 'Tap to copy email'));
   }
 
   // ---------------------------------------------------------------------------
   // Rendering
   // ---------------------------------------------------------------------------
-  const STATUS_LABEL = { pending: 'Pending', referred: 'Referred ✓', declined: 'Declined' };
+  const BADGE = {
+    pending: ['clock', 'Pending'],
+    referred: ['check', 'Referred'],
+    declined: ['circle-minus', 'Declined'],
+  };
 
-  // Tab labels with counts, e.g. "Pending (3)".
   function updateCounts() {
     const counts = { pending: 0, referred: 0, declined: 0, all: requests.length };
     requests.forEach((r) => { counts[r.status]++; });
-    document.querySelectorAll('.tab').forEach((tab) => {
-      tab.textContent = tab.textContent.replace(/\s*\(\d+\)$/, '') + ' (' + counts[tab.dataset.filter] + ')';
+    document.querySelectorAll('.filter').forEach((tab) => {
+      tab.querySelector('b').textContent = counts[tab.dataset.filter];
       tab.setAttribute('aria-selected', String(tab.dataset.filter === filter));
     });
   }
 
   function render() {
     updateCounts();
-    const list = $('list');
-    list.replaceChildren();
     const shown = requests.filter((r) => filter === 'all' || r.status === filter);
-    shown.forEach((r) => list.append(card(r)));
+    $('list').replaceChildren(...shown.map(card));
 
-    const empty = $('empty');
-    empty.classList.toggle('hidden', shown.length > 0);
+    $('empty').classList.toggle('hidden', shown.length > 0);
     if (!shown.length) {
-      empty.textContent = requests.length === 0
-        ? 'No requests yet. Share your public link on LinkedIn to get your first one.'
-        : filter === 'pending' ? 'All caught up. No pending requests.' : 'Nothing here yet.';
+      const [title, text] = requests.length === 0
+        ? ['No requests yet', 'Share your public link on LinkedIn, or reply to referral DMs with it. New requests show up here.']
+        : filter === 'pending' ? ['All caught up', 'Every request has an answer. Nice work.'] : ['Nothing here yet', 'Requests you decide on will show up here.'];
+      $('empty-title').textContent = title;
+      $('empty-text').textContent = text;
     }
   }
 
@@ -109,56 +122,58 @@
     return el;
   }
 
-  function fillCard(el, r) {
-    const job = /^https?:\/\//i.test(r.job_ref)
-      ? safeLink(r.job_ref, host(r.job_ref) + ' ↗')
-      : h('span', null, r.job_ref, ' ', copyButton(r.job_ref, 'Copy'));
+  function linkChip(url, iconName, label, good, title) {
+    if (!isLink(url)) return null;
+    return h('a', { class: 'link-chip' + (good ? ' good' : ''), href: url, target: '_blank', rel: 'noopener noreferrer', title },
+      icon(iconName), h('span', null, label), icon('external'));
+  }
 
+  function copyChip(iconName, text, title) {
+    const label = h('span', null, text);
+    const btn = h('button', { class: 'link-chip', type: 'button', title }, icon(iconName), label, icon('copy'));
+    btn.addEventListener('click', async () => {
+      if (!(await copyText(text))) return;
+      label.textContent = 'Copied';
+      setTimeout(() => { label.textContent = text; }, 1500);
+    });
+    return btn;
+  }
+
+  function fillCard(el, r) {
+    const [badgeIcon, badgeText] = BADGE[r.status];
     el.replaceChildren(
       h('div', { class: 'req-head' },
-        h('div', null,
+        avatar(r.candidate_name, 'sm'),
+        h('div', { class: 'req-who' },
           h('div', { class: 'req-name' }, r.candidate_name),
           h('div', { class: 'req-time' }, timeAgo(r.created_at))),
-        r.status !== 'pending' ? h('span', { class: 'pill pill-' + r.status }, STATUS_LABEL[r.status]) : null),
-      h('div', { class: 'quick' }, quickCheck(r)),
-      h('div', { class: 'why' }, r.why_fit),
-      h('dl', { class: 'facts' },
-        h('dt', null, 'Job'), h('dd', null, job),
-        h('dt', null, 'Email'), h('dd', null, r.candidate_email, ' ', copyButton(r.candidate_email, 'Copy')),
-        h('dt', null, 'Links'), h('dd', null, safeLink(r.candidate_linkedin, 'LinkedIn ↗'), '  ·  ', safeLink(r.resume_url, 'Resume ↗'))),
+        h('span', { class: 'badge badge-' + r.status }, icon(badgeIcon), badgeText)),
+      h('p', { class: 'why' }, r.why_fit),
+      linksRow(r),
       r.status === 'pending' ? actions(el, r) : decided(el, r)
     );
   }
 
-  function copyButton(text, label) {
-    return h('button', {
-      class: 'btn-link small', type: 'button',
-      onclick: async (e) => { if (await copyText(text)) { e.target.textContent = 'Copied ✓'; setTimeout(() => { e.target.textContent = label; }, 1500); } },
-    }, label);
-  }
-
   function actions(el, r) {
-    return h('div', { class: 'btn-row' },
-      h('button', { class: 'btn btn-ok', type: 'button', onclick: () => decide(el, r, 'referred', null) }, 'Referred ✓'),
+    return h('div', { class: 'req-actions' },
+      h('button', { class: 'btn btn-success', type: 'button', onclick: () => decide(el, r, 'referred', null) }, icon('check'), 'Referred'),
       h('button', { class: 'btn btn-secondary', type: 'button', onclick: () => el.lastChild.replaceWith(reasons(el, r)) }, 'Decline'));
   }
 
   function reasons(el, r) {
-    return h('div', null,
-      h('p', { class: 'small muted', style: 'margin:0 0 8px' }, 'Pick a reason. The candidate sees a polite version.'),
+    return h('div', { class: 'reasons-wrap' },
+      h('p', { class: 'xs muted', style: 'margin:0 0 10px;font-weight:500' }, 'Pick a reason. The candidate sees a kind version of it.'),
       h('div', { class: 'reasons' },
         ...Object.keys(DECLINE_REASONS).map((key) =>
-          h('button', { class: 'btn btn-secondary btn-sm', type: 'button', onclick: () => decide(el, r, 'declined', key) }, DECLINE_REASONS[key].employee)),
-        h('button', { class: 'btn-link small', type: 'button', style: 'justify-self:start;margin-top:4px', onclick: () => fillCard(el, r) }, 'Cancel')));
+          h('button', { class: 'btn btn-secondary btn-sm', type: 'button', onclick: () => decide(el, r, 'declined', key) }, DECLINE_REASONS[key].employee))),
+      h('button', { class: 'text-btn', type: 'button', style: 'margin-top:10px', onclick: () => fillCard(el, r) }, icon('x'), 'Cancel'));
   }
 
   function decided(el, r) {
-    const what = r.status === 'referred'
-      ? 'Referred'
-      : 'Declined · ' + DECLINE_REASONS[r.decline_reason].employee;
+    const what = r.status === 'referred' ? 'You referred them' : 'Declined: ' + DECLINE_REASONS[r.decline_reason].employee;
     return h('div', { class: 'decided' },
-      h('span', null, what + (r.decided_at ? ' · ' + formatDate(r.decided_at) : '')),
-      h('button', { class: 'btn-link small', type: 'button', onclick: () => el.lastChild.replaceWith(actions(el, r)) }, 'Change'));
+      h('span', null, icon(r.status === 'referred' ? 'circle-check' : 'circle-minus'), what + (r.decided_at ? ' · ' + formatDate(r.decided_at) : '')),
+      h('button', { class: 'text-btn', type: 'button', onclick: () => el.lastChild.replaceWith(actions(el, r)) }, icon('pen'), 'Change'));
   }
 
   async function decide(el, r, decision, reason) {
@@ -186,7 +201,7 @@
     }
   }
 
-  document.querySelectorAll('.tab').forEach((tab) => {
+  document.querySelectorAll('.filter').forEach((tab) => {
     tab.addEventListener('click', () => { filter = tab.dataset.filter; render(); });
   });
   $('refresh').addEventListener('click', () => load(true));

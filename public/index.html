@@ -5,55 +5,168 @@
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <meta name="referrer" content="no-referrer">
   <title>ReferLink: your referral inbox</title>
-  <meta name="description" content="One link for referral requests. Candidates send complete requests, you decide in one tap, and everyone gets an answer.">
+  <meta name="description" content="One link for every referral request. Candidates send complete requests, you decide in one tap, and nobody gets ghosted.">
   <meta property="og:title" content="ReferLink: your referral inbox">
-  <meta property="og:description" content="One link for referral requests. Candidates send complete requests, you decide in one tap, and everyone gets an answer.">
+  <meta property="og:description" content="One link for every referral request. Candidates send complete requests, you decide in one tap, and nobody gets ghosted.">
   <meta property="og:image" content="/og.png">
   <meta property="og:type" content="website">
   <meta name="twitter:card" content="summary_large_image">
+  <meta name="theme-color" content="#fafafa" media="(prefers-color-scheme: light)">
+  <meta name="theme-color" content="#09090b" media="(prefers-color-scheme: dark)">
   <link rel="icon" href="/favicon.svg" type="image/svg+xml">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Geist:wght@400;500;600;700&family=Geist+Mono:wght@400;500&family=Instrument+Serif:ital@1&display=swap">
   <link rel="stylesheet" href="/css/style.css">
   <script src="/js/config.js" defer></script>
   <script src="/js/app.js" defer></script>
 </head>
 <body>
   <header class="site-header">
-    <div class="wrap">
-      <a class="logo" href="/"><svg class="logo-mark" viewBox="0 0 32 32" aria-hidden="true"><rect width="32" height="32" rx="8" fill="#1d4ed8"/><path d="M9.5 16.5l4.5 4.5 8.5-10" fill="none" stroke="#fff" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/></svg>ReferLink</a>
+    <div class="container wide header-row">
+      <a class="logo" href="/" aria-label="ReferLink home"><span class="logo-mark"><svg class="icon" viewBox="0 0 24 24" aria-hidden="true"><path d="M20 6 9 17l-5-5"/></svg></span>ReferLink</a>
+      <a class="btn btn-secondary btn-sm" href="/create">Create my link</a>
     </div>
   </header>
 
-  <main>
-    <div class="wrap stack">
+  <main style="overflow-x:clip">
+    <div class="container wide">
       <section class="hero">
-        <h1>Referral requests, sorted.</h1>
-        <p class="lead">Get one link for all your referral requests. Candidates send complete requests. You decide in one tap. Everyone gets an answer.</p>
-        <a class="btn btn-primary btn-block" href="/create">Create my referral link</a>
-        <p class="small muted center" style="margin-top:10px">Free · No sign-up · Under a minute</p>
+        <div class="hero-bg" aria-hidden="true"></div>
+        <span class="eyebrow"><span class="eyebrow-dot">Free</span>For employees who get referral DMs</span>
+        <h1>Referral requests, <span class="serif">sorted.</span></h1>
+        <p class="hero-sub">One link for every "can you refer me?" message. Candidates send complete requests, you decide in one tap, and nobody gets ghosted.</p>
+        <div class="hero-cta">
+          <a class="btn btn-primary btn-lg" href="/create">Create my referral link <svg class="icon"><use href="#i-arrow"/></svg></a>
+          <a class="btn btn-secondary btn-lg" href="#how">See how it works</a>
+        </div>
+        <div class="trust-row">
+          <span><svg class="icon"><use href="#i-check"/></svg>No sign-up</span>
+          <span><svg class="icon"><use href="#i-check"/></svg>Under a minute</span>
+          <span><svg class="icon"><use href="#i-check"/></svg>Candidates can delete their data</span>
+        </div>
+
+        <!-- Static example of a request card in the employee's inbox -->
+        <div class="preview" role="img" aria-label="Example of a referral request in the ReferLink inbox">
+          <div class="preview-bar" aria-hidden="true"><i></i><i></i><i></i><div class="preview-url">referlink · your private inbox</div></div>
+          <div class="preview-body" aria-hidden="true">
+            <article class="card req">
+              <div class="req-head">
+                <div class="avatar avatar-sm" style="--h:262">AI</div>
+                <div class="req-who">
+                  <div class="req-name">Ananya Iyer</div>
+                  <div class="req-time">2 hours ago</div>
+                </div>
+                <span class="badge badge-pending"><svg class="icon"><use href="#i-clock"/></svg>Pending</span>
+              </div>
+              <p class="why">2 years as a data analyst, SQL and Python daily. Applying for Data Analyst II, which asks for exactly this.</p>
+              <div class="req-links">
+                <span class="link-chip good"><svg class="icon"><use href="#i-briefcase"/></svg><span>Google job</span><svg class="icon"><use href="#i-external"/></svg></span>
+                <span class="link-chip good"><svg class="icon"><use href="#i-file"/></svg><span>Resume · Google Drive</span><svg class="icon"><use href="#i-external"/></svg></span>
+                <span class="link-chip good"><svg class="icon"><use href="#i-user"/></svg><span>LinkedIn</span><svg class="icon"><use href="#i-external"/></svg></span>
+              </div>
+              <div class="req-actions">
+                <span class="btn btn-success"><svg class="icon"><use href="#i-check"/></svg>Referred</span>
+                <span class="btn btn-secondary">Decline</span>
+              </div>
+            </article>
+          </div>
+        </div>
+        <span class="preview-label">Example request. The name is made up.</span>
       </section>
 
-      <section class="card">
-        <h2>How it works</h2>
-        <ol class="steps">
-          <li><strong>Add your link to LinkedIn.</strong><br><span class="muted">"Want a referral from me? Request it here."</span></li>
-          <li><strong>Candidates fill a short form.</strong><br><span class="muted">Job link, resume and why they fit. Incomplete requests can't be sent.</span></li>
-          <li><strong>You tap Referred or Decline.</strong><br><span class="muted">They see the answer on their own status page. No more ghosting.</span></li>
-        </ol>
+      <section class="section" id="how">
+        <div class="section-head">
+          <span class="kicker">How it works</span>
+          <h2>From messy DMs to a clear answer</h2>
+          <p>Three steps, no accounts, no back-and-forth.</p>
+        </div>
+        <div class="features">
+          <div class="card feature">
+            <div class="feature-icon"><svg class="icon"><use href="#i-link"/></svg></div>
+            <span class="step-num">01</span>
+            <h3>Share one link</h3>
+            <p>Add it to your LinkedIn profile, or reply to referral DMs with it.</p>
+          </div>
+          <div class="card feature">
+            <div class="feature-icon"><svg class="icon"><use href="#i-file"/></svg></div>
+            <span class="step-num">02</span>
+            <h3>Get complete requests</h3>
+            <p>Job link, resume and a short pitch. Incomplete requests can't be sent.</p>
+          </div>
+          <div class="card feature">
+            <div class="feature-icon"><svg class="icon"><use href="#i-tap"/></svg></div>
+            <span class="step-num">03</span>
+            <h3>Decide in one tap</h3>
+            <p>Referred or Decline. The candidate sees your answer on their own status page.</p>
+          </div>
+        </div>
       </section>
 
-      <section class="card">
-        <h2>Safe by design</h2>
-        <p class="muted">No passwords. You get a private link instead. A candidate's details are shown only to the employee they asked, and they can delete them at any time.</p>
-        <a href="/privacy">How we handle data</a>
+      <section class="section">
+        <div class="section-head">
+          <span class="kicker">Built for both sides</span>
+          <h2>Less guilt. Fewer ghosts.</h2>
+        </div>
+        <div class="split">
+          <div class="card">
+            <div class="feature-icon"><svg class="icon"><use href="#i-inbox"/></svg></div>
+            <h3>For employees</h3>
+            <ul class="list-check">
+              <li><svg class="icon"><use href="#i-check"/></svg>A private inbox for referral requests. No account needed.</li>
+              <li><svg class="icon"><use href="#i-check"/></svg>Quick checks on every request: job link, resume, LinkedIn.</li>
+              <li><svg class="icon"><use href="#i-check"/></svg>Decline politely with one tap. We send the kind wording.</li>
+            </ul>
+          </div>
+          <div class="card">
+            <div class="feature-icon"><svg class="icon"><use href="#i-send"/></svg></div>
+            <h3>For candidates</h3>
+            <ul class="list-check">
+              <li><svg class="icon"><use href="#i-check"/></svg>A clear form, so your request actually gets read.</li>
+              <li><svg class="icon"><use href="#i-check"/></svg>Your own status page with the answer. No more guessing.</li>
+              <li><svg class="icon"><use href="#i-check"/></svg>Delete your details any time, in one tap.</li>
+            </ul>
+          </div>
+        </div>
       </section>
 
-      <section class="card">
-        <h2>Looking for a referral?</h2>
-        <p class="muted" style="margin:0">Each employee has their own ReferLink. Look for it on their LinkedIn profile, or ask them for it.</p>
+      <section class="section">
+        <div class="section-head">
+          <span class="kicker">Safe by design</span>
+          <h2>Career data, handled with care</h2>
+        </div>
+        <div class="features">
+          <div class="card feature">
+            <div class="feature-icon"><svg class="icon"><use href="#i-lock"/></svg></div>
+            <h3>No passwords</h3>
+            <p>Private links with 64 random characters. Impossible to guess.</p>
+          </div>
+          <div class="card feature">
+            <div class="feature-icon"><svg class="icon"><use href="#i-shield"/></svg></div>
+            <h3>Only the person you asked</h3>
+            <p>A candidate's details are shown only to the employee they sent them to.</p>
+          </div>
+          <div class="card feature">
+            <div class="feature-icon"><svg class="icon"><use href="#i-trash"/></svg></div>
+            <h3>Delete any time</h3>
+            <p>Candidates can wipe their details from their status page. <a href="/privacy">How we handle data</a></p>
+          </div>
+        </div>
+      </section>
+
+      <section class="cta-band">
+        <h2>Stop sorting referral DMs.</h2>
+        <p>Create your link in under a minute. It's free.</p>
+        <a class="btn btn-lg" href="/create">Create my referral link <svg class="icon"><use href="#i-arrow"/></svg></a>
       </section>
     </div>
   </main>
 
-  <footer class="site-footer"><a href="/privacy">Privacy</a> · Made by Siddh Mishra</footer>
+  <footer class="site-footer">
+    <div class="container wide footer-row">
+      <span>ReferLink · Made by Siddh Mishra</span>
+      <nav class="footer-links"><a href="/privacy">Privacy</a><a href="/create">Create a link</a></nav>
+    </div>
+  </footer>
 </body>
 </html>

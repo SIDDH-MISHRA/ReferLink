@@ -1,6 +1,6 @@
 // /s/<token>: the candidate sees the outcome of one request, and can delete it.
 (function () {
-  const { rpc, track, safeLink, bindCopy, mailtoHref, formatDate, errorText, toast, pathParam, DECLINE_REASONS } = window.RL;
+  const { rpc, track, h, icon, safeLink, bindCopy, mailtoHref, formatDate, errorText, toast, pathParam, DECLINE_REASONS } = window.RL;
   const $ = (id) => document.getElementById(id);
   const token = pathParam();
 
@@ -21,21 +21,24 @@
     const first = s.employee_name.split(/\s+/)[0];
     const view = {
       pending: {
-        icon: '…', title: 'Pending',
-        text: 'Waiting for ' + first + ' to review your request. Check back here later.',
+        icon: 'clock', title: 'Waiting for ' + first,
+        text: first + " hasn't answered yet. Check back here later.",
+        step: 'Waiting for an answer',
       },
       referred: {
-        icon: '✓', title: 'Referred ✓',
+        icon: 'check', title: 'You were referred',
         text: first + ' has referred you at ' + s.company + '. Watch your email for messages from ' + s.company + "'s recruiting team.",
+        step: 'Referred',
       },
       declined: {
-        icon: '–', title: 'Not this time',
+        icon: 'circle-minus', title: 'Not this time',
         text: s.decline_reason ? DECLINE_REASONS[s.decline_reason].candidate : 'Not this time.',
+        step: 'Not this time',
       },
     }[s.status];
 
     $('status-box').classList.add('status-' + s.status);
-    $('status-icon').textContent = view.icon;
+    $('status-ring').append(icon(view.icon));
     $('status-title').textContent = view.title;
     $('status-text').textContent = view.text;
 
@@ -45,13 +48,16 @@
       $('retry').classList.remove('hidden');
     }
 
-    $('to').textContent = s.employee_name + ', ' + s.company;
+    const answered = s.status !== 'pending';
+    const step = (done, iconName, title, sub) =>
+      h('li', { class: done ? 'tl-done' : '' },
+        h('span', { class: 'tl-dot' }, icon(iconName)),
+        h('div', null, h('div', { class: 'tl-title' }, title), h('div', { class: 'tl-sub' }, sub)));
+    $('timeline').replaceChildren(
+      step(true, 'check', 'Sent to ' + s.employee_name, s.company + ' · ' + formatDate(s.created_at)),
+      step(answered, answered ? 'check' : 'clock', view.step, answered && s.decided_at ? formatDate(s.decided_at) : 'You can check this page any time'));
+
     $('job').append(/^https?:\/\//i.test(s.job_ref) ? safeLink(s.job_ref, s.job_ref) : s.job_ref);
-    $('sent').textContent = formatDate(s.created_at);
-    if (s.decided_at && s.status !== 'pending') {
-      $('answered').textContent = formatDate(s.decided_at);
-      document.querySelectorAll('.decided-row').forEach((el) => el.classList.remove('hidden'));
-    }
 
     const link = location.origin + '/s/' + token;
     $('status-link').value = link;

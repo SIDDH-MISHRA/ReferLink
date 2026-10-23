@@ -94,3 +94,10 @@ One entry per real decision or problem. Newest at the bottom.
 - Who: Claude (overnight)
 - Evidence: All flows worked. A `<img onerror>` injection test in "Why you fit" showed as plain text. No page scrolled sideways on a phone.
 - Result: Fixed 3 small issues: filter tabs touching the card above, unclear wording ("their recruiting team" → "Google's recruiting team"), and a confusing message when copying fails.
+
+## 2026-10-24 · UI redesign
+- Decision: Rebuilt the whole look. Geist font, near-black buttons, one indigo accent, line icons instead of emoji, automatic dark mode, a product preview on the landing page, a live board preview while creating a link, and a timeline on the status page.
+- Why: Siddh reviewed the first version and said it looked "built in 2017". The causes were the system font, a Bootstrap-style blue, and the same white box everywhere.
+- Who: Siddh (the call to redesign), Claude (the direction)
+- Evidence: Siddh suggested the "ui-ux-pro-max" skill from GitHub. Claude read it and didn't install it, because it's mainly a Python search over style spreadsheets, which means running outside code for little gain. Its checklist was used instead: no emoji icons, dark mode, reduced-motion support, visible focus rings, 44px+ tap targets.
+- Result: Every flow retested in the browser at desktop and phone width (375px), with no sideways scrolling. Same plain HTML/CSS/JS with no framework. Fonts now load from Google Fonts, and the privacy page says so.

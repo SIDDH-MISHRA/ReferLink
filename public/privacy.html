@@ -6,21 +6,26 @@
   <meta name="referrer" content="no-referrer">
   <title>Privacy · ReferLink</title>
   <meta name="description" content="What ReferLink collects, who sees it, and how to delete it.">
+  <meta name="theme-color" content="#fafafa" media="(prefers-color-scheme: light)">
+  <meta name="theme-color" content="#09090b" media="(prefers-color-scheme: dark)">
   <link rel="icon" href="/favicon.svg" type="image/svg+xml">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Geist:wght@400;500;600;700&display=swap">
   <link rel="stylesheet" href="/css/style.css">
   <script src="/js/config.js" defer></script>
   <script src="/js/app.js" defer></script>
 </head>
 <body>
   <header class="site-header">
-    <div class="wrap">
-      <a class="logo" href="/"><svg class="logo-mark" viewBox="0 0 32 32" aria-hidden="true"><rect width="32" height="32" rx="8" fill="#1d4ed8"/><path d="M9.5 16.5l4.5 4.5 8.5-10" fill="none" stroke="#fff" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/></svg>ReferLink</a>
+    <div class="container wide header-row">
+      <a class="logo" href="/" aria-label="ReferLink home"><span class="logo-mark"><svg class="icon" viewBox="0 0 24 24" aria-hidden="true"><path d="M20 6 9 17l-5-5"/></svg></span>ReferLink</a>
     </div>
   </header>
 
   <main>
-    <div class="wrap">
-      <article class="card prose">
+    <div class="container">
+      <article class="prose view">
         <h1>Privacy, in plain words</h1>
         <p class="muted">ReferLink is a small side project. Here's exactly what happens to your data.</p>
 
@@ -38,8 +43,9 @@
           <li>There are no passwords. Instead, there are private links. Anyone with a private link can open it, so keep yours safe.</li>
         </ul>
 
-        <h2>Analytics</h2>
+        <h2>Analytics and fonts</h2>
         <p>We count events like "request submitted" to see if ReferLink works. We use PostHog for this. These events don't include names, emails or links, and private links are removed before anything is sent. PostHog keeps an anonymous ID in your browser's storage.</p>
+        <p>Fonts load from Google Fonts, which sees your IP address the way any website you load does.</p>
 
         <h2>Deleting your data</h2>
         <ul>
@@ -57,6 +63,11 @@
     </div>
   </main>
 
-  <footer class="site-footer"><a href="/">ReferLink</a> · Made by Siddh Mishra</footer>
+  <footer class="site-footer">
+    <div class="container wide footer-row">
+      <span>ReferLink · Made by Siddh Mishra</span>
+      <nav class="footer-links"><a href="/">Home</a><a href="/create">Create a link</a></nav>
+    </div>
+  </footer>
 </body>
 </html>

@@ -150,3 +150,10 @@ One entry per real decision or problem. Newest at the bottom.
 - Who: Siddh (asked, approved the install), Claude (script, build, render)
 - Evidence: `hyperframes check` passed with 0 errors and all text meeting the contrast standard. Frames were checked from both the preview and the final MP4. A DM line that could read as mocking candidates was replaced.
 - Result: `design/referlink-how-it-works.mp4`. The end card has no URL yet. Add the domain after deploy and re-render with `cd design/video && npm run render` (about a minute).
+
+## 2026-10-24 · The MP4 replaces the HTML demo on the landing page
+- Decision: The "See it in 30 seconds" section now plays the HyperFrames MP4 (1.1 MB). It's muted, loops, has no player bar, and only plays while on screen, with a Pause/Play button. People who prefer reduced motion see a still image until they press Play. The HTML demo code was removed.
+- Why: Siddh expected to see the actual video on the site, and wanted visitors to see the same thing as on LinkedIn.
+- Who: Siddh (picked option 1), Claude (build)
+- Evidence: The file loads at 1080×1080 and plays muted. Byte-range requests return 206, matching how Vercel serves video. It starts by itself when on screen (the headless test showed "Pause" after load), and there's no sideways scroll at 375px.
+- Result: Done. The local test server now supports video byte ranges, like Vercel.

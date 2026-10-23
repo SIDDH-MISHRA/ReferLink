@@ -20,7 +20,7 @@
   <link rel="stylesheet" href="/css/style.css">
   <script src="/js/config.js" defer></script>
   <script src="/js/app.js" defer></script>
-  <script src="/js/demo.js" defer></script>
+  <script src="/js/video.js" defer></script>
 </head>
 <body>
   <header class="site-header">
@@ -63,68 +63,19 @@
         <div><span class="step-num">03</span><h3>Answer in one click</h3><p>Refer or decline. The candidate sees it on their own status page.</p></div>
       </div>
 
-      <!-- How it works: an animated replay of the real flow, built from HTML (no video file) -->
+      <!-- How it works: a 29-second muted video (made with HyperFrames) -->
       <section class="section" id="how">
         <div class="section-head">
-          <h2>See it in 20 seconds</h2>
+          <h2>See it in 30 seconds</h2>
           <p>From a LinkedIn DM to a clear answer, without a single back-and-forth.</p>
         </div>
-        <div class="demo" id="demo">
-          <div class="demo-bar">
-            <div class="demo-steps" role="tablist" aria-label="Demo steps">
-              <button type="button" role="tab" data-go="0"><span><i></i></span>1 · Share</button>
-              <button type="button" role="tab" data-go="1"><span><i></i></span>2 · Ask</button>
-              <button type="button" role="tab" data-go="2"><span><i></i></span>3 · Inbox</button>
-              <button type="button" role="tab" data-go="3"><span><i></i></span>4 · Answer</button>
-            </div>
-            <button class="btn btn-ghost btn-sm demo-replay" type="button" id="demo-toggle">Pause</button>
-          </div>
-          <div class="demo-stage">
-            <!-- Scene 1: share the link -->
-            <div class="scene" data-scene="0">
-              <div class="mock">
-                <div style="display:flex;gap:10px;align-items:center;margin-bottom:12px"><span class="avatar">PS</span><div><strong class="small">Priya Sharma</strong><div class="xs muted">Software Engineer at Google</div></div></div>
-                <p class="small" style="margin:0 0 10px">Want a referral from me? Request it here:</p>
-                <div class="copy-field"><span class="mono xs" style="flex:1;color:var(--accent)" data-type="referlink.app/r/priya-google"></span><span class="btn btn-ink btn-sm" data-flash>Copy</span></div>
-              </div>
-              <p class="scene-caption">Add your link to LinkedIn, or reply to DMs with it.</p>
-            </div>
-            <!-- Scene 2: candidate answers one question at a time -->
-            <div class="scene" data-scene="1">
-              <div class="mock">
-                <div class="xs muted" style="display:flex;justify-content:space-between"><span>Asking Priya Sharma · Google</span><span>Step 3 of 5</span></div>
-                <div class="mock-progress"><i data-grow="60%"></i></div>
-                <h3 style="font-size:1.125rem;letter-spacing:-0.02em;margin-bottom:12px">Which job are you applying for?</h3>
-                <div class="mock-input focus"><span class="mono" data-type="JR-104523"></span><span class="caret"></span></div>
-                <div class="hint">Requests without a job ID usually get ignored.</div>
-                <span class="btn btn-primary btn-block" style="margin-top:14px">Continue</span>
-              </div>
-              <p class="scene-caption">Candidates must include the job, resume and pitch.</p>
-            </div>
-            <!-- Scene 3: it lands in the inbox -->
-            <div class="scene" data-scene="2">
-              <div class="mock" style="padding:6px 16px">
-                <div class="mock-li" data-arrive><span class="avatar avatar-sm">AI</span><span style="flex:1"><strong>Ananya Iyer</strong><span class="muted"> · <span class="mono">JR-104523</span></span></span><span class="badge badge-pending">New</span></div>
-                <div class="mock-li"><span class="avatar avatar-sm">RV</span><span style="flex:1"><strong>Rahul Verma</strong><span class="muted"> · Backend</span></span><span class="badge badge-plain">2h</span></div>
-                <div class="mock-li"><span class="avatar avatar-sm">KM</span><span style="flex:1"><strong>Karan Malhotra</strong><span class="muted"> · Data</span></span><span class="badge badge-plain">1d</span></div>
-              </div>
-              <p class="scene-caption">Every request lands complete, newest first.</p>
-            </div>
-            <!-- Scene 4: one click, the candidate hears back -->
-            <div class="scene" data-scene="3">
-              <div style="display:grid;gap:14px;width:100%;max-width:420px">
-                <div class="mock" style="display:flex;align-items:center;gap:10px;padding:14px 16px"><span class="avatar avatar-sm">AI</span><strong class="small" style="flex:1">Ananya Iyer</strong><span class="btn btn-primary btn-sm" data-pulse>Refer</span></div>
-                <div class="mock" data-reveal style="text-align:center">
-                  <span class="badge badge-ok" style="margin-bottom:8px">Referred</span>
-                  <div style="font-weight:650;letter-spacing:-0.02em">You were referred</div>
-                  <div class="xs muted">Priya referred you at Google</div>
-                </div>
-              </div>
-              <p class="scene-caption">One click. The candidate sees the answer on their status page.</p>
-            </div>
-          </div>
-        </div>
-        <p class="xs muted" style="margin-top:10px">Example names. This is an animation of the real screens, not a video.</p>
+        <figure class="video-frame">
+          <video id="how-video" src="/media/how-it-works.mp4" poster="/media/how-it-works.jpg" width="1080" height="1080"
+                 muted loop playsinline preload="metadata"
+                 aria-label="How ReferLink works: share one link, candidates ask with the job ID and resume, the request lands in your inbox, and you answer in one click."></video>
+          <button class="btn btn-secondary btn-sm video-toggle" type="button" id="video-toggle">Pause</button>
+        </figure>
+        <p class="xs muted" style="margin-top:10px">No sound. Example names.</p>
       </section>
 
       <section class="section">

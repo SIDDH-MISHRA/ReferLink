@@ -13,7 +13,7 @@ const db = await openDb(fileURLToPath(new URL('./.pgdata', import.meta.url)));
 
 const TYPES = {
   '.html': 'text/html; charset=utf-8', '.css': 'text/css; charset=utf-8', '.js': 'text/javascript; charset=utf-8',
-  '.svg': 'image/svg+xml', '.png': 'image/png', '.ico': 'image/x-icon', '.json': 'application/json', '.txt': 'text/plain',
+  '.svg': 'image/svg+xml', '.png': 'image/png', '.ico': 'image/x-icon', '.json': 'application/json', '.txt': 'text/plain', '.mp4': 'video/mp4', '.jpg': 'image/jpeg',
 };
 
 // "/r/:slug" -> /^\/r\/[^/]+$/
@@ -46,7 +46,18 @@ async function serveStatic(req, res, path) {
   if (!extname(file) && (await fileExists(file + '.html'))) file += '.html';
 
   if (await fileExists(file)) {
-    return send(res, 200, await readFile(file), TYPES[extname(file)] || 'application/octet-stream');
+    const body = await readFile(file);
+    const type = TYPES[extname(file)] || 'application/octet-stream';
+    // Videos need byte ranges, like Vercel serves them.
+    const range = /^bytes=(\d*)-(\d*)$/.exec(req.headers.range || '');
+    if (range && type.startsWith('video/')) {
+      const start = range[1] ? Number(range[1]) : 0;
+      const end = range[2] ? Math.min(Number(range[2]), body.length - 1) : body.length - 1;
+      res.setHeader('Content-Range', 'bytes ' + start + '-' + end + '/' + body.length);
+      res.setHeader('Accept-Ranges', 'bytes');
+      return send(res, 206, body.subarray(start, end + 1), type);
+    }
+    return send(res, 200, body, type);
   }
   return send(res, 404, await readFile(join(ROOT, '404.html')), TYPES['.html']);
 }

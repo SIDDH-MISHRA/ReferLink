@@ -184,3 +184,10 @@ One entry per real decision or problem. Newest at the bottom.
 - Who: Siddh (hook script, carousel, faster pace, cursor bug), Claude (scene design, build)
 - Evidence: `hyperframes check` reports 0 errors and 121/121 text contrast checks pass. The remaining warnings are DMs and carousel cards on screen only briefly, which is intended. Frames were reviewed in both the wide and square versions. The carousel uses example names only.
 - Result: The site video (`public/media/how-it-works.mp4`) and the LinkedIn square (`design/referlink-how-it-works.mp4`) were both re-rendered. The landing section title "See it in 30 seconds" still fits.
+
+## 2026-10-24 · Competition analysis
+- Decision: Wrote `COMPETITION.md`. ReferLink is positioned as a single-player tool for the flooded employee, not a referral marketplace.
+- Why: Siddh found many referral products in India and asked how ReferLink differs.
+- Who: Siddh (raised it), Claude (research and write-up)
+- Evidence: I read the websites of Refril, ReferNext, RefOpen, Referd, Reffconnect and Topmate's referral listings, plus press and directory pages for older players. Reffconnect is waitlist-only and Referd is in early access. Every number is marked as self-reported. No user research was done.
+- Result: Honest gaps are listed: no discovery, no verification, tracking stops at the decision, and a Google Form is the real substitute. There are 3 untested assumptions to check after launch.

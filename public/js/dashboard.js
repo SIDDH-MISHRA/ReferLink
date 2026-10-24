@@ -10,6 +10,7 @@
   let filter = 'pending';
   let openId = null;    // row whose details are shown
   let reasonsId = null; // row showing the decline reasons
+  let noteId = null; // row writing an "Other" note
 
   function show(id) {
     ['loading', 'not-found', 'load-error', 'app'].forEach((x) => $(x).classList.toggle('hidden', x !== id));
@@ -112,7 +113,7 @@
     const open = r.id === openId;
     const row = h('div', {
       class: 'trow' + (open ? ' open' : ''), role: 'row', tabindex: '0', 'aria-expanded': String(open),
-      onclick: () => { openId = open ? null : r.id; reasonsId = null; render(); },
+      onclick: () => { openId = open ? null : r.id; reasonsId = null; noteId = null; render(); },
       onkeydown: (e) => { if ((e.key === 'Enter' || e.key === ' ') && e.target === e.currentTarget) { e.preventDefault(); e.currentTarget.click(); } },
     },
     h('div', { class: 'cell-who', role: 'cell' },
@@ -160,6 +161,7 @@
         statusBadge(r),
         r.status === 'declined' ? DECLINE_REASONS[r.decline_reason].employee : 'You referred them',
         h('button', { class: 'text-btn', type: 'button', onclick: () => { reasonsId = null; renderChange(r); } }, 'Change')));
+      if (r.decline_note) parts.push(h('p', { class: 'sent-note' }, h('span', { class: 'muted' }, 'Your note: '), r.decline_note));
     }
     return h('div', { class: 'expand', id: 'x-' + r.id }, ...parts);
   }
@@ -173,12 +175,38 @@
   }
 
   function reasons(r) {
+    if (noteId === r.id) return noteBox(r);
     return h('div', { class: 'reasons' },
       h('p', null, 'Pick a reason. The candidate sees a kind version of it.'),
       h('div', { class: 'reason-list' },
         ...Object.keys(DECLINE_REASONS).map((key) =>
-          h('button', { class: 'btn btn-secondary btn-sm', type: 'button', onclick: () => decide(r, 'declined', key) }, DECLINE_REASONS[key].employee)),
+          h('button', {
+            class: 'btn btn-secondary btn-sm', type: 'button',
+            // "Other" asks for the employee's own words instead of declining straight away.
+            onclick: () => (key === 'other' ? (noteId = r.id, render()) : decide(r, 'declined', key)),
+          }, key === 'other' ? 'Other, write a note' : DECLINE_REASONS[key].employee)),
         h('button', { class: 'btn btn-ghost btn-sm', type: 'button', onclick: () => { reasonsId = null; render(); } }, 'Cancel')));
+  }
+
+  // Optional free-text feedback, shown to the candidate on their status page.
+  function noteBox(r) {
+    const MAX = 300;
+    const count = h('span', { class: 'counter' }, '0 / ' + MAX);
+    const area = h('textarea', {
+      id: 'note-' + r.id, rows: '3', maxlength: String(MAX),
+      placeholder: 'e.g. Strong profile, but we need 2+ years of SQL. Happy to look again next year.',
+      oninput: () => { count.textContent = area.value.length + ' / ' + MAX; },
+    });
+    setTimeout(() => area.focus(), 0);
+    return h('div', { class: 'reasons note-box' },
+      h('label', { for: 'note-' + r.id }, 'A note for ' + r.candidate_name.split(/\s+/)[0], h('span', { class: 'muted' }, ' (optional)')),
+      area,
+      h('div', { class: 'note-foot' },
+        h('span', { class: 'xs muted' }, 'They see it on their status page. Leave it empty to just say "Not this time."'),
+        count),
+      h('div', { class: 'reason-list' },
+        h('button', { class: 'btn btn-primary btn-sm', type: 'button', onclick: () => decide(r, 'declined', 'other', area.value) }, 'Decline and send'),
+        h('button', { class: 'btn btn-ghost btn-sm', type: 'button', onclick: () => { noteId = null; render(); } }, 'Back')));
   }
 
   function link(url, label) {
@@ -193,22 +221,26 @@
     }, 'Copy');
   }
 
-  async function decide(r, decision, reason) {
+  async function decide(r, decision, reason, note) {
     document.querySelectorAll('#rows button').forEach((b) => { b.disabled = true; });
     try {
-      const res = await rpc('decide_request', { p_token: token, p_request_id: r.id, p_decision: decision, p_reason: reason });
-      Object.assign(r, { status: res.status, decline_reason: res.decline_reason, decided_at: res.decided_at });
+      const args = { p_token: token, p_request_id: r.id, p_decision: decision, p_reason: reason };
+      if (note && note.trim()) args.p_note = note; // only sent when there is one
+      const res = await rpc('decide_request', args);
+      Object.assign(r, { status: res.status, decline_reason: res.decline_reason, decline_note: res.decline_note, decided_at: res.decided_at });
       track('decision_made', {
         board_id: board.board_id,
         type: res.status,
         reason: res.decline_reason,
+        has_note: !!res.decline_note, // whether a note was written, never its text
         hours_to_decision: res.hours_to_decision,
         is_first_decision: res.is_first_decision,
       });
       toast(decision === 'referred'
         ? 'Referred. ' + r.candidate_name.split(/\s+/)[0] + ' can see it now.'
-        : 'Declined. They\'ll see: "' + DECLINE_REASONS[reason].candidate + '"');
+        : res.decline_note ? 'Declined. They\'ll see your note.' : 'Declined. They\'ll see: "' + DECLINE_REASONS[reason].candidate + '"');
       reasonsId = null;
+      noteId = null;
       if (openId === r.id) openId = null;
       render();
     } catch (err) {
@@ -233,7 +265,7 @@
   }
 
   document.querySelectorAll('.seg button').forEach((b) => {
-    b.addEventListener('click', () => { filter = b.dataset.filter; openId = null; reasonsId = null; render(); });
+    b.addEventListener('click', () => { filter = b.dataset.filter; openId = null; reasonsId = null; noteId = null; render(); });
   });
   $('refresh').addEventListener('click', () => load(true));
 

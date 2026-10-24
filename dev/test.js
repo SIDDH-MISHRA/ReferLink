@@ -132,6 +132,30 @@ test('decisions: reason required for decline, first decision time is kept', asyn
   assert.equal(s.candidate_email, undefined, 'status page does not expose email');
 });
 
+test('decline note: optional, shown to the candidate, cleared on refer, wiped on delete', async () => {
+  const b = await board();
+  const { status_token } = await request(b.slug);
+  const [r] = (await rpc(db, 'get_dashboard', { p_token: b.dashboard_token })).requests;
+  const args = { p_token: b.dashboard_token, p_request_id: r.id };
+
+  await fails(rpc(db, 'decide_request', { ...args, p_decision: 'declined', p_reason: 'other', p_note: 'x'.repeat(301) }), 'invalid:note');
+
+  const blank = await rpc(db, 'decide_request', { ...args, p_decision: 'declined', p_reason: 'other', p_note: '   ' });
+  assert.equal(blank.decline_note, null, 'a blank note is stored as no note');
+
+  await rpc(db, 'decide_request', { ...args, p_decision: 'declined', p_reason: 'other', p_note: '  Try again when you have a year of SQL.  ' });
+  assert.equal((await rpc(db, 'get_request_status', { p_token: status_token })).decline_note, 'Try again when you have a year of SQL.');
+  assert.equal((await rpc(db, 'get_dashboard', { p_token: b.dashboard_token })).requests[0].decline_note, 'Try again when you have a year of SQL.');
+
+  const referred = await rpc(db, 'decide_request', { ...args, p_decision: 'referred', p_note: 'ignored' });
+  assert.equal(referred.decline_note, null, 'refer never carries a note');
+
+  await rpc(db, 'decide_request', { ...args, p_decision: 'declined', p_reason: 'other', p_note: 'Not a fit right now.' });
+  await rpc(db, 'delete_request', { p_token: status_token });
+  const [row] = await asOwner('select decline_note from public.requests where id = $1', [r.id]);
+  assert.equal(row.decline_note, null);
+});
+
 test('delete wipes personal data but keeps an anonymous row for metrics', async () => {
   const b = await board();
   const { status_token } = await request(b.slug);

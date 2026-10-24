@@ -2,9 +2,10 @@
 // It loads the same supabase/schema.sql that goes live, then switches to the
 // "anon" role, so every call has the same rights as a browser on the live site.
 import { PGlite } from '@electric-sql/pglite';
-import { readFile } from 'node:fs/promises';
+import { readFile, readdir } from 'node:fs/promises';
 
 const SCHEMA = new URL('../supabase/schema.sql', import.meta.url);
+const MIGRATIONS = new URL('../supabase/migrations/', import.meta.url);
 
 export async function openDb(dataDir) {
   const db = new PGlite(dataDir);
@@ -16,6 +17,10 @@ export async function openDb(dataDir) {
     reset role;
   `);
   await db.exec(await readFile(SCHEMA, 'utf8'));
+  // Upgrades for databases created before a change (the same files that get run on Supabase).
+  for (const f of (await readdir(MIGRATIONS)).filter((n) => n.endsWith('.sql')).sort()) {
+    await db.exec(await readFile(new URL(f, MIGRATIONS), 'utf8'));
+  }
   await db.exec('grant usage on schema public to anon, authenticated; set role anon;');
   return db;
 }

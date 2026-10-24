@@ -34,11 +34,13 @@ create table if not exists public.requests (
                      check (status in ('pending', 'referred', 'declined')),
   decline_reason     text
                      check (decline_reason in ('role_mismatch', 'experience', 'resume_link', 'job_closed', 'other')),
+  decline_note       text check (char_length(decline_note) <= 300),  -- optional words from the employee
   created_at         timestamptz not null default now(),
   decided_at         timestamptz,  -- first decision only, used for speed metrics
   updated_at         timestamptz,
   deleted_at         timestamptz,
-  constraint reason_only_when_declined check ((status = 'declined') = (decline_reason is not null))
+  constraint reason_only_when_declined check ((status = 'declined') = (decline_reason is not null)),
+  constraint note_only_when_declined check (decline_note is null or status = 'declined')
 );
 
 create index if not exists requests_board_created_idx
@@ -249,7 +251,8 @@ begin
                'id', r.id, 'candidate_name', r.candidate_name, 'candidate_email', r.candidate_email,
                'candidate_linkedin', r.candidate_linkedin, 'job_ref', r.job_ref,
                'resume_url', r.resume_url, 'why_fit', r.why_fit, 'status', r.status,
-               'decline_reason', r.decline_reason, 'created_at', r.created_at, 'decided_at', r.decided_at)
+               'decline_reason', r.decline_reason, 'decline_note', r.decline_note,
+               'created_at', r.created_at, 'decided_at', r.decided_at)
              order by r.created_at desc)
         from public.requests r
        where r.board_id = b.id and r.deleted_at is null), '[]'::json));
@@ -258,17 +261,21 @@ $$;
 
 -- Door 5: the dashboard secret can decide on one of that board's requests.
 -- A decision can be changed later; decided_at keeps the first decision time.
+-- A decline can carry an optional note (up to 300 characters) that the candidate sees.
+drop function if exists public.decide_request(text, uuid, text, text);
 create or replace function public.decide_request(
   p_token text,
   p_request_id uuid,
   p_decision text,
-  p_reason text default null
+  p_reason text default null,
+  p_note text default null
 ) returns json
 language plpgsql security definer set search_path = '' as $$
 declare
   v_board_id uuid;
   v_req      public.requests;
   v_first    boolean;
+  v_note     text := nullif(btrim(coalesce(p_note, '')), '');
 begin
   select id into v_board_id from public.boards where dashboard_token_hash = private.hash_token(p_token);
   if v_board_id is null then raise exception 'not_found'; end if;
@@ -283,6 +290,7 @@ begin
       ('role_mismatch', 'experience', 'resume_link', 'job_closed', 'other')) then
     raise exception 'invalid:reason';
   end if;
+  if char_length(v_note) > 300 then raise exception 'invalid:note'; end if;
 
   v_first := v_req.decided_at is null;
 
@@ -290,6 +298,7 @@ begin
     update public.requests
        set status         = p_decision,
            decline_reason = case when p_decision = 'declined' then p_reason end,
+           decline_note   = case when p_decision = 'declined' then v_note end,
            decided_at     = coalesce(decided_at, now()),
            updated_at     = now()
      where id = v_req.id
@@ -300,7 +309,7 @@ begin
 
   return json_build_object(
     'id', v_req.id, 'status', v_req.status, 'decline_reason', v_req.decline_reason,
-    'decided_at', v_req.decided_at, 'is_first_decision', v_first,
+    'decline_note', v_req.decline_note, 'decided_at', v_req.decided_at, 'is_first_decision', v_first,
     'hours_to_decision', round((extract(epoch from (v_req.decided_at - v_req.created_at)) / 3600)::numeric, 1));
 end;
 $$;
@@ -312,7 +321,7 @@ declare
   v json;
 begin
   select json_build_object(
-           'status', r.status, 'decline_reason', r.decline_reason,
+           'status', r.status, 'decline_reason', r.decline_reason, 'decline_note', r.decline_note,
            'created_at', r.created_at, 'decided_at', r.decided_at,
            'job_ref', r.job_ref, 'candidate_name', r.candidate_name,
            'employee_name', b.name, 'company', b.company, 'board_slug', b.slug)
@@ -332,7 +341,7 @@ language plpgsql security definer set search_path = '' as $$
 begin
   update public.requests
      set candidate_name = null, candidate_email = null, candidate_linkedin = null,
-         job_ref = null, job_ref_norm = null, resume_url = null, why_fit = null,
+         job_ref = null, job_ref_norm = null, resume_url = null, why_fit = null, decline_note = null,
          status_token_hash = null, deleted_at = now(), updated_at = now()
    where status_token_hash = private.hash_token(p_token) and deleted_at is null;
   if not found then raise exception 'not_found'; end if;
@@ -346,7 +355,7 @@ revoke all on function
   public.get_public_board(text),
   public.submit_request(text, text, text, text, text, text, text, boolean, text),
   public.get_dashboard(text),
-  public.decide_request(text, uuid, text, text),
+  public.decide_request(text, uuid, text, text, text),
   public.get_request_status(text),
   public.delete_request(text)
 from public;
@@ -356,7 +365,7 @@ grant execute on function
   public.get_public_board(text),
   public.submit_request(text, text, text, text, text, text, text, boolean, text),
   public.get_dashboard(text),
-  public.decide_request(text, uuid, text, text),
+  public.decide_request(text, uuid, text, text, text),
   public.get_request_status(text),
   public.delete_request(text)
 to anon, authenticated;

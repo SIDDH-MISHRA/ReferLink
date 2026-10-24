@@ -43,6 +43,7 @@ Each page is a plain HTML file. `vercel.json` maps the short URLs to the right f
 | `job_ref_norm` | The job ID or link in lowercase. Used to catch duplicates. |
 | `status` | `pending`, `referred` or `declined` |
 | `decline_reason` | `role_mismatch`, `experience`, `resume_link`, `job_closed` or `other` |
+| `decline_note` | Optional, up to 300 characters. Written by the employee (offered when they pick "Other"), shown to the candidate, wiped on delete. Added in upgrade `supabase/migrations/002_decline_note.sql`. |
 | `created_at`, `decided_at`, `updated_at`, `deleted_at` | `decided_at` is the **first** decision only, so the speed metric can't be gamed by changing a decision later |
 
 **Delete keeps an anonymous row.** When a candidate deletes a request, every personal field is wiped. Only the board, status, reason and timestamps stay.

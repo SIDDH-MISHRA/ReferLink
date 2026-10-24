@@ -131,6 +131,7 @@
       .end h3 { font-size: 56px; font-weight: 800; letter-spacing: -0.045em; margin-top: 30px; }
       .end h3 em { font-style: normal; color: var(--accent); }
       .pills { display: flex; gap: 14px; margin-top: 28px; }
+      .end-url { margin-top: 30px; font: 600 34px var(--mono); color: var(--accent); letter-spacing: -0.01em; }
       .pills span { padding: 12px 22px; border-radius: 999px; background: var(--surface); border: 1.5px solid var(--line-2); font-size: 26px; color: var(--ink-2); }
     </style>
   </head>
@@ -183,7 +184,7 @@
               <h2>Share <em>one link.</em></h2>
               <div class="card share" id="share-card">
                 <div class="who"><span class="avatar">PS</span><div><b>Priya Sharma</b><span>Software Engineer at Google</span></div></div>
-                <div class="linkbox"><span class="url"><span class="type" id="type-link">referlink.app/r/priya</span></span>
+                <div class="linkbox"><span class="url"><span class="type" id="type-link">referlink.vercel.app/r/priya</span></span>
                   <span class="btn btn-ink btn-copy" id="copy">Copy<span class="ok" id="copy-ok">Copied ✓</span><svg class="cursor" id="cur1" viewBox="0 0 24 24"><path d="M4 2l16 10-7 1.5L9.5 21z" fill="#0f172a" stroke="#fff" stroke-width="1.5" stroke-linejoin="round"/></svg></span></div>
               </div>
             </div>
@@ -222,6 +223,7 @@
           <div class="logo" id="end-logo"><span class="logo-mark"><svg viewBox="0 0 24 24"><path d="M20 6 9 17l-5-5"/></svg></span>ReferLink</div>
           <h3 class="split" id="end-title">Clear your <em>referral DMs.</em></h3>
           <div class="pills" id="end-pills"><span>Free</span><span>No sign-up</span><span>Takes a minute</span></div>
+          <div class="end-url" id="end-url">referlink.vercel.app</div>
         </div>
       </section>
     </div>
@@ -324,7 +326,7 @@
       };
 
       // Share: link types, cursor glides onto Copy, clicks
-      tl.to("#type-link", { width: "21ch", duration: 0.65, ease: "steps(21)" }, 16.65);
+      tl.to("#type-link", { width: "28ch", duration: 0.8, ease: "steps(28)" }, 16.65);
       tl.fromTo("#cur1", { opacity: 0, x: 220, y: 160 }, { opacity: 1, x: 0, y: 0, duration: 0.55, ease: "power3.out" }, 17.2);
       press("#copy", 17.8);
       tl.to("#copy-ok", { opacity: 1, duration: 0.15 }, 17.85);
@@ -358,6 +360,7 @@
       tl.from("#end-logo", { opacity: 0, scale: 0.9, duration: 0.6, ease: "back.out(1.6)" }, 27.1);
       tl.from("#end-title .w", { opacity: 0, y: 18, filter: "blur(10px)", duration: 0.5, ease, stagger: 0.08 }, 27.45);
       tl.from("#end-pills span", { opacity: 0, y: 14, duration: 0.4, ease, stagger: 0.1 }, 28);
+      tl.from("#end-url", { opacity: 0, y: 14, filter: "blur(8px)", duration: 0.5, ease }, 28.45);
 
       window.__timelines = window.__timelines || {};
       window.__timelines["main"] = tl;

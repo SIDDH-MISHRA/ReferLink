@@ -42,6 +42,14 @@
     $('status-title').textContent = view.title;
     $('status-text').textContent = view.text;
 
+    // The employee's own words, if they wrote a note when declining. Shown as plain text.
+    if (s.status === 'declined' && s.decline_note) {
+      if (s.decline_reason === 'other') $('status-text').textContent = first + " couldn't refer you this time.";
+      $('status-note-who').textContent = 'A note from ' + first;
+      $('status-note-text').textContent = s.decline_note;
+      $('status-note').classList.remove('hidden');
+    }
+
     // A broken resume link is fixable: offer a new request.
     if (s.status === 'declined' && s.decline_reason === 'resume_link') {
       $('retry').href = '/r/' + encodeURIComponent(s.board_slug);

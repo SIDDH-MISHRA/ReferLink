@@ -214,3 +214,14 @@ One entry per real decision or problem. Newest at the bottom.
 - Who: Claude (found it during the live test, and fixed it)
 - Evidence: Every step of the live flow worked. PostHog loaded with autocapture and replay off. The delete confirmation is a browser pop-up, which the test browser closes by itself, so it was accepted by script to test the rest of the path.
 - Result: Privacy no longer depends on PostHog dashboard switches.
+
+## 2026-10-25 · New domain, decline notes, two-tone panels
+- Decision:
+  - The domain is now referlink.vercel.app, used in the link previews and in both video end cards and typed links.
+  - "Other" on Decline now opens an optional note of up to 300 characters, shown to the candidate as "A note from <name>". It's cleared if the decision changes and wiped if the candidate deletes the request.
+  - Two-tone panels (ink and indigo in light mode, white and indigo in dark mode, with indigo waves) are on the create form, the candidate form (who you're asking stays in the side panel on every step), the dashboard header and the status result.
+- Why: Siddh's review. "Other" declined people with no reason, and the forms and cards looked plain, with white on white or black on black.
+- Who: Siddh (the note and the two-tone idea, including the wave reference), Claude (the design and the build)
+- Evidence: 12 of 12 database tests pass, including a new note test. The upgrade file was tested on a copy of the old database: it keeps existing requests, is safe to run twice, and table reads stay blocked. Headless screenshots were checked in light mode, dark mode and at phone width. The dashboard only sends the note when there is one, so ordinary declines keep working before the upgrade runs.
+- Result: Siddh must run `supabase/migrations/002_decline_note.sql` in the Supabase SQL Editor. The local server now applies upgrade files automatically on start.
+- Open: Siddh raised lost access (a new device or a lost link) and notifications. Options are with Siddh for a decision.

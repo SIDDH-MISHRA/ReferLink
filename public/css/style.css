@@ -344,7 +344,14 @@ main { flex: 1; padding: 36px 0 72px; }
 .reasons { margin-top: 16px; padding: 14px; border-radius: var(--r); background: var(--surface); border: 1px solid var(--line); }
 .reasons p { margin: 0 0 10px; font-size: 0.8125rem; color: var(--text-2); }
 .reason-list { display: flex; flex-wrap: wrap; gap: 6px; }
-.decided-line { display: flex; flex-wrap: wrap; gap: 8px; align-items: center; margin-top: 14px; font-size: 0.875rem; color: var(--text-2); }
+.note-box label { display: block; font-size: 0.875rem; font-weight: 600; margin-bottom: 8px; }
+.note-box textarea { width: 100%; }
+.note-foot { display: flex; justify-content: space-between; gap: 12px; margin: 6px 0 12px; }
+.sent-note { margin: 10px 0 0; font-size: 0.875rem; color: var(--text); white-space: pre-wrap; overflow-wrap: anywhere; }
+.status-note { margin: 18px 0 0; }
+.status-note figcaption { font-size: 0.8125rem; font-weight: 600; color: var(--text-2); }
+.status-note .quote { margin: 8px 0 0; color: var(--text); }
+.decided-line {display: flex; flex-wrap: wrap; gap: 8px; align-items: center; margin-top: 14px; font-size: 0.875rem; color: var(--text-2); }
 .empty { text-align: center; padding: 56px 24px; color: var(--text-3); }
 .empty h3 { font-size: 1.0625rem; color: var(--text); margin-bottom: 4px; }
 .empty p { margin: 0 auto; max-width: 26rem; font-size: 0.875rem; }
@@ -481,4 +488,63 @@ main { flex: 1; padding: 36px 0 72px; }
 @media (prefers-reduced-motion: reduce) {
   .lift:hover, .btn:hover:not(:disabled) { transform: none; }
   .text-loop > span { transition: none; }
+}
+
+/* ---------------------------------------------------------------------------
+   Two-tone panels. The same idea as the homepage card on hover: ink with indigo
+   in light mode, white with indigo in dark mode. Indigo waves run down the right edge.
+   Variables are redefined inside, so fields, chips and buttons adapt by themselves.
+   --------------------------------------------------------------------------- */
+.tone {
+  --surface: #0f172a; --text: #f8fafc; --text-2: #cbd5e1; --text-3: #94a3b8;
+  --line: #273449; --line-strong: #334155; --bg-subtle: #1e293b; --accent: #a5b4fc;
+  position: relative; isolation: isolate; overflow: hidden;
+  background: var(--surface); color: var(--text);
+}
+:root[data-theme="dark"] .tone {
+  --surface: #ffffff; --text: #0f172a; --text-2: #475569; --text-3: #64748b;
+  --line: #e2e8f0; --line-strong: #cbd5e1; --bg-subtle: #f1f5f9; --accent: #4338ca;
+}
+.tone::after {
+  content: ""; position: absolute; top: 0; right: 0; bottom: 0; width: var(--wave-w, 30%); z-index: -1; pointer-events: none;
+  background: url("/img/waves.svg") right center / 100% 100% no-repeat;
+}
+
+/* Side panel + main card, as one card */
+.container.duo-wide { max-width: 940px; }
+.duo { display: grid; grid-template-columns: 5fr 7fr; border-radius: var(--r-lg); overflow: hidden; border: 1px solid var(--line); background: var(--surface); box-shadow: var(--shadow); }
+.duo-side { --wave-w: 26%; padding: 32px 30% 32px 30px; display: flex; flex-direction: column; gap: 18px; }
+.duo-main { padding: 28px; min-width: 0; }
+.duo-main.card { border: 0; box-shadow: none; border-radius: 0; }
+.duo-eyebrow { font: 600 0.75rem var(--mono, ui-monospace, monospace); letter-spacing: 0.08em; text-transform: uppercase; color: var(--accent); }
+.duo-side h2 { margin: 0; font-size: 1.5rem; line-height: 1.2; letter-spacing: -0.03em; }
+.duo-side p { margin: 0; color: var(--text-2); font-size: 0.9375rem; }
+.duo-list { list-style: none; margin: 0; padding: 0; display: grid; gap: 12px; }
+.duo-list li { display: flex; gap: 10px; align-items: flex-start; font-size: 0.9375rem; color: var(--text-2); }
+.duo-list li::before { content: ""; flex: none; width: 18px; height: 18px; margin-top: 2px; border-radius: 50%; background: var(--accent) url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%230f172a' stroke-width='3.5' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M20 6 9 17l-5-5'/%3E%3C/svg%3E") center / 11px no-repeat; }
+:root[data-theme="dark"] .duo-list li::before { background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%23ffffff' stroke-width='3.5' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M20 6 9 17l-5-5'/%3E%3C/svg%3E"); }
+.duo-foot { margin-top: auto; font-size: 0.8125rem; color: var(--text-3); }
+/* The candidate form: who you're asking sits in the side panel, and stays there on every step */
+.duo-side .asking { margin: 0; background: var(--bg-subtle); border-color: var(--line); }
+.duo-side .about { margin: 0; }
+
+@media (max-width: 860px) {
+  .duo { grid-template-columns: 1fr; }
+  .duo-side { --wave-w: 22%; padding: 22px 26% 22px 20px; gap: 12px; }
+  .duo-side .duo-list, .duo-side .duo-foot { display: none; }
+  .duo-main { padding: 20px; }
+}
+@media (min-width: 861px) {
+  .duo-side .about.hidden { display: block; }
+}
+
+/* Bands: dashboard header and the status result */
+.tone-band { --wave-w: 22%; border-radius: var(--r-lg); padding: 26px 24% 26px 28px; box-shadow: var(--shadow); border: 1px solid var(--line); }
+.dash-top.tone-band { align-items: center; padding-right: 26px; }
+.dash-top.tone-band .share { position: relative; z-index: 1; }
+.dash-top.tone-band .copy-field { background: var(--bg-subtle); }
+#status-box.tone-band { margin-bottom: 16px; }
+@media (max-width: 640px) {
+  .tone-band { padding: 20px 20% 20px 18px; }
+  .dash-top.tone-band { padding-right: 18px; --wave-w: 14%; }
 }

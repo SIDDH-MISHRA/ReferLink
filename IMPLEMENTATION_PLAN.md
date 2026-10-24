@@ -84,7 +84,10 @@ Anti-spam checks inside the functions:
 5. **Tokens can't be guessed.** Each is 64 random characters, which is more combinations than there are atoms on Earth.
 6. **We store fingerprints, not tokens.** If the database leaked, the stored values couldn't be turned back into working links. This is the same idea as storing password hashes.
 7. **Links don't leak.** A `no-referrer` policy stops private URLs from being sent to LinkedIn or Google Drive when someone clicks a link on the dashboard. Private pages also tell search engines not to index them.
-8. **Analytics gets no personal data.** No names, emails or links are sent. Secret tokens are scrubbed from page URLs before anything goes to PostHog.
+8. **Analytics gets no personal data.**
+   - No names, emails or links are sent.
+   - Before anything goes to PostHog, secret tokens and public slugs (which contain names) are scrubbed from page URLs, and page titles are removed.
+   - An allow-list means only our 11 named events can leave the browser. Extras PostHog can switch on from its dashboard (dead clicks, heatmaps, web vitals, session replay) are turned off in the code.
 9. **Candidate text is shown as plain text, never as code.** This blocks script injection (XSS) through the "Why you fit" box.
 
 ---

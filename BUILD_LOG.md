@@ -205,3 +205,12 @@ One entry per real decision or problem. Newest at the bottom.
 - Who: Siddh (Vercel import), Claude (diagnosis and fix)
 - Evidence: Before the fix, `/r/x`, `/d/x` and `/s/x` returned 404 live while `/board` returned 200. The local server now copies Vercel's clean-URL behaviour, and 11 of 11 tests pass.
 - Result: The live short links should work after this push (rechecked below).
+
+## 2026-10-24 · Live test passed; analytics locked down
+- Decision:
+  - Tested on the live site: create a board, send a request through the 5-step form, decline it with a reason, the candidate sees "Not this time" with the kind wording, delete the request, and the homepage live inbox.
+  - Locked analytics down in code: only our 11 named events can be sent. Dead clicks, heatmaps, web vitals and error capture are off. Public slugs and page titles are scrubbed too.
+- Why: The live check showed that PostHog's project settings had switched on dead-click and web-vitals tracking by themselves. Dead clicks record the text of clicked elements, which on the dashboard could include candidate names. Public board addresses and page titles also contain the employee's name.
+- Who: Claude (found it during the live test, and fixed it)
+- Evidence: Every step of the live flow worked. PostHog loaded with autocapture and replay off. The delete confirmation is a browser pop-up, which the test browser closes by itself, so it was accepted by script to test the rest of the path.
+- Result: Privacy no longer depends on PostHog dashboard switches.

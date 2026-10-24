@@ -53,11 +53,19 @@
   let posthog = null;
 
   function scrub(value) {
-    return typeof value === 'string' ? value.replace(/\/(d|s)\/[A-Za-z0-9]+/g, '/$1/[token]') : value;
+    // Private tokens (/d, /s) and public slugs (/r, which contain the employee's name).
+    return typeof value === 'string' ? value.replace(/\/(d|s|r)\/[A-Za-z0-9-]+/g, '/$1/[id]') : value;
   }
   function scrubAll(obj) {
     if (obj) Object.keys(obj).forEach((k) => { obj[k] = scrub(obj[k]); });
   }
+
+  // The full list of events in IMPLEMENTATION_PLAN.md. Nothing else is sent.
+  const EVENTS = new Set([
+    'board_created', 'public_link_copied', 'request_form_viewed', 'request_form_started',
+    'request_form_step_viewed', 'request_form_blocked', 'request_submitted', 'dashboard_viewed',
+    'decision_made', 'home_inbox_opened', 'status_page_viewed',
+  ]);
 
   function initAnalytics() {
     if (!cfg.posthogKey) return;
@@ -74,10 +82,21 @@
         capture_pageleave: false,
         disable_session_recording: true,
         disable_surveys: true,
+        // Off here too, so switches in the PostHog dashboard can't turn them on.
+        capture_dead_clicks: false,
+        capture_heatmaps: false,
+        capture_performance: false,
+        capture_exceptions: false,
         persistence: 'localStorage',
         person_profiles: 'identified_only',
         before_send: function (event) {
-          if (event) { scrubAll(event.properties); scrubAll(event.$set); scrubAll(event.$set_once); }
+          // Only our own named events leave the browser; anything PostHog adds is dropped.
+          if (!event || !EVENTS.has(event.event)) return null;
+          scrubAll(event.properties); scrubAll(event.$set); scrubAll(event.$set_once);
+          // Board page titles contain the employee's name.
+          [event.properties, event.$set, event.$set_once].forEach(function (o) {
+            if (o) Object.keys(o).forEach(function (k) { if (/title/i.test(k)) delete o[k]; });
+          });
           return event;
         },
         loaded: function (ph) {

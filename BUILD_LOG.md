@@ -191,3 +191,10 @@ One entry per real decision or problem. Newest at the bottom.
 - Who: Siddh (raised it), Claude (research and write-up)
 - Evidence: I read the websites of Refril, ReferNext, RefOpen, Referd, Reffconnect and Topmate's referral listings, plus press and directory pages for older players. Reffconnect is waitlist-only and Referd is in early access. Every number is marked as self-reported. No user research was done.
 - Result: Honest gaps are listed: no discovery, no verification, tracking stops at the decision, and a Google Form is the real substitute. There are 3 untested assumptions to check after launch.
+
+## 2026-10-24 · Fixed the carousel zoom jump in the video
+- Decision: Moved the carousel's zoom-in onto a flat layer outside the 3D scene, then re-rendered both videos.
+- Why: Siddh's screen recording showed the carousel stuck small and soft, then snapping to full size in one frame. That's because animating scale inside a 3D scene renders wrongly until the animation ends.
+- Who: Siddh (spotted it), Claude (fix)
+- Evidence: Frames at 10 per second across the zoom now grow steadily with no jump, in both the wide and square versions. `hyperframes check` reports 0 errors.
+- Result: The site video and the LinkedIn square were updated.

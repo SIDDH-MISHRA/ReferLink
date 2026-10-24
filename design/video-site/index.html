@@ -42,7 +42,7 @@
       /* Circular carousel */
       #ring-fx { position: absolute; inset: 0; }
       .ring-stage { position: absolute; left: 50%; top: 47%; width: 0; height: 0; perspective: 1700px; transform: scale(var(--ring-scale)); }
-      .ring-zoom { transform-style: preserve-3d; }
+      .ring-zoom { position: absolute; inset: 0; transform-origin: 50% 47%; }
       .ring-tilt { transform-style: preserve-3d; transform: rotateX(-9deg); }
       .ring { position: absolute; left: 0; transform-style: preserve-3d; }
       .ring.r1 { top: -150px; } .ring.r2 { top: 10px; }
@@ -160,7 +160,7 @@
 
         <div id="ring-fx" data-layout-allow-overlap>
           <div class="caption split" id="cap">And they keep coming.</div>
-          <div class="ring-stage" id="ring-stage"><div class="ring-zoom" id="ring-zoom"><div class="ring-tilt"><div class="ring r1" id="r1"></div><div class="ring r2" id="r2"></div></div></div></div>
+          <div class="ring-zoom" id="ring-zoom"><div class="ring-stage" id="ring-stage"><div class="ring-tilt"><div class="ring r1" id="r1"></div><div class="ring r2" id="r2"></div></div></div></div>
         </div>
 
         <div class="center" id="gotyou">
@@ -293,12 +293,12 @@
 
       // ---- 3. The flood: two rings of requests spin past ----
       tl.set("#ring-fx", { opacity: 1 }, 8.4);
-      tl.from("#ring-zoom", { opacity: 0, scale: 0.7, duration: 0.9, ease }, 8.4);
+      tl.from("#ring-zoom", { opacity: 0, scale: 0.7, force3D: false, duration: 0.9, ease }, 8.4);
       tl.fromTo("#r1", { rotationY: 20 }, { rotationY: -130, duration: 5.4, ease: "power1.inOut" }, 8.4);
       tl.fromTo("#r2", { rotationY: -20 }, { rotationY: 120, duration: 5.4, ease: "power1.inOut" }, 8.4);
       words("#cap", 8.8);
       tl.to("#cap", { opacity: 0, y: -20, filter: "blur(10px)", duration: 0.4 }, 11.35);
-      tl.to("#ring-stage", { opacity: 0.22, filter: "blur(8px)", duration: 0.6 }, 11.4);
+      tl.to("#ring-zoom", { opacity: 0.22, filter: "blur(8px)", duration: 0.6 }, 11.4);
 
       // ---- 4. The turn ----
       tl.set("#gotyou", { opacity: 1 }, 11.6);

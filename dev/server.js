@@ -36,6 +36,11 @@ async function fileExists(p) {
 }
 
 async function serveStatic(req, res, path) {
+  // LIVE=1 tries the pages against the real Supabase in config.js (analytics stays off).
+  if (path === '/js/config.js' && process.env.LIVE) {
+    const live = (await readFile(join(ROOT, 'js/config.js'), 'utf8')).replace(/posthogKey: '[^']*'/, "posthogKey: ''");
+    return send(res, 200, live, TYPES['.js']);
+  }
   if (path === '/js/config.js') return send(res, 200, DEV_CONFIG, TYPES['.js']);
 
   for (const r of rewrites) if (r.re.test(path)) { path = r.dest; break; }

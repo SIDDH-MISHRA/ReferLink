@@ -170,3 +170,17 @@ One entry per real decision or problem. Newest at the bottom.
 - Who: Siddh (all requests, and the live-dashboard idea), Claude (the no-sign-in design and the build). The hover split is Claude's reading of Siddh's "2:1" description.
 - Evidence: Browser checks passed. The split measures exactly 2:1 (352:176px), and its colours are right in both themes. The live card shows real rows with a "Live" dot. Remember and forget work, the box is ticked by default, and there's no sideways scroll at 375px. A bug was found and fixed: the dashboard's device note crashed because a code insert landed inside the wrong function.
 - Result: New event `home_inbox_opened` shows whether employees come back through the homepage. The tradeoff: anyone using the same browser can open a remembered dashboard, which is why it's a visible checkbox and explained on the privacy page.
+
+## 2026-10-24 · Video rebuilt: longer hook, carousel, faster how-to
+- Decision: The video is now about 31 seconds, split roughly 14 seconds of hook and 17 of product.
+  - **Hook (dark, the site's dark theme):**
+    - "Tired of DMs like this?" over a pile of DMs.
+    - "You want to help. But you can't sort / track / answer them all."
+    - A 3D circular carousel of request cards, captioned "And they keep coming."
+    - "We've got you."
+  - **Product (light, Ledger):** a circle wipe into the light theme and the ReferLink logo. Then the four steps sit on one track that pans sideways, with a step rail on top (Share, Ask, Inbox, Answer). Each step takes about 2.5 seconds.
+  - **The cursor** now lives inside the button it clicks (Copy, Refer), so its tip always lands on the button.
+- Why: Siddh's review. The hook was too thin, the video felt like separate animations played one after another, the steps were slow, and the cursor clicked beside the Refer button.
+- Who: Siddh (hook script, carousel, faster pace, cursor bug), Claude (scene design, build)
+- Evidence: `hyperframes check` reports 0 errors and 121/121 text contrast checks pass. The remaining warnings are DMs and carousel cards on screen only briefly, which is intended. Frames were reviewed in both the wide and square versions. The carousel uses example names only.
+- Result: The site video (`public/media/how-it-works.mp4`) and the LinkedIn square (`design/referlink-how-it-works.mp4`) were both re-rendered. The landing section title "See it in 30 seconds" still fits.

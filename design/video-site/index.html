@@ -1,232 +1,363 @@
 <!doctype html>
-<html lang="en" >
+<html lang="en">
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=1440, height=810" />
     <script src="https://cdn.jsdelivr.net/npm/gsap@3.14.2/dist/gsap.min.js"></script>
-    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@500;600&display=block" />
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@500;600&display=block" />
     <style>
-      /* ReferLink "how it works" film: Ledger look (white, slate ink, one indigo accent). */
+      /* ReferLink film. Hook in the site's dark theme, product in the light (Ledger) theme. */
       :root {
-        --ground: #ffffff;
-        --subtle: #f8fafc;
-        --ink: #0f172a;
-        --ink-2: #475569;
-        --ink-3: #64748b;
-        --line: #e8ebef;
-        --line-2: #d6dbe1;
-        --accent: #4338ca;
-        --accent-soft: #eef2ff;
-        --ok: #047857;
-        --ok-soft: #d1fae5;
-        --pend: #b45309;
-        --pend-soft: #fef3c7;
-        --font-display: "Inter", system-ui, sans-serif;
-        --mono: "JetBrains Mono", ui-monospace, monospace;
+        /* dark (site dark mode) */
+        --d-bg: #070a10; --d-surface: #121926; --d-line: #222c3c; --d-text: #e6e9ef; --d-text-2: #9aa4b2; --d-accent: #818cf8;
+        /* light (Ledger) */
+        --ground: #f4f6f9; --surface: #ffffff; --subtle: #f8fafc; --ink: #0f172a; --ink-2: #475569; --ink-3: #64748b;
+        --line: #e1e6ec; --line-2: #cfd6df; --accent: #4338ca; --accent-soft: #eef2ff;
+        --ok: #047857; --ok-soft: #d1fae5; --pend: #b45309; --pend-soft: #fef3c7;
+        --font: "Inter", system-ui, sans-serif; --mono: "JetBrains Mono", ui-monospace, monospace;
+        --ring-scale: 1;
       }
+      html.sq { --ring-scale: 0.74; }
       * { margin: 0; padding: 0; box-sizing: border-box; }
-      html, body { width: 1440px; height: 810px; overflow: hidden; background: var(--ground); }
-      #root { position: relative; width: 100%; height: 100%; font-family: var(--font-display); color: var(--ink); -webkit-font-smoothing: antialiased; }
-      .clip { position: absolute; inset: 0; display: flex; flex-direction: column; align-items: center; justify-content: center; padding: 50px 90px; }
+      html, body { width: 1440px; height: 810px; overflow: hidden; background: var(--d-bg); }
+      #root { position: relative; width: 100%; height: 100%; font-family: var(--font); -webkit-font-smoothing: antialiased; }
+      .clip { position: absolute; inset: 0; overflow: hidden; }
+      .center { position: absolute; inset: 0; display: flex; flex-direction: column; align-items: center; justify-content: center; text-align: center; padding: 0 80px; }
+      .w { display: inline-block; white-space: pre; }
 
-      /* Shared pieces */
-      .step-label { font: 600 28px var(--mono); letter-spacing: 0.06em; text-transform: uppercase; color: var(--accent); margin-bottom: 22px; }
-      .headline { font-size: 64px; font-weight: 700; letter-spacing: -0.045em; line-height: 1.05; text-align: center; }
-      .sub { font-size: 30px; color: var(--ink-2); text-align: center; margin-top: 22px; line-height: 1.4; }
-      .card { background: #fff; border: 2px solid var(--line); border-radius: 22px; box-shadow: 0 2px 4px rgba(15, 23, 42, 0.04), 0 40px 80px -40px rgba(15, 23, 42, 0.35); }
-      .avatar { width: 64px; height: 64px; border-radius: 50%; background: var(--accent-soft); color: var(--accent); display: grid; place-items: center; font-weight: 600; font-size: 28px; flex: none; }
-      .btn { display: inline-flex; align-items: center; justify-content: center; height: 68px; padding: 0 30px; border-radius: 14px; font-weight: 600; font-size: 28px; }
+      /* ---------- Dark hook ---------- */
+      #dark { background: radial-gradient(1200px 700px at 50% 40%, #111a2e 0%, var(--d-bg) 70%); color: var(--d-text); }
+      .h-top { position: absolute; top: 9%; left: 0; right: 0; text-align: center; font-size: 72px; font-weight: 800; letter-spacing: -0.045em; z-index: 2; }
+      .h-top em, .big em { font-style: normal; color: var(--d-accent); }
+      #bubbles { position: absolute; inset: 0; }
+      .bub { position: absolute; transform: translate(-50%, -50%); display: flex; align-items: center; gap: 14px; padding: 16px 22px 16px 16px; border-radius: 22px 22px 22px 6px;
+             background: var(--d-surface); border: 1.5px solid var(--d-line); font-size: 26px; color: var(--d-text); white-space: nowrap; box-shadow: 0 30px 60px -30px rgba(0,0,0,.8); }
+      .bub i { width: 44px; height: 44px; border-radius: 50%; background: rgba(129,140,248,.16); color: var(--d-accent); display: grid; place-items: center; font: 600 18px var(--font); font-style: normal; flex: none; }
+      .bub .dot { position: absolute; top: -6px; right: -6px; width: 16px; height: 16px; border-radius: 50%; background: var(--d-accent); box-shadow: 0 0 0 4px var(--d-bg); }
+      .big { font-size: 78px; font-weight: 800; letter-spacing: -0.045em; line-height: 1.08; }
+      .big.dim { color: var(--d-text-2); }
+      .cycle { display: block; height: 1.12em; overflow: hidden; color: var(--d-accent); }
+      .cycle-in > div { height: 1.12em; }
+
+      /* Circular carousel */
+      #ring-fx { position: absolute; inset: 0; }
+      .ring-stage { position: absolute; left: 50%; top: 47%; width: 0; height: 0; perspective: 1700px; transform: scale(var(--ring-scale)); }
+      .ring-zoom { transform-style: preserve-3d; }
+      .ring-tilt { transform-style: preserve-3d; transform: rotateX(-9deg); }
+      .ring { position: absolute; left: 0; transform-style: preserve-3d; }
+      .ring.r1 { top: -150px; } .ring.r2 { top: 10px; }
+      .rc { position: absolute; left: -150px; top: 0; width: 300px; height: 128px; padding: 18px 20px; border-radius: 18px; backface-visibility: hidden;
+            background: var(--d-surface); border: 1.5px solid var(--d-line); display: flex; gap: 14px; align-items: flex-start; text-align: left; }
+      .rc i { width: 46px; height: 46px; border-radius: 50%; background: rgba(129,140,248,.16); color: var(--d-accent); display: grid; place-items: center; font: 600 18px var(--font); font-style: normal; flex: none; }
+      .rc b { display: block; font-size: 22px; color: var(--d-text); }
+      .rc span { display: block; font-size: 19px; color: var(--d-text-2); margin-top: 4px; }
+      .rc u { display: inline-block; text-decoration: none; margin-top: 10px; font: 600 15px var(--mono); color: var(--d-accent); letter-spacing: .04em; text-transform: uppercase; }
+      .caption { position: absolute; top: 8%; left: 0; right: 0; text-align: center; font-size: 60px; font-weight: 800; letter-spacing: -0.04em; z-index: 3; }
+
+      /* ---------- Light product ---------- */
+      #light { background: var(--ground); color: var(--ink); clip-path: circle(0% at 50% 50%); }
+      .logo { display: flex; align-items: center; gap: 22px; font-size: 80px; font-weight: 800; letter-spacing: -0.045em; }
+      .logo-mark { width: 96px; height: 96px; border-radius: 24px; background: var(--ink); display: grid; place-items: center; }
+      .logo-mark svg { width: 52px; height: 52px; stroke: #fff; fill: none; stroke-width: 3; stroke-linecap: round; stroke-linejoin: round; }
+      .tag { font-size: 34px; color: var(--ink-2); margin-top: 22px; letter-spacing: -0.01em; }
+      .tag b { color: var(--accent); font-weight: 700; }
+
+      .rail { position: absolute; top: 56px; left: 50%; transform: translateX(-50%); display: grid; grid-template-columns: repeat(4, 190px); padding: 6px; border-radius: 16px; background: var(--surface); border: 1.5px solid var(--line); box-shadow: 0 10px 30px -18px rgba(15,23,42,.35); z-index: 3; }
+      .rail span { position: relative; z-index: 1; height: 54px; display: flex; align-items: center; justify-content: center; font: 600 22px var(--font); color: var(--ink-3); }
+      .rail span b { font: 600 18px var(--mono); margin-right: 8px; opacity: .7; }
+      .rail .pill { position: absolute; left: 6px; top: 6px; width: 190px; height: 54px; border-radius: 11px; background: var(--accent); z-index: 0; }
+      .how { position: absolute; top: 130px; bottom: 0; left: 0; right: 0; overflow: hidden; }
+      .track { display: flex; width: 400%; height: 100%; }
+      .panel { flex: 0 0 25%; display: flex; flex-direction: column; align-items: center; justify-content: center; padding-bottom: 20px; }
+      .panel h2 { font-size: 46px; font-weight: 800; letter-spacing: -0.04em; margin-bottom: 26px; }
+      .panel h2 em { font-style: normal; color: var(--accent); }
+
+      .card { background: var(--surface); border: 1.5px solid var(--line-2); border-radius: 22px; box-shadow: 0 2px 4px rgba(15,23,42,.04), 0 40px 80px -40px rgba(15,23,42,.4); text-align: left; }
+      .avatar { width: 60px; height: 60px; border-radius: 50%; background: var(--accent-soft); color: var(--accent); display: grid; place-items: center; font-weight: 600; font-size: 24px; flex: none; }
+      .btn { position: relative; display: inline-flex; align-items: center; justify-content: center; height: 62px; padding: 0 28px; border-radius: 14px; font-weight: 600; font-size: 26px; white-space: nowrap; }
       .btn-primary { background: var(--accent); color: #fff; }
       .btn-ink { background: var(--ink); color: #fff; }
-      .btn-line { border: 2px solid var(--line-2); color: var(--ink); background: #fff; }
-      .badge { display: inline-flex; align-items: center; height: 46px; padding: 0 16px; border-radius: 10px; font-weight: 600; font-size: 28px; }
+      .btn-line { border: 1.5px solid var(--line-2); color: var(--ink); background: #fff; }
+      .badge { display: inline-flex; align-items: center; height: 42px; padding: 0 14px; border-radius: 10px; font-weight: 600; font-size: 22px; }
       .badge-pend { background: var(--pend-soft); color: var(--pend); }
       .badge-ok { background: var(--ok-soft); color: var(--ok); }
       .type { display: inline-block; overflow: hidden; white-space: nowrap; vertical-align: bottom; width: 0ch; font-family: var(--mono); }
-      .caret { display: inline-block; width: 3px; height: 34px; background: var(--ink); vertical-align: middle; margin-left: 2px; }
+      /* The cursor lives inside the button it clicks, so its tip always lands on that button. */
+      .cursor { position: absolute; left: 50%; top: 50%; width: 44px; height: 44px; pointer-events: none; opacity: 0; z-index: 5; }
 
-      /* 1 · Hook: messy DMs */
-      .dms { display: flex; flex-direction: column; gap: 18px; width: 760px; margin-top: 50px; }
-      .dm { align-self: flex-start; padding: 20px 26px; border-radius: 22px 22px 22px 6px; background: var(--subtle); border: 2px solid var(--line); font-size: 30px; color: var(--ink-2); }
-      .dm:nth-child(even) { align-self: flex-end; border-radius: 22px 22px 6px 22px; }
+      .share { width: 820px; padding: 36px; }
+      .who { display: flex; align-items: center; gap: 18px; margin-bottom: 22px; }
+      .who b { font-size: 28px; display: block; }
+      .who span { font-size: 24px; color: var(--ink-3); }
+      .linkbox { display: flex; align-items: center; gap: 16px; padding: 10px 10px 10px 24px; border-radius: 16px; background: var(--subtle); border: 1.5px solid var(--line); }
+      .linkbox .url { flex: 1; font: 600 28px var(--mono); color: var(--accent); }
 
-      /* 2 · Logo */
-      .logo { display: flex; align-items: center; gap: 22px; font-size: 76px; font-weight: 700; letter-spacing: -0.04em; }
-      .logo-mark { width: 92px; height: 92px; border-radius: 22px; background: var(--ink); display: grid; place-items: center; }
-      .logo-mark svg { width: 50px; height: 50px; stroke: #fff; fill: none; stroke-width: 3; stroke-linecap: round; stroke-linejoin: round; }
-
-      /* 3 · Share */
-      .share { width: 820px; padding: 40px; }
-      .who { display: flex; align-items: center; gap: 18px; margin-bottom: 26px; }
-      .who b { font-size: 30px; display: block; }
-      .who span { font-size: 28px; color: var(--ink-3); }
-      .linkbox { display: flex; align-items: center; gap: 16px; padding: 12px 12px 12px 26px; border-radius: 16px; background: var(--subtle); border: 2px solid var(--line); }
-      .linkbox .url { flex: 1; font: 600 30px var(--mono); color: var(--accent); }
-
-      /* 4 · Ask */
-      .ask { width: 820px; padding: 44px; }
-      .meta { display: flex; justify-content: space-between; font-size: 28px; color: var(--ink-3); }
-      .bar { height: 8px; border-radius: 4px; background: var(--line); margin: 18px 0 34px; overflow: hidden; }
+      .ask { width: 820px; padding: 38px; }
+      .meta { font-size: 24px; color: var(--ink-3); }
+      .bar { height: 8px; border-radius: 4px; background: var(--line); margin: 16px 0 30px; overflow: hidden; }
       .bar i { display: block; height: 100%; width: 40%; background: var(--accent); }
-      .q { font-size: 44px; font-weight: 700; letter-spacing: -0.035em; margin-bottom: 26px; }
-      .input { height: 84px; border: 2px solid var(--accent); box-shadow: 0 0 0 6px rgba(67, 56, 202, 0.15); border-radius: 16px; display: flex; align-items: center; padding: 0 26px; font-size: 34px; }
-      .hint { font-size: 28px; color: var(--ink-3); margin-top: 14px; }
+      .q { font-size: 40px; font-weight: 700; letter-spacing: -0.035em; margin-bottom: 22px; }
+      .input { height: 78px; border: 2px solid var(--accent); box-shadow: 0 0 0 6px rgba(67,56,202,.14); border-radius: 16px; display: flex; align-items: center; padding: 0 24px; font-size: 32px; }
+      .hint { font-size: 24px; color: var(--ink-3); margin-top: 16px; height: 32px; position: relative; }
+      .hint span { position: absolute; left: 0; top: 0; }
+      .hint .sent { color: var(--ok); font-weight: 600; opacity: 0; }
 
-      /* 5 · Inbox */
       .inbox { width: 860px; overflow: hidden; }
-      .inbox-head { display: flex; align-items: center; gap: 14px; padding: 24px 30px; border-bottom: 2px solid var(--line); font-size: 30px; font-weight: 600; }
-      .row { display: flex; align-items: center; gap: 18px; padding: 22px 30px; border-bottom: 2px solid var(--line); font-size: 30px; }
+      .inbox-head { display: flex; align-items: center; gap: 14px; padding: 22px 28px; border-bottom: 1.5px solid var(--line); font-size: 28px; font-weight: 700; }
+      .row { display: flex; align-items: center; gap: 18px; padding: 18px 28px; border-bottom: 1.5px solid var(--line); font-size: 26px; background: var(--surface); }
       .row:last-child { border-bottom: 0; }
       .row .name { flex: 1; }
       .row .name b { display: block; }
-      .row .name span { font-size: 28px; color: var(--ink-3); }
+      .row .name span { font-size: 22px; color: var(--ink-3); }
 
-      /* 6 · Answer */
-      .answer { display: flex; flex-direction: column; gap: 28px; width: 820px; }
-      .req { display: flex; align-items: center; gap: 18px; padding: 26px 30px; }
-      .req b { flex: 1; font-size: 30px; }
-      .result { padding: 44px; text-align: center; }
-      .result .check { width: 84px; height: 84px; border-radius: 50%; background: var(--ok-soft); display: grid; place-items: center; margin: 0 auto 22px; }
-      .result .check svg { width: 44px; height: 44px; stroke: var(--ok); fill: none; stroke-width: 3; stroke-linecap: round; stroke-linejoin: round; }
-      .result h3 { font-size: 46px; letter-spacing: -0.035em; }
-      .result p { font-size: 30px; color: var(--ink-3); margin-top: 8px; }
-      .cursor { position: absolute; width: 44px; height: 44px; }
+      .answer { width: 860px; display: flex; flex-direction: column; gap: 22px; }
+      .req { display: flex; align-items: center; gap: 18px; padding: 24px 28px; }
+      .req .name { flex: 1; }
+      .req .name b { display: block; font-size: 28px; }
+      .req .name span { font-size: 22px; color: var(--ink-3); }
+      .btn-refer { width: 210px; }
+      .btn-copy { width: 170px; }
+      .btn-copy .ok { position: absolute; inset: 0; display: grid; place-items: center; border-radius: 14px; background: var(--ink); color: #fff; opacity: 0; }
+      .btn-refer .ok { position: absolute; inset: 0; display: grid; place-items: center; border-radius: 14px; background: var(--ok); color: #fff; opacity: 0; }
+      .toast { display: flex; align-items: center; gap: 18px; padding: 22px 28px; }
+      .toast .check { width: 56px; height: 56px; border-radius: 50%; background: var(--ok-soft); display: grid; place-items: center; flex: none; }
+      .toast .check svg { width: 30px; height: 30px; stroke: var(--ok); fill: none; stroke-width: 3; stroke-linecap: round; stroke-linejoin: round; }
+      .toast b { display: block; font-size: 28px; }
+      .toast span { font-size: 22px; color: var(--ink-3); }
 
-      /* 7 · End card */
-      .end .logo { font-size: 64px; }
-      .end .logo-mark { width: 78px; height: 78px; border-radius: 18px; }
-      .end .logo-mark svg { width: 42px; height: 42px; }
-      .pills { display: flex; gap: 14px; margin-top: 30px; }
-      .pill { padding: 12px 22px; border-radius: 999px; background: var(--subtle); border: 2px solid var(--line); font-size: 28px; color: var(--ink-2); }
+      .end .logo { font-size: 66px; }
+      .end .logo-mark { width: 80px; height: 80px; border-radius: 20px; }
+      .end .logo-mark svg { width: 44px; height: 44px; }
+      .end h3 { font-size: 56px; font-weight: 800; letter-spacing: -0.045em; margin-top: 30px; }
+      .end h3 em { font-style: normal; color: var(--accent); }
+      .pills { display: flex; gap: 14px; margin-top: 28px; }
+      .pills span { padding: 12px 22px; border-radius: 999px; background: var(--surface); border: 1.5px solid var(--line-2); font-size: 26px; color: var(--ink-2); }
     </style>
   </head>
   <body>
-    <div id="root" data-composition-id="main" data-start="0" data-duration="29" data-width="1440" data-height="810">
+    <div id="root" data-composition-id="main" data-start="0" data-duration="31.1" data-width="1440" data-height="810">
 
-      <!-- 1 · Hook (0–3.6s) -->
-      <section id="s1" class="clip" data-start="0" data-duration="3.6" data-track-index="0">
-        <div class="headline" id="s1-title">Drowning in referral DMs?</div>
-        <div class="dms">
-          <div class="dm">hey, can u refer me? 🙏</div>
-          <div class="dm">any openings at your company??</div>
-          <div class="dm">pls refer, resume attached somewhere</div>
-          <div class="dm">can you refer me for any role?</div>
+      <!-- Hook (dark): DMs pile up, the problem, the flood of people, "we've got you" -->
+      <section id="dark" class="clip" data-start="0" data-duration="14.8" data-track-index="0">
+        <div id="bubbles" data-layout-allow-overlap>
+          <div class="bub" style="left:25%;top:36%;rotate:-3deg"><i>RK</i>hey, can u refer me? 🙏<span class="dot"></span></div>
+          <div class="bub" style="left:72%;top:33%;rotate:2deg"><i>NS</i>any openings at your company??<span class="dot"></span></div>
+          <div class="bub" style="left:44%;top:50%;rotate:1deg"><i>AM</i>pls refer, resume attached<span class="dot"></span></div>
+          <div class="bub" style="left:80%;top:56%;rotate:-2deg"><i>TG</i>can you refer me for any role?<span class="dot"></span></div>
+          <div class="bub" style="left:17%;top:62%;rotate:2deg"><i>PJ</i>Hi! Saw your post. Referral?<span class="dot"></span></div>
+          <div class="bub" style="left:57%;top:68%;rotate:-1deg"><i>VS</i>is your team hiring?<span class="dot"></span></div>
+          <div class="bub" style="left:30%;top:82%;rotate:-2deg"><i>MD</i>following up on my last message 🙂<span class="dot"></span></div>
+          <div class="bub" style="left:78%;top:83%;rotate:3deg"><i>SB</i>could you check my profile once?<span class="dot"></span></div>
+          <div class="bub" style="left:50%;top:94%;rotate:1deg"><i>HC</i>sorry to bother again…<span class="dot"></span></div>
+        </div>
+        <div class="h-top" id="h-tired"><span class="split">Tired of DMs</span> <em class="split">like this?</em></div>
+
+        <div class="center" id="problem">
+          <div class="big split" id="p1">You want to help.</div>
+          <div class="big dim split" id="p2" style="margin-top:14px">But you can't</div>
+          <div class="big cycle" id="p3"><div class="cycle-in" id="p3-in"><div>sort them all.</div><div>track them all.</div><div>answer them all.</div></div></div>
+        </div>
+
+        <div id="ring-fx" data-layout-allow-overlap>
+          <div class="caption split" id="cap">And they keep coming.</div>
+          <div class="ring-stage" id="ring-stage"><div class="ring-zoom" id="ring-zoom"><div class="ring-tilt"><div class="ring r1" id="r1"></div><div class="ring r2" id="r2"></div></div></div></div>
+        </div>
+
+        <div class="center" id="gotyou">
+          <div class="big split" style="font-size:96px">We've got <em>you.</em></div>
         </div>
       </section>
 
-      <!-- 2 · Logo (3.6–7s) -->
-      <section id="s2" class="clip" data-start="3.6" data-duration="3.4" data-track-index="0">
-        <div class="logo" id="s2-logo"><span class="logo-mark"><svg viewBox="0 0 24 24"><path d="M20 6 9 17l-5-5"/></svg></span>ReferLink</div>
-        <div class="sub" id="s2-sub">Every referral request in one inbox.</div>
-      </section>
-
-      <!-- 3 · Share (7–11.5s) -->
-      <section id="s3" class="clip" data-start="7" data-duration="4.5" data-track-index="0">
-        <div class="step-label" id="s3-label">1 · Share one link</div>
-        <div class="card share" id="s3-card">
-          <div class="who"><span class="avatar">PS</span><div><b>Priya Sharma</b><span>Software Engineer at Google</span></div></div>
-          <div class="sub" style="text-align:left;font-size:28px;margin:0 0 20px;color:var(--ink)">Want a referral from me? Request it here:</div>
-          <div class="linkbox"><span class="url"><span class="type" id="s3-type">referlink.app/r/priya</span></span><span class="btn btn-ink" id="s3-copy">Copy</span></div>
+      <!-- Product (light): logo, four steps on one moving track, end card -->
+      <section id="light" class="clip" data-start="13.8" data-duration="17.3" data-track-index="1">
+        <div class="center" id="brand">
+          <div class="logo" id="brand-logo"><span class="logo-mark"><svg viewBox="0 0 24 24"><path d="M20 6 9 17l-5-5"/></svg></span>ReferLink</div>
+          <div class="tag" id="brand-tag">Every referral request, in <b>one inbox.</b></div>
         </div>
-      </section>
 
-      <!-- 4 · Ask (11.5–16s) -->
-      <section id="s4" class="clip" data-start="11.5" data-duration="4.5" data-track-index="0">
-        <div class="step-label" id="s4-label">2 · Candidates ask properly</div>
-        <div class="card ask" id="s4-card">
-          <div class="meta"><span>Asking Priya Sharma · Google</span><span>Step 3 of 5</span></div>
-          <div class="bar"><i id="s4-bar"></i></div>
-          <div class="q">Which job are you applying for?</div>
-          <div class="input"><span class="type" id="s4-type">JR-104523</span><span class="caret"></span></div>
-          <div class="hint">Requests without a job ID usually get ignored.</div>
-        </div>
-      </section>
+        <div class="rail" id="rail"><i class="pill" id="rail-pill"></i><span id="t0"><b>1</b>Share</span><span id="t1"><b>2</b>Ask</span><span id="t2"><b>3</b>Inbox</span><span id="t3"><b>4</b>Answer</span></div>
 
-      <!-- 5 · Inbox (16–20.5s) -->
-      <section id="s5" class="clip" data-start="16" data-duration="4.5" data-track-index="0">
-        <div class="step-label" id="s5-label">3 · It lands in your inbox</div>
-        <div class="card inbox" id="s5-card">
-          <div class="inbox-head">Requests <span class="badge badge-pend">1 new</span></div>
-          <div class="row" id="s5-new"><span class="avatar">AI</span><span class="name"><b>Ananya Iyer</b><span>Data Analyst II · JR-104523</span></span><span class="badge badge-pend">New</span></div>
-          <div class="row"><span class="avatar">RV</span><span class="name"><b>Rahul Verma</b><span>Backend Engineer</span></span><span class="badge badge-ok">Referred</span></div>
-          <div class="row"><span class="avatar">KM</span><span class="name"><b>Karan Malhotra</b><span>Data Engineer</span></span><span class="badge badge-ok">Referred</span></div>
-        </div>
-      </section>
-
-      <!-- 6 · Answer (20.5–25s) -->
-      <section id="s6" class="clip" data-start="20.5" data-duration="4.5" data-track-index="0">
-        <div class="step-label" id="s6-label">4 · Answer in one click</div>
-        <div class="answer">
-          <div class="card req" id="s6-req"><span class="avatar">AI</span><b>Ananya Iyer</b><span class="btn btn-primary" id="s6-refer">Refer</span><span class="btn btn-line">Decline</span></div>
-          <div class="card result" id="s6-result">
-            <div class="check"><svg viewBox="0 0 24 24"><path d="M20 6 9 17l-5-5"/></svg></div>
-            <h3>You were referred</h3>
-            <p>Priya referred you at Google</p>
+        <div class="how" id="how">
+          <div class="track" id="track">
+            <div class="panel">
+              <h2>Share <em>one link.</em></h2>
+              <div class="card share" id="share-card">
+                <div class="who"><span class="avatar">PS</span><div><b>Priya Sharma</b><span>Software Engineer at Google</span></div></div>
+                <div class="linkbox"><span class="url"><span class="type" id="type-link">referlink.app/r/priya</span></span>
+                  <span class="btn btn-ink btn-copy" id="copy">Copy<span class="ok" id="copy-ok">Copied ✓</span><svg class="cursor" id="cur1" viewBox="0 0 24 24"><path d="M4 2l16 10-7 1.5L9.5 21z" fill="#0f172a" stroke="#fff" stroke-width="1.5" stroke-linejoin="round"/></svg></span></div>
+              </div>
+            </div>
+            <div class="panel">
+              <h2>Candidates ask <em>properly.</em></h2>
+              <div class="card ask">
+                <div class="meta">Asking Priya Sharma · Google</div>
+                <div class="bar"><i id="bar"></i></div>
+                <div class="q">Which job are you applying for?</div>
+                <div class="input"><span class="type" id="type-job">JR-104523</span></div>
+                <div class="hint"><span id="hint-a">Requests without a job ID usually get ignored.</span><span class="sent" id="hint-b">✓ Request sent to Priya</span></div>
+              </div>
+            </div>
+            <div class="panel">
+              <h2>It lands in <em>your inbox.</em></h2>
+              <div class="card inbox">
+                <div class="inbox-head">Requests <span class="badge badge-pend" id="new-badge">1 new</span></div>
+                <div class="row" id="row-new"><span class="avatar">AI</span><span class="name"><b>Ananya Iyer</b><span>Data Analyst II · JR-104523</span></span><span class="badge badge-pend">Pending</span></div>
+                <div class="row"><span class="avatar">RV</span><span class="name"><b>Rahul Verma</b><span>Backend Engineer</span></span><span class="badge badge-ok">Referred</span></div>
+                <div class="row"><span class="avatar">KM</span><span class="name"><b>Karan Malhotra</b><span>Data Engineer</span></span><span class="badge badge-ok">Referred</span></div>
+              </div>
+            </div>
+            <div class="panel">
+              <h2>Answer in <em>one click.</em></h2>
+              <div class="answer">
+                <div class="card req"><span class="avatar">AI</span><span class="name"><b>Ananya Iyer</b><span>Data Analyst II · JR-104523</span></span>
+                  <span class="btn btn-primary btn-refer" id="refer">Refer<span class="ok" id="refer-ok">Referred ✓</span><svg class="cursor" id="cur2" viewBox="0 0 24 24"><path d="M4 2l16 10-7 1.5L9.5 21z" fill="#0f172a" stroke="#fff" stroke-width="1.5" stroke-linejoin="round"/></svg></span>
+                  <span class="btn btn-line" id="decline">Decline</span></div>
+                <div class="card toast" id="toast"><span class="check"><svg viewBox="0 0 24 24"><path d="M20 6 9 17l-5-5"/></svg></span><div><b>Ananya sees: “You were referred”</b><span>No chasing, no follow-up DMs.</span></div></div>
+              </div>
+            </div>
           </div>
         </div>
-        <svg class="cursor" id="s6-cursor" viewBox="0 0 24 24" style="left:770px;top:520px"><path d="M4 2l16 10-7 1.5L9.5 21z" fill="#0f172a" stroke="#fff" stroke-width="1.5" stroke-linejoin="round"/></svg>
-      </section>
 
-      <!-- 7 · End card (25–29s) -->
-      <section id="s7" class="clip end" data-start="25" data-duration="4" data-track-index="0">
-        <div class="logo" id="s7-logo"><span class="logo-mark"><svg viewBox="0 0 24 24"><path d="M20 6 9 17l-5-5"/></svg></span>ReferLink</div>
-        <div class="headline" id="s7-title" style="font-size:54px;margin-top:34px">Clear your referral DMs.</div>
-        <div class="pills" id="s7-pills"><span class="pill">Free</span><span class="pill">No sign-up</span><span class="pill">Takes a minute</span></div>
+        <div class="center end" id="end">
+          <div class="logo" id="end-logo"><span class="logo-mark"><svg viewBox="0 0 24 24"><path d="M20 6 9 17l-5-5"/></svg></span>ReferLink</div>
+          <h3 class="split" id="end-title">Clear your <em>referral DMs.</em></h3>
+          <div class="pills" id="end-pills"><span>Free</span><span>No sign-up</span><span>Takes a minute</span></div>
+        </div>
       </section>
     </div>
 
     <script>
+      // Build the carousel cards (example names only).
+      const people = [
+        ["Ananya Iyer", "Data Analyst II"], ["Rahul Verma", "Backend Engineer"], ["Sneha Kapoor", "Product Analyst"], ["Arjun Nair", "SDE-1"],
+        ["Meera Joshi", "UX Designer"], ["Kabir Singh", "Data Engineer"], ["Ishita Rao", "Program Manager"], ["Rohan Das", "Frontend Engineer"],
+        ["Pooja Menon", "Business Analyst"], ["Vikram Shah", "SRE"], ["Nikita Bose", "ML Engineer"], ["Aditya Kulkarni", "QA Engineer"],
+        ["Tanvi Mehta", "APM"], ["Harsh Patel", "Android Engineer"], ["Divya Pillai", "Data Scientist"], ["Siddharth Roy", "Cloud Engineer"],
+        ["Riya Agarwal", "Growth Analyst"], ["Manav Gupta", "SDE-2"], ["Neha Reddy", "Support Engineer"], ["Yash Thakur", "iOS Engineer"],
+        ["Kavya Krishnan", "Technical Writer"], ["Dev Malhotra", "Security Analyst"], ["Aisha Khan", "Product Designer"], ["Om Prakash", "DevOps Engineer"],
+      ];
+      const asks = ["wants a referral", "asked 2h ago", "wants a referral", "following up"];
+      const N = 12, R = 590;
+      people.forEach(([name, role], i) => {
+        const ring = document.getElementById(i < N ? "r1" : "r2");
+        const k = i % N;
+        const el = document.createElement("div");
+        el.className = "rc";
+        el.style.transform = `rotateY(${(k * 360) / N + (i < N ? 0 : 15)}deg) translateZ(${R}px)`;
+        el.innerHTML = `<i>${name.split(" ").map((p) => p[0]).join("")}</i><div><b>${name}</b><span>${role}</span><u>${asks[i % asks.length]}</u></div>`;
+        ring.appendChild(el);
+      });
+
+      // Split marked text into words for the blur-in effect.
+      document.querySelectorAll(".split").forEach((el) => {
+        const walk = (node) => [...node.childNodes].forEach((c) => {
+          if (c.nodeType === 3) {
+            const frag = document.createDocumentFragment();
+            c.textContent.split(/(\s+)/).forEach((part) => {
+              if (!part) return;
+              if (/^\s+$/.test(part)) { frag.appendChild(document.createTextNode(part)); return; }
+              const s = document.createElement("span"); s.className = "w"; s.textContent = part; frag.appendChild(s);
+            });
+            c.replaceWith(frag);
+          } else if (c.nodeType === 1) walk(c);
+        });
+        walk(el);
+      });
+
       const tl = gsap.timeline({ paused: true });
       const ease = "power3.out";
+      const words = (sel, at, stagger = 0.07) =>
+        tl.from(`${sel} .w`, { opacity: 0, y: 18, filter: "blur(10px)", duration: 0.5, ease, stagger }, at);
+      const press = (sel, at) => { tl.to(sel, { scale: 0.93, duration: 0.09 }, at); tl.to(sel, { scale: 1, duration: 0.18, ease: "back.out(3)" }, at + 0.09); };
 
-      // 1 · Hook: title drops in, DMs stack up, then everything fades
-      // The title is on screen from frame 0: that frame is the social thumbnail.
-      gsap.utils.toArray("#s1 .dm").forEach((dm, i) => {
-        tl.from(dm, { opacity: 0, y: 24, scale: 0.96, duration: 0.45, ease }, 0.6 + i * 0.4);
-      });
-      tl.to("#s1", { opacity: 0, duration: 0.35 }, 3.25);
+      // Initial states for things that enter later.
+      gsap.set(["#problem", "#ring-fx", "#gotyou", "#rail", "#how", "#end"], { opacity: 0 });
 
-      // 2 · Logo reveal
-      tl.from("#s2-logo", { opacity: 0, scale: 0.9, duration: 0.7, ease: "back.out(1.6)" }, 3.7);
-      tl.from("#s2-sub", { opacity: 0, y: 20, duration: 0.6, ease }, 4.3);
-      tl.to("#s2", { opacity: 0, duration: 0.35 }, 6.65);
+      // ---- 1. Hook: the title is on screen at frame 0 (it is the thumbnail), DMs pile up fast ----
+      tl.from("#h-tired", { scale: 0.97, duration: 0.6, ease }, 0);
+      tl.from("#bubbles .bub", { opacity: 0, scale: 0.6, duration: 0.42, ease: "back.out(2)", stagger: 0.26 }, 0.35);
+      tl.fromTo("#bubbles", { scale: 1 }, { scale: 1.07, duration: 3.6, ease: "none" }, 0);
+      tl.to("#h-tired", { opacity: 0, y: -30, filter: "blur(10px)", duration: 0.4 }, 3.35);
+      tl.to("#bubbles", { opacity: 0.18, filter: "blur(9px)", scale: 1.12, duration: 0.6, ease: "power2.inOut" }, 3.35);
 
-      // 3 · Share: link types itself, then "Copied"
-      tl.from("#s3-label", { opacity: 0, y: 16, duration: 0.5, ease }, 7.05);
-      tl.from("#s3-card", { opacity: 0, y: 40, duration: 0.6, ease }, 7.2);
-      tl.to("#s3-type", { width: "21ch", duration: 1.3, ease: "steps(21)" }, 7.9);
-      tl.to("#s3-copy", { scale: 0.92, duration: 0.12 }, 9.6);
-      tl.to("#s3-copy", { scale: 1, duration: 0.2 }, 9.72);
-      tl.set("#s3-copy", { textContent: "Copied ✓" }, 9.75);
-      tl.to("#s3", { opacity: 0, duration: 0.35 }, 11.15);
+      // ---- 2. The problem ----
+      tl.set("#problem", { opacity: 1 }, 3.6);
+      words("#p1", 3.65);
+      tl.to("#p1", { color: "#9aa4b2", duration: 0.4 }, 4.55);
+      words("#p2", 4.6);
+      tl.from("#p3", { opacity: 0, y: 24, filter: "blur(10px)", duration: 0.5, ease }, 4.95);
+      tl.to("#p3-in", { yPercent: -33.333, duration: 0.45, ease: "power3.inOut" }, 6.0);
+      tl.to("#p3-in", { yPercent: -66.666, duration: 0.45, ease: "power3.inOut" }, 6.95);
+      tl.to("#problem", { opacity: 0, scale: 0.94, filter: "blur(10px)", duration: 0.45, ease: "power2.in" }, 8.15);
+      tl.to("#bubbles", { opacity: 0, duration: 0.4 }, 8.15);
 
-      // 4 · Ask: job ID types in, progress moves on
-      tl.from("#s4-label", { opacity: 0, y: 16, duration: 0.5, ease }, 11.55);
-      tl.from("#s4-card", { opacity: 0, y: 40, duration: 0.6, ease }, 11.7);
-      tl.to("#s4-type", { width: "9ch", duration: 0.9, ease: "steps(9)" }, 12.5);
-      tl.to("#s4-bar", { width: "60%", duration: 0.8, ease }, 13.8);
-      tl.to("#s4", { opacity: 0, duration: 0.35 }, 15.65);
+      // ---- 3. The flood: two rings of requests spin past ----
+      tl.set("#ring-fx", { opacity: 1 }, 8.4);
+      tl.from("#ring-zoom", { opacity: 0, scale: 0.7, duration: 0.9, ease }, 8.4);
+      tl.fromTo("#r1", { rotationY: 20 }, { rotationY: -130, duration: 5.4, ease: "power1.inOut" }, 8.4);
+      tl.fromTo("#r2", { rotationY: -20 }, { rotationY: 120, duration: 5.4, ease: "power1.inOut" }, 8.4);
+      words("#cap", 8.8);
+      tl.to("#cap", { opacity: 0, y: -20, filter: "blur(10px)", duration: 0.4 }, 11.35);
+      tl.to("#ring-stage", { opacity: 0.22, filter: "blur(8px)", duration: 0.6 }, 11.4);
 
-      // 5 · Inbox: the new request slides in on top
-      tl.from("#s5-label", { opacity: 0, y: 16, duration: 0.5, ease }, 16.05);
-      tl.from("#s5-card", { opacity: 0, y: 40, duration: 0.6, ease }, 16.2);
-      tl.from("#s5-new", { opacity: 0, y: -40, duration: 0.6, ease }, 17.1);
-      tl.to("#s5", { opacity: 0, duration: 0.35 }, 20.15);
+      // ---- 4. The turn ----
+      tl.set("#gotyou", { opacity: 1 }, 11.6);
+      words("#gotyou", 11.65, 0.12);
+      tl.to("#gotyou", { scale: 1.06, duration: 2, ease: "none" }, 12);
 
-      // 6 · Answer: cursor clicks Refer, the candidate's answer appears
-      tl.from("#s6-label", { opacity: 0, y: 16, duration: 0.5, ease }, 20.55);
-      tl.from("#s6-req", { opacity: 0, y: 40, duration: 0.6, ease }, 20.7);
-      tl.from("#s6-cursor", { opacity: 0, x: 140, y: 160, duration: 0.8, ease: "power2.inOut" }, 21.2);
-      tl.to("#s6-refer", { scale: 0.92, duration: 0.12 }, 22.0);
-      tl.to("#s6-refer", { scale: 1, duration: 0.2 }, 22.12);
-      tl.to("#s6-cursor", { opacity: 0, duration: 0.3 }, 22.4);
-      tl.from("#s6-result", { opacity: 0, y: 40, scale: 0.96, duration: 0.6, ease: "back.out(1.4)" }, 22.4);
-      tl.to("#s6", { opacity: 0, duration: 0.35 }, 24.65);
+      // ---- 5. Circle wipe into the light product world ----
+      tl.fromTo("#light", { clipPath: "circle(0% at 50% 50%)" }, { clipPath: "circle(80% at 50% 50%)", duration: 0.85, ease: "power3.inOut" }, 13.8);
+      tl.from("#brand-logo", { opacity: 0, scale: 0.85, duration: 0.7, ease: "back.out(1.7)" }, 14.2);
+      tl.from("#brand-tag", { opacity: 0, y: 16, filter: "blur(8px)", duration: 0.5, ease }, 14.65);
+      tl.to("#brand", { opacity: 0, y: -40, duration: 0.4, ease: "power2.in" }, 15.95);
 
-      // 7 · End card
-      tl.from("#s7-logo", { opacity: 0, y: 20, duration: 0.6, ease }, 25.1);
-      tl.from("#s7-title", { opacity: 0, y: 20, duration: 0.6, ease }, 25.4);
-      tl.from("#s7 .pill", { opacity: 0, y: 16, duration: 0.45, ease, stagger: 0.12 }, 25.8);
+      // ---- 6. How it works: one track that pans between four steps ----
+      tl.to(["#rail", "#how"], { opacity: 1, duration: 0.35 }, 16.2);
+      tl.from("#rail", { y: -20, duration: 0.45, ease }, 16.2);
+      tl.set("#t0", { color: "#fff" }, 16.2);
+      tl.from("#share-card", { y: 40, duration: 0.5, ease }, 16.25);
+      const step = (i, at) => {
+        tl.to("#track", { xPercent: -25 * i, duration: 0.6, ease: "power3.inOut" }, at);
+        tl.to("#rail-pill", { x: 190 * i, duration: 0.6, ease: "power3.inOut" }, at);
+        tl.to(`#t${i - 1}`, { color: "#64748b", duration: 0.3 }, at + 0.1);
+        tl.to(`#t${i}`, { color: "#ffffff", duration: 0.3 }, at + 0.3);
+      };
+
+      // Share: link types, cursor glides onto Copy, clicks
+      tl.to("#type-link", { width: "21ch", duration: 0.65, ease: "steps(21)" }, 16.65);
+      tl.fromTo("#cur1", { opacity: 0, x: 220, y: 160 }, { opacity: 1, x: 0, y: 0, duration: 0.55, ease: "power3.out" }, 17.2);
+      press("#copy", 17.8);
+      tl.to("#copy-ok", { opacity: 1, duration: 0.15 }, 17.85);
+      tl.to("#cur1", { opacity: 0, duration: 0.25 }, 18.3);
+
+      // Ask
+      step(1, 18.6);
+      tl.to("#type-job", { width: "9ch", duration: 0.5, ease: "steps(9)" }, 19.2);
+      tl.to("#bar", { width: "100%", duration: 0.6, ease }, 19.8);
+      tl.to("#hint-a", { opacity: 0, duration: 0.2 }, 20.2);
+      tl.to("#hint-b", { opacity: 1, duration: 0.25 }, 20.3);
+
+      // Inbox
+      step(2, 21.1);
+      tl.from("#row-new", { opacity: 0, y: -50, duration: 0.5, ease: "back.out(1.4)" }, 21.65);
+      tl.fromTo("#row-new", { backgroundColor: "#eef2ff" }, { backgroundColor: "#ffffff", duration: 1.2 }, 22);
+      tl.from("#new-badge", { scale: 0.5, opacity: 0, duration: 0.4, ease: "back.out(2.5)" }, 21.85);
+
+      // Answer: cursor rides in and clicks Refer itself
+      step(3, 23.4);
+      tl.fromTo("#cur2", { opacity: 0, x: 240, y: 170 }, { opacity: 1, x: 0, y: 0, duration: 0.6, ease: "power3.out" }, 24);
+      press("#refer", 24.7);
+      tl.to("#refer-ok", { opacity: 1, duration: 0.2 }, 24.75);
+      tl.to("#decline", { opacity: 0.35, duration: 0.3 }, 24.8);
+      tl.to("#cur2", { opacity: 0, duration: 0.25 }, 25.2);
+      tl.from("#toast", { opacity: 0, y: 40, scale: 0.97, duration: 0.5, ease: "back.out(1.5)" }, 25.1);
+
+      // ---- 7. End card ----
+      tl.to(["#rail", "#how"], { opacity: 0, y: -20, duration: 0.4, ease: "power2.in" }, 26.7);
+      tl.set("#end", { opacity: 1 }, 27.1);
+      tl.from("#end-logo", { opacity: 0, scale: 0.9, duration: 0.6, ease: "back.out(1.6)" }, 27.1);
+      tl.from("#end-title .w", { opacity: 0, y: 18, filter: "blur(10px)", duration: 0.5, ease, stagger: 0.08 }, 27.45);
+      tl.from("#end-pills span", { opacity: 0, y: 14, duration: 0.4, ease, stagger: 0.1 }, 28);
 
       window.__timelines = window.__timelines || {};
       window.__timelines["main"] = tl;

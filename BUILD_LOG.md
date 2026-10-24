@@ -198,3 +198,10 @@ One entry per real decision or problem. Newest at the bottom.
 - Who: Siddh (spotted it), Claude (fix)
 - Evidence: Frames at 10 per second across the zoom now grow steadily with no jump, in both the wide and square versions. `hyperframes check` reports 0 errors.
 - Result: The site video and the LinkedIn square were updated.
+
+## 2026-10-24 · Deployed to Vercel; fixed short links
+- Decision: Live at https://refer-link-dev.vercel.app. Fixed the routing file, `vercel.json`, so that `/r/…`, `/d/…` and `/s/…` point to `/board`, `/dashboard` and `/status`, not to `.html` files. Link previews now use full image addresses.
+- Why: With clean URLs turned on, Vercel redirects `.html` addresses, so the short links returned 404 on the live site. The local server didn't copy that behaviour, so local tests passed.
+- Who: Siddh (Vercel import), Claude (diagnosis and fix)
+- Evidence: Before the fix, `/r/x`, `/d/x` and `/s/x` returned 404 live while `/board` returned 200. The local server now copies Vercel's clean-URL behaviour, and 11 of 11 tests pass.
+- Result: The live short links should work after this push (rechecked below).

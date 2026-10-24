@@ -3,9 +3,9 @@
   "cleanUrls": true,
   "trailingSlash": false,
   "rewrites": [
-    { "source": "/r/:slug", "destination": "/board.html" },
-    { "source": "/d/:token", "destination": "/dashboard.html" },
-    { "source": "/s/:token", "destination": "/status.html" }
+    { "source": "/r/:slug", "destination": "/board" },
+    { "source": "/d/:token", "destination": "/dashboard" },
+    { "source": "/s/:token", "destination": "/status" }
   ],
   "headers": [
     {

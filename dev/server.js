@@ -43,7 +43,13 @@ async function serveStatic(req, res, path) {
   }
   if (path === '/js/config.js') return send(res, 200, DEV_CONFIG, TYPES['.js']);
 
+  // Like Vercel's cleanUrls: "/x.html" redirects to "/x", and a rewrite to a ".html" path finds nothing.
+  if (vercel.cleanUrls && path.endsWith('.html')) {
+    res.writeHead(308, { Location: path.slice(0, -5) || '/' });
+    return res.end();
+  }
   for (const r of rewrites) if (r.re.test(path)) { path = r.dest; break; }
+  if (vercel.cleanUrls && path.endsWith('.html')) return send(res, 404, await readFile(join(ROOT, '404.html')), TYPES['.html']);
   if (path.endsWith('/')) path += 'index.html';
 
   let file = normalize(join(ROOT, decodeURIComponent(path)));

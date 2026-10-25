@@ -45,7 +45,7 @@ async function serveStatic(req, res, path) {
 
   // Like Vercel's cleanUrls: "/x.html" redirects to "/x", and a rewrite to a ".html" path finds nothing.
   if (vercel.cleanUrls && path.endsWith('.html')) {
-    res.writeHead(308, { Location: path.slice(0, -5) || '/' });
+    res.writeHead(308, { Location: (path.slice(0, -5) || '/') + new URL(req.url, 'http://local').search });
     return res.end();
   }
   for (const r of rewrites) if (r.re.test(path)) { path = r.dest; break; }

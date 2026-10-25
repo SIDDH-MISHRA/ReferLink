@@ -27,26 +27,15 @@
   </header>
 
   <main>
-    <div class="container duo-wide">
+    <div class="container">
       <!-- Step 1: the form -->
       <section id="form-view" class="view">
-        <div class="page-head">
-          <h1>Create your referral link</h1>
-          <p>Candidates will see your name, company and note.</p>
-        </div>
-
-        <div class="duo">
-        <aside class="duo-side tone">
-          <span class="duo-eyebrow">Your referral inbox</span>
-          <h2>One link for every referral DM.</h2>
-          <ul class="duo-list">
-            <li>Candidates must add a job ID and a resume link.</li>
-            <li>You answer each request in one click.</li>
-            <li>They see your answer, so no follow-up DMs.</li>
-          </ul>
-          <p class="duo-foot">Free. No sign-up. Takes about a minute.</p>
-        </aside>
-        <form id="create-form" class="duo-main card" novalidate>
+        <form id="create-form" class="card banded" novalidate>
+          <div class="band">
+            <h1>Create your referral link</h1>
+            <p>Candidates will see your name, company and note.</p>
+          </div>
+          <div class="card-body">
           <div id="form-error" class="form-error hidden" role="alert"></div>
 
           <div class="field">
@@ -79,12 +68,12 @@
 
           <button class="btn btn-primary btn-lg btn-block" type="submit">Create my link</button>
           <p class="privacy-line">No sign-up. You'll get a private link to manage requests.</p>
+          </div>
         </form>
-        </div>
       </section>
 
       <!-- Step 2: save your links -->
-      <section id="done-view" class="hidden view" style="max-width:580px;margin:0 auto">
+      <section id="done-view" class="hidden view">
         <div class="page-head">
           <div class="done-mark"><svg class="icon"><use href="#i-check"/></svg></div>
           <h1>Your links are ready</h1>

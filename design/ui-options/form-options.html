@@ -1,0 +1,101 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>Form card options</title>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@600&display=block">
+<style>
+  /* Five ways to stop the form card blending into the page. Same form in each. */
+  * { box-sizing: border-box; margin: 0; }
+  body { font-family: Inter, system-ui, sans-serif; background: #e9edf2; padding: 28px; width: 2000px; -webkit-font-smoothing: antialiased; }
+  h1 { font-size: 26px; letter-spacing: -0.03em; margin-bottom: 4px; }
+  .lead { color: #475569; font-size: 15px; margin-bottom: 22px; }
+  .grid { display: grid; grid-template-columns: repeat(5, 1fr); gap: 16px; }
+  .head { font-weight: 700; font-size: 17px; margin-bottom: 2px; }
+  .head b { display: inline-grid; place-items: center; width: 26px; height: 26px; border-radius: 7px; background: #0f172a; color: #fff; font-size: 14px; margin-right: 8px; }
+  .why { font-size: 13px; color: #475569; margin-bottom: 10px; min-height: 36px; }
+
+  .page { border-radius: 14px; padding: 26px 20px; }
+  .light { --bg:#f4f6f9; --surface:#fff; --text:#0f172a; --text-2:#475569; --text-3:#64748b; --line:#e1e6ec; --line-strong:#cfd6df; --field:#fff; --accent:#4338ca; --ink:#0f172a; --soft:#eef2ff; }
+  .dark  { --bg:#070a10; --surface:#121926; --text:#e6e9ef; --text-2:#9aa4b2; --text-3:#7c8797; --line:#222c3c; --line-strong:#2d3a4f; --field:#0d131d; --accent:#818cf8; --ink:#ffffff; --soft:#1b2140; }
+  .page { background: var(--bg); color: var(--text); }
+  .row-label { font: 600 12px "JetBrains Mono", monospace; letter-spacing: .08em; text-transform: uppercase; color: #64748b; margin: 18px 0 8px; }
+
+  .card { position: relative; overflow: hidden; isolation: isolate; background: var(--surface); border: 1px solid var(--line); border-radius: 14px; padding: 22px; box-shadow: 0 1px 2px rgba(15,23,42,.05), 0 10px 24px -14px rgba(15,23,42,.25); }
+  .card h2 { font-size: 19px; letter-spacing: -0.03em; margin-bottom: 4px; position: relative; }
+  .card .sub { font-size: 13px; color: var(--text-2); margin-bottom: 16px; position: relative; }
+  label { display: block; font-size: 12.5px; font-weight: 600; margin: 0 0 6px; }
+  .in { height: 38px; border: 1px solid var(--line-strong); border-radius: 8px; background: var(--field); margin-bottom: 12px; padding: 0 10px; display: flex; align-items: center; font-size: 13px; color: var(--text-3); }
+  .btn { height: 40px; border-radius: 9px; background: #4338ca; color: #fff; font-weight: 600; font-size: 14px; display: grid; place-items: center; margin-top: 6px; }
+  .dark .btn { background: #6366f1; }
+
+  /* A · Accent edge */
+  .a { border-left: 0; padding-left: 28px; }
+  .a::before { content: ""; position: absolute; left: 0; top: 0; bottom: 0; width: 6px; background: linear-gradient(180deg, #312e81, #4338ca 45%, #818cf8); }
+
+  /* B · Corner waves (the Haikei idea, in the corner of the same card) */
+  .b::after { content: ""; position: absolute; top: -1px; right: -1px; width: 104px; height: 104px; z-index: -1; background: url("waves-corner.svg") top right / 100% 100% no-repeat; }
+  .b h2, .b .sub { max-width: 72%; }
+
+  /* C · Wave header band: two-tone top and bottom */
+  .c { padding: 0; }
+  .c .band { position: relative; isolation: isolate; overflow: hidden; background: var(--ink); color: var(--bg); padding: 20px 22px 18px; }
+  .dark .c .band { color: #0f172a; }
+  .c .band::after { content: ""; position: absolute; top: 0; right: 0; bottom: 0; width: 34%; z-index: -1; background: url("waves.svg") right / 100% 100% no-repeat; }
+  .c .band h2 { margin: 0 0 3px; }
+  .c .band .sub { margin: 0; color: inherit; opacity: .75; max-width: 62%; }
+  .c .body { padding: 18px 22px 22px; }
+
+  /* D · Tinted card: soft indigo wash and border, no hard shapes */
+  .d { background: linear-gradient(160deg, var(--soft) 0%, var(--surface) 46%); border-color: color-mix(in srgb, var(--accent) 35%, var(--line)); box-shadow: 0 0 0 4px color-mix(in srgb, var(--accent) 8%, transparent), 0 14px 30px -16px rgba(67,56,202,.45); }
+  .d::after { content: ""; position: absolute; right: -40px; bottom: -40px; width: 160px; height: 160px; border-radius: 50%; z-index: -1; background: radial-gradient(circle, color-mix(in srgb, var(--accent) 22%, transparent), transparent 70%); }
+
+  /* E · Side panel (what's live now) */
+  .e { padding: 0; display: grid; grid-template-columns: 38% 62%; }
+  .e .side { position: relative; isolation: isolate; overflow: hidden; background: var(--ink); color: var(--bg); padding: 22px 26% 22px 16px; font-size: 12.5px; }
+  .dark .e .side { color: #0f172a; }
+  .e .side::after { content: ""; position: absolute; top: 0; right: 0; bottom: 0; width: 30%; z-index: -1; background: url("waves.svg") right / 100% 100% no-repeat; }
+  .e .side h2 { font-size: 15px; line-height: 1.25; }
+  .e .body { padding: 22px 16px; }
+  .e .body .sub { display: none; }
+</style>
+</head>
+<body>
+  <h1>Five ways to give the form card contrast</h1>
+  <p class="lead">Same create form in each. Top row light mode, bottom row dark mode. The same treatment would go on the candidate form, dashboard header and status card.</p>
+
+  <div class="grid">
+    <div><div class="head"><b>A</b>Accent edge</div><p class="why">A thin indigo gradient strip on the card's left edge. Quietest option.</p></div>
+    <div><div class="head"><b>B</b>Corner waves</div><p class="why">Layered indigo waves tucked into the top-right corner of the same white card.</p></div>
+    <div><div class="head"><b>C</b>Wave header</div><p class="why">Two-tone top to bottom: an ink header band with waves, white form below.</p></div>
+    <div><div class="head"><b>D</b>Indigo wash</div><p class="why">Soft indigo tint, border and glow. No shapes, just colour.</p></div>
+    <div><div class="head"><b>E</b>Side panel (live now)</div><p class="why">Two-tone left to right, with a dark panel beside the form. Shown for comparison.</p></div>
+  </div>
+
+  <div id="rows"></div>
+
+<template id="form">
+  <label>Your full name</label><div class="in"></div>
+  <label>Company you work at</label><div class="in"></div>
+  <label>Your LinkedIn profile URL</label><div class="in">linkedin.com/in/your-name</div>
+  <div class="btn">Create my link</div>
+</template>
+
+<script>
+  const form = document.getElementById('form').innerHTML;
+  const title = '<h2>Create your referral link</h2><p class="sub">Candidates will see your name, company and note.</p>';
+  const cards = {
+    a: `<div class="card a">${title}${form}</div>`,
+    b: `<div class="card b">${title}${form}</div>`,
+    c: `<div class="card c"><div class="band">${title}</div><div class="body">${form}</div></div>`,
+    d: `<div class="card d">${title}${form}</div>`,
+    e: `<div class="card e"><div class="side"><h2>One link for every referral DM.</h2></div><div class="body">${form}</div></div>`,
+  };
+  const rows = document.getElementById('rows');
+  for (const theme of ['light', 'dark']) {
+    rows.insertAdjacentHTML('beforeend', `<div class="row-label">${theme} mode</div><div class="grid">` +
+      Object.values(cards).map((c) => `<div class="page ${theme}">${c}</div>`).join('') + '</div>');
+  }
+</script>
+</body>
+</html>

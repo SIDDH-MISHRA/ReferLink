@@ -225,3 +225,10 @@ One entry per real decision or problem. Newest at the bottom.
 - Evidence: 12 of 12 database tests pass, including a new note test. The upgrade file was tested on a copy of the old database: it keeps existing requests, is safe to run twice, and table reads stay blocked. Headless screenshots were checked in light mode, dark mode and at phone width. The dashboard only sends the note when there is one, so ordinary declines keep working before the upgrade runs.
 - Result: Siddh must run `supabase/migrations/002_decline_note.sql` in the Supabase SQL Editor. The local server now applies upgrade files automatically on start.
 - Open: Siddh raised lost access (a new device or a lost link) and notifications. Options are with Siddh for a decision.
+
+## 2026-10-25 · Header bands (design X2) replace the side panel
+- Decision: The create form, candidate form, dashboard header and status card now start with a plain ink band (white in dark mode). Two thin indigo wave layers rise from the bottom-right and fade out to the left, with a faint glow in the top-right corner. The side panel and its wave artwork were removed.
+- Why: Siddh found the side panel "a little weird", and it squeezed the form. Siddh then asked to see options as pictures before anything was built. That took 3 rounds: 5 directions, then 4 calmer versions of the header idea, then 2 blends of C3 and C4. Siddh picked X2.
+- Who: Siddh (the direction, and every pick), Claude (the mockups and the build)
+- Evidence: Screenshots of all four places in light mode, dark mode and phone width (`design/ui-options/x2-implemented.png`). 12 of 12 tests pass. The mockups are kept in `design/ui-options/`.
+- Lesson: When Siddh asks for ideas, show pictures first and build only after a pick.

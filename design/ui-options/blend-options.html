@@ -1,0 +1,108 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>C3 + C4 blend</title>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@500;600&display=block">
+<style>
+  /* C3 + C4: waves rise from the right and fade to the left (C3), with a faint glow in the top-right corner (C4). */
+  * { box-sizing: border-box; margin: 0; }
+  body { font-family: Inter, system-ui, sans-serif; background: #e9edf2; padding: 28px; width: 1700px; -webkit-font-smoothing: antialiased; }
+  h1 { font-size: 26px; letter-spacing: -0.03em; margin-bottom: 4px; }
+  .lead { color: #475569; font-size: 15px; margin-bottom: 18px; }
+  .sec { font-weight: 700; font-size: 18px; margin: 26px 0 4px; }
+  .sec b { display: inline-grid; place-items: center; min-width: 30px; height: 26px; padding: 0 6px; border-radius: 7px; background: #0f172a; color: #fff; font-size: 13px; margin-right: 8px; }
+  .why { font-size: 13px; color: #475569; margin-bottom: 10px; }
+  .grid2 { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; }
+  .grid4 { display: grid; grid-template-columns: 1.8fr 1fr; gap: 16px; }
+  .dash .link { white-space: nowrap; }
+  .tag { font: 600 11px "JetBrains Mono", monospace; letter-spacing: .08em; text-transform: uppercase; color: #64748b; margin-bottom: 6px; }
+
+  .light { --bg:#f4f6f9; --surface:#fff; --text:#0f172a; --text-2:#475569; --text-3:#64748b; --line:#e1e6ec; --line-strong:#cfd6df; --field:#fff; --subtle:#f1f5f9;
+           --band:#0f172a; --band-text:#f8fafc; --band-text-2:#cbd5e1; --band-field:#1e293b; --band-line:#334155; --glow: rgba(99,102,241,.38); }
+  .dark  { --bg:#070a10; --surface:#121926; --text:#e6e9ef; --text-2:#9aa4b2; --text-3:#7c8797; --line:#222c3c; --line-strong:#2d3a4f; --field:#0d131d; --subtle:#1a2230;
+           --band:#ffffff; --band-text:#0f172a; --band-text-2:#475569; --band-field:#f1f5f9; --band-line:#e2e8f0; --glow: rgba(99,102,241,.22); }
+  .page { background: var(--bg); color: var(--text); border-radius: 14px; padding: 24px 22px; }
+
+  .card { overflow: hidden; background: var(--surface); border: 1px solid var(--line); border-radius: 14px; box-shadow: 0 1px 2px rgba(15,23,42,.05), 0 10px 24px -14px rgba(15,23,42,.25); }
+  .band { position: relative; isolation: isolate; overflow: hidden; background: var(--band); color: var(--band-text); padding: 22px 22px 52px; }
+  .band h2 { font-size: 20px; letter-spacing: -0.03em; margin-bottom: 4px; }
+  .band p { font-size: 13px; color: var(--band-text-2); }
+  /* The waves: from the right, fading to nothing on the left */
+  .band::after { content: ""; position: absolute; left: 0; right: 0; bottom: 0; z-index: -1; pointer-events: none;
+                 -webkit-mask-image: linear-gradient(to left, #000 22%, transparent 92%); mask-image: linear-gradient(to left, #000 22%, transparent 92%); }
+  .x1 .band::after { height: 64px; background: url("hw-soft.svg") bottom / 100% 100% no-repeat; }
+  .x2 .band::after { height: 56px; background: url("hw-tide.svg") bottom / 100% 100% no-repeat; }
+  /* The glow: faint, in the top-right corner */
+  .band::before { content: ""; position: absolute; right: -70px; top: -90px; width: 300px; height: 240px; z-index: -1; border-radius: 50%;
+                  background: radial-gradient(closest-side, var(--glow), transparent); }
+
+  .body { padding: 18px 22px 22px; }
+  label { display: block; font-size: 12.5px; font-weight: 600; margin: 0 0 6px; }
+  .in { height: 38px; border: 1px solid var(--line-strong); border-radius: 8px; background: var(--field); margin-bottom: 12px; padding: 0 10px; display: flex; align-items: center; font-size: 13px; color: var(--text-3); }
+  .btn { height: 40px; border-radius: 9px; background: #4338ca; color: #fff; font-weight: 600; font-size: 14px; display: grid; place-items: center; margin-top: 6px; }
+  .dark .btn { background: #6366f1; }
+
+  /* Dashboard header in the same style */
+  .dash .band { display: flex; justify-content: space-between; align-items: center; gap: 16px; padding: 22px 22px 34px; border-radius: 14px; border: 1px solid var(--line); }
+  .dash .band::after { height: 46px; }
+  .dash .link { display: flex; align-items: center; gap: 8px; font-size: 12px; color: var(--band-text-2); }
+  .dash .field { display: flex; align-items: center; gap: 8px; height: 34px; padding: 0 4px 0 10px; border-radius: 8px; background: var(--band-field); border: 1px solid var(--band-line); font: 600 12px "JetBrains Mono", monospace; color: var(--band-text); }
+  .dash .copy { height: 26px; padding: 0 10px; border-radius: 6px; display: grid; place-items: center; background: var(--band); border: 1px solid var(--band-line); color: var(--band-text); font: 600 12px Inter; }
+  .seg { display: inline-flex; gap: 4px; padding: 4px; border-radius: 10px; background: var(--subtle); margin: 14px 0 10px; font-size: 13px; color: var(--text-2); }
+  .seg span { padding: 6px 10px; border-radius: 7px; }
+  .seg span:first-child { background: var(--surface); color: var(--text); font-weight: 600; box-shadow: 0 1px 2px rgba(0,0,0,.08); }
+  .row { display: flex; align-items: center; gap: 10px; padding: 12px 14px; border: 1px solid var(--line); border-radius: 12px; background: var(--surface); font-size: 13px; }
+  .row .av { width: 30px; height: 30px; border-radius: 50%; background: #eef2ff; color: #4338ca; display: grid; place-items: center; font-weight: 600; font-size: 12px; }
+  .row .grow { flex: 1; } .row b { display: block; } .row .muted { color: var(--text-3); font-size: 12px; }
+  .pill { height: 28px; padding: 0 12px; border-radius: 7px; display: grid; place-items: center; font-weight: 600; font-size: 12px; }
+  .pill.p { background: #4338ca; color: #fff; } .pill.s { border: 1px solid var(--line-strong); color: var(--text); }
+
+  /* Status card in the same style */
+  .status .band { padding: 22px 22px 56px; border-radius: 14px; border: 1px solid var(--line); }
+  .status .word { display: inline-flex; align-items: center; gap: 6px; padding: 3px 9px; border-radius: 6px; font-size: 12px; font-weight: 600; background: #d1fae5; color: #047857; margin-bottom: 10px; }
+  .status .word i { width: 6px; height: 6px; border-radius: 50%; background: currentColor; }
+  .status h2 { font-size: 26px; }
+</style>
+</head>
+<body>
+  <h1>C3 + C4 blend: waves from the right that fade out, plus a soft corner glow</h1>
+  <p class="lead">The header stays plain black (white in dark mode) on the left, where the title sits. Indigo rises only from the right and the corner.</p>
+
+  <div class="sec"><b>X1</b>Soft layers, faded, with glow</div>
+  <p class="why">Three see-through layers (from C3), plus the corner glow (from C4).</p>
+  <div class="grid2" id="x1"></div>
+
+  <div class="sec"><b>X2</b>Thin tide, faded, with glow</div>
+  <p class="why">Two thinner layers (from C4), faded like C3, plus the corner glow. Slightly lighter.</p>
+  <div class="grid2" id="x2"></div>
+
+  <div class="sec"><b>X1</b>on the other pages</div>
+  <p class="why">The same treatment on the dashboard header and the candidate's status card.</p>
+  <div class="grid4" id="others"></div>
+
+<template id="form">
+  <label>Your full name</label><div class="in"></div>
+  <label>Company you work at</label><div class="in"></div>
+  <label>Your LinkedIn profile URL</label><div class="in">linkedin.com/in/your-name</div>
+  <div class="btn">Create my link</div>
+</template>
+<script>
+  const form = document.getElementById('form').innerHTML;
+  const band = '<div class="band"><h2>Create your referral link</h2><p>Candidates will see your name, company and note.</p></div>';
+  for (const v of ['x1', 'x2']) {
+    document.getElementById(v).innerHTML = ['light', 'dark'].map((t) =>
+      `<div><div class="tag">${t} mode</div><div class="page ${t}"><div class="card ${v}" style="max-width:420px;margin:0 auto">${band}<div class="body">${form}</div></div></div></div>`).join('');
+  }
+  const dash = `<div class="dash x1"><div class="band"><div><h2>Requests</h2><p>Priya Sharma · Google</p></div>
+      <div class="link">Your link <span class="field">referlink.vercel.app/r/priya… <span class="copy">Copy</span></span></div></div>
+    <div class="seg"><span>Pending 2</span><span>Referred</span><span>Declined</span><span>All 2</span></div>
+    <div class="row"><span class="av">AI</span><span class="grow"><b>Ananya Iyer</b><span class="muted">Data Analyst II · JR-104523</span></span><span class="pill p">Refer</span><span class="pill s">Decline</span></div></div>`;
+  const status = `<div class="status x1"><div class="band"><span class="word"><i></i>Referred</span><h2>You were referred</h2>
+      <p>Priya has referred you at Google. Watch your email for messages from Google's recruiting team.</p></div></div>`;
+  document.getElementById('others').innerHTML = ['light', 'dark'].flatMap((t) => [
+    `<div><div class="tag">Dashboard · ${t}</div><div class="page ${t}">${dash}</div></div>`,
+    `<div><div class="tag">Status · ${t}</div><div class="page ${t}">${status}</div></div>`]).join('');
+</script>
+</body>
+</html>
